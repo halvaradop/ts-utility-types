@@ -1,0 +1,34 @@
+{
+  "name": "ts-utility-types",
+  "version": "0.0.1",
+  "description": "Utility types tools to enhances the productivity using typescript",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/halvaradop/ts-utility-types.git"
+  },
+  "keywords": [
+    "typescript",
+    "utilities",
+    "utility-types",
+    "productivity",
+    "development",
+    "interfaces"
+  ],
+  "author": "Hernan Alvarado <hernanvid123@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/halvaradop/ts-utility-types/issues"
+  },
+  "homepage": "https://github.com/halvaradop/ts-utility-types#readme",
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.3"
+  },
+  "files": [
+    "src"
+  ]
+}
