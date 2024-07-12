@@ -1,0 +1,1 @@
+export type { Prettify, DeepReadonly } from "../src/utilities"
