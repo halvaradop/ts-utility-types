@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Utility types tools to enhances the productivity using typescript",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.ts",  
   "scripts": {
     "dev": "tsc -w"
   },
@@ -30,6 +30,6 @@
     "typescript": "^5.5.3"
   },
   "files": [
-    "src"
+    "dist"
   ]
 }
