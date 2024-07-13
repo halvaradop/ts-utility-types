@@ -1,5 +1,5 @@
 {
-  "name": "ts-utility-types",
+  "name": "@halvaradop/ts-utility-types",
   "version": "0.0.1",
   "description": "Utility types tools to enhances the productivity using typescript",
   "main": "dist/index.js",
