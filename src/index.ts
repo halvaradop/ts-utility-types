@@ -1,1 +1,2 @@
-export type { Prettify, DeepReadonly } from "../src/utilities"
+export type { Prettify, DeepReadonly } from "./utility-types"
+export type { ArgsFunction, Nullish, Primitive } from "./types"
