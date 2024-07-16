@@ -30,3 +30,28 @@ export type DeepReadonly<T extends object> = {
 export type TupleToUnion<T extends readonly any[]> = T extends [infer Item, ...infer Spreed]
     ? Item | TupleToUnion<Spreed>
     : never;
+
+
+/**
+ * Returns the size of an array
+ * @example
+ * const nums = [1, 2, 3, 4, 5]
+ * type SizeNums = Size<nums> // 5
+ */
+export type Size<T extends any[]> = T extends any[] ? T["length"] : 0;
+
+
+/**
+ * Get the last element within an array otherwise it return never
+ * @example
+ * type LastItem = Last<1, 2, 3, 4> // 4
+ */
+export type Last<T extends any[]> = T extends [...any, infer Last] ? Last : never;
+
+/**
+ * Pops the last item of an array and returns the first element without the last item.
+ * @example
+ * type PopStr = Pop<["a", "b", "c"]> // ["a", "b"]
+ * type PopNums = Pop<[1, 2, 3]> // [1, 2]
+ */
+export type Pop<T extends any[]> = T extends [...infer Items, any] ? Items : [];
