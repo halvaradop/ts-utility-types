@@ -19,7 +19,22 @@ export type ArgsFunction = (...args: any) => void;
 export type Nullish = null | undefined;
 
 /**
+ * Represents a primitive data type that can also be null or undefined.
+ * This type is useful for situations where nullish values are allowed.
+ *
+ */
+export type PrimitiveNullish = number | string | boolean | bigint | symbol | Nullish;
+
+/**
  * Represents a primitive data type: number, string, boolean, bigint, or symbol.
  * This type is useful for identifying simple, immutable values.
+ *
+ * @remarks This type excludes nullish values (null and undefined).
  */
-export type Primitive = number | string | boolean | bigint | symbol | Nullish;
+export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">;
+ 
+/**
+ * Represents a whitespace character: space, newline, tab, carriage return, form feed,
+ * line separator, or paragraph separator.
+ */
+export type WhiteSpace = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"
