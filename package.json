@@ -1,11 +1,13 @@
 {
   "name": "@halvaradop/ts-utility-types",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Utility types tools to enhances the productivity using typescript",
   "main": "dist/index.d.ts",
-  "types": "dist/index.d.ts",  
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "test": "vitest",
+    "coverage": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -27,7 +29,8 @@
   "homepage": "https://github.com/halvaradop/ts-utility-types#readme",
   "devDependencies": {
     "@types/node": "^20.14.10",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.3"
   },
   "files": [
     "dist"
