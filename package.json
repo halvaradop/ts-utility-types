@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "tsc -w",
     "test": "vitest",
-    "coverage": "vitest run"
+    "coverage": "vitest run",
+    "build:js": "tsc src/validate-types.ts --outDir dist && rm dist/types.js",
+    "publish": "tsc && npm run build:js"
   },
   "repository": {
     "type": "git",
