@@ -1,3 +1,5 @@
+import { Equals } from "./test";
+
 /**
  * Utility type that transforms an object to have each property on a new line
  * for better readability. 
@@ -57,3 +59,43 @@ export type Last<T extends any[]> = T extends [...any, infer Last] ? Last : neve
  * type PopNums = Pop<[1, 2, 3]> // [1, 2]
  */
 export type Pop<T extends any[]> = T extends [...infer Items, any] ? Items : [];
+
+/**
+ * Exclude properties of type `U` from type `T`
+ */
+export type Exclude<T, U> = T extends U ? never : T;
+
+/**
+ * Get the type of the resolved value of a PromiseLike object.
+ */
+export type Awaited<T extends PromiseLike<any>> = T extends PromiseLike<infer R> 
+	? R extends PromiseLike<any> 
+		? Awaited<R>
+		: R
+	: never;
+
+/**
+ * Get the type of the function's arguments
+ * @example
+ * function add(x: number, y: number): number { 
+ *     return x + y; 
+ * }
+ * type AddParams = Parameters<typeof add>; // AddParams = [number, number]
+ */
+export type Parameters<T extends (...args: any) => void> = T extends (...args: infer P) => void ? P : never;
+
+/**
+ * Create a new type with a subset of properties from an object
+ */
+export type Pick<T extends object, K extends keyof T> = {
+	[Property in K]: T[Property]
+};
+
+/**
+ * Check if a value exists within a tuple and is equal to a specific value.as
+ */
+export type Includes<T extends any[], U> = T extends [infer Compare, ...infer Items]
+	? Equals<Compare, U> extends true
+		? true 
+		: Includes<Items, U>
+	: false;
