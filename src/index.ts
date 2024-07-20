@@ -9,7 +9,7 @@ export type {
     Exclude, 
     Includes, 
     Parameters, 
-    Pick 
+    Pick
 } from "./utility-types"
 
 export type { 
