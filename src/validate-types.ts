@@ -21,10 +21,7 @@ export const isPrimitive = (value: any): value is Primitive => {
  * @param value The value to check
  * @returns {boolean} `true` if the value is a primitive type with nullish values, `false` otherwise
  */
-export const isPrimitiveNullish = (value: any): value is PrimitiveNullish => {
-    if(value === null || value === undefined) return true
-    return isPrimitive(value)
-};
+export const isPrimitiveNullish = (value: any): value is PrimitiveNullish => isNullish(value) || isPrimitive(value);
 
 /**
  * Checks if a value is nullish (null or undefined).
