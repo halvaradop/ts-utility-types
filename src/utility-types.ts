@@ -1,4 +1,5 @@
 import { Equals } from "./test";
+import { WhiteSpaces } from "./types";
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -99,3 +100,44 @@ export type Includes<T extends any[], U> = T extends [infer Compare, ...infer It
 		? true 
 		: Includes<Items, U>
 	: false;
+
+/**
+ * Creates a new type that omits properties from an object type based on another type
+ * @example
+ * type Person = { name: string; age: number; email: string };
+ * type NoEmailPerson = Omit<Person, "email">;  // NoEmailPerson = { name: string; age: number }
+ */
+export type Omit<T extends object, U> = {
+	[Property in keyof T as Property extends U ? never : Property]: T[Property]
+};
+
+/**
+ * Removes leading whitespace characters from a string type
+ * @example
+ * type Str = "  hello world  ";
+ * type TrimmedLeft = TrimLeft<Str>; // TrimmedLeft = "hello world  "
+ */
+export type TrimLeft<S extends string> = S extends `${WhiteSpaces}${infer Characters}`
+	? TrimLeft<Characters>
+	: S
+/**
+ * Removes trailing whitespace characters from a string type
+ * @example
+ * type Str = "hello world  ";
+ * type TrimmedRight = TrimRight<Str>; // TrimmedRight = "hello world"
+ */
+export type TrimRight<S extends string> = S extends `${infer Char}${WhiteSpaces}`
+	? TrimRight<Char>
+	: S;
+
+/**
+ * Removes leading and trailing whitespace characters from a string type
+ * @example
+ * type Str = "  hello world  ";
+ * type Trimmed = Trim<Str>; // Trimmed = "hello world"
+ */
+export type Trim<S extends string> = S extends `${WhiteSpaces}${infer Characters}`
+	? Trim<Characters>
+	: S extends `${infer Char}${WhiteSpaces}`
+		? Trim<Char>
+		: S;

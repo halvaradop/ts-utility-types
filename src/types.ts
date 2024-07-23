@@ -37,4 +37,4 @@ export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">;
  * Represents a whitespace character: space, newline, tab, carriage return, form feed,
  * line separator, or paragraph separator.
  */
-export type WhiteSpace = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"
+export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"

@@ -9,7 +9,11 @@ export type {
     Exclude, 
     Includes, 
     Parameters, 
-    Pick
+    Pick,
+    Omit,
+    Trim,
+    TrimLeft,
+    TrimRight
 } from "./utility-types"
 
 export type { 
@@ -17,12 +21,18 @@ export type {
     Nullish, 
     Primitive,
     PrimitiveNullish,
-    WhiteSpace
+    WhiteSpaces
 } from "./types"
 
 export {
     isPrimitive,
-    isPrimitiveNullish
+    isPrimitiveNullish,
+    isArray,
+    isBoolean,
+    isNullish,
+    isNumber,
+    isObject,
+    isString
 } from "./validate-types"
 
 export type {
