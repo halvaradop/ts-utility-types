@@ -1,11 +1,10 @@
 import { describe, test, expect } from "vitest"
-import { isPrimitive, isPrimitiveNullish } from './../src/validate-types';
+import { isPrimitive, isPrimitiveNullish, isBoolean, isNumber, isString, isObject, isArray } from './../src/validate-types';
 
 
 describe("Primitive Validation", () => {
-
     describe("isPrimitive", () => {
-        test("should return true for primitive values", () => {
+        test("should return true for primitive values", ({  }) => {
             expect(isPrimitive(1)).toBeTruthy()
             expect(isPrimitive("str")).toBeTruthy()
             expect(isPrimitive(true)).toBeTruthy()
@@ -31,9 +30,83 @@ describe("Primitive Validation", () => {
             expect(isPrimitiveNullish(null)).toBeTruthy()
             expect(isPrimitiveNullish(undefined)).toBeTruthy()
         })
+        test("should return false for non-primitive values", () => {
+            expect(isPrimitive({})).toBeFalsy()
+            expect(isPrimitive(() => {})).toBeFalsy()
+        })
     })
-    test("should return false for non-primitive values", () => {
-        expect(isPrimitive({})).toBeFalsy()
-        expect(isPrimitive(() => {})).toBeFalsy()
+})
+
+
+describe("Types validation", () => {
+    describe("isNumber", () => {
+        test("should return true for numbers", () => {
+            expect(isNumber(1)).toBeTruthy()
+        })
+
+        test("should return false for non-numbers", () => {
+            expect(isNumber(false)).toBeFalsy()
+            expect(isNumber("str")).toBeFalsy()
+            expect(isNumber(null)).toBeFalsy()
+            expect(isNumber(undefined)).toBeFalsy()
+            expect(isNumber({})).toBeFalsy()
+        })
+    })
+
+    describe("isBoolean", () => {
+        test("should return true for booleans", () => {
+            expect(isBoolean(false)).toBeTruthy()
+        })
+        
+        test("should return false for non-booleans", () => {
+            expect(isBoolean(1)).toBeFalsy()
+            expect(isBoolean("str")).toBeFalsy()
+            expect(isBoolean(null)).toBeFalsy()
+            expect(isBoolean(undefined)).toBeFalsy()
+            expect(isBoolean({})).toBeFalsy()
+        })
+    })
+
+    describe("isString", () => {
+        test("should return true for strings", () => {
+            expect(isString("str")).toBeTruthy()
+        })
+        
+        test("should return false for non-strings", () => {
+            expect(isString(1)).toBeFalsy()
+            expect(isString(false)).toBeFalsy()
+            expect(isString(null)).toBeFalsy()
+            expect(isString(undefined)).toBeFalsy()
+            expect(isString({})).toBeFalsy()
+        })
+    })
+
+    describe("isObject", () => {
+        test("should return true for objects", () => {
+            expect(isObject({})).toBeTruthy()
+        })
+        
+        test("should return false for non-objects", () => {
+            expect(isObject(1)).toBeFalsy()
+            expect(isObject(false)).toBeFalsy()
+            expect(isObject("str")).toBeFalsy()
+            expect(isObject(null)).toBeFalsy()
+            expect(isObject(undefined)).toBeFalsy()
+        })
+    })
+
+    describe("isArray", () => {
+        test("should return true for arrays", () => {
+            expect(isArray([])).toBeTruthy()
+            expect(isArray([1, 2, 3])).toBeTruthy()
+        })
+        
+        test("should return false for non-arrays", () => {
+            expect(isArray(1)).toBeFalsy()
+            expect(isArray(false)).toBeFalsy()
+            expect(isArray("str")).toBeFalsy()
+            expect(isArray(null)).toBeFalsy()
+            expect(isArray(undefined)).toBeFalsy()
+        })
     })
 })
