@@ -1,4 +1,4 @@
-import { Nullish, Primitive, PrimitiveNullish } from "./types";
+import type { Nullish, Primitive, PrimitiveNullish } from "./types";
 
 /**
  * Define the types of primitive values in JavaScript and TypeScript.
