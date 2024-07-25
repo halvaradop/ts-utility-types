@@ -1,5 +1,5 @@
-import { Equals } from "./test";
-import { WhiteSpaces } from "./types";
+import type { Equals } from "./test";
+import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types";
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -141,3 +141,34 @@ export type Trim<S extends string> = S extends `${WhiteSpaces}${infer Characters
 	: S extends `${infer Char}${WhiteSpaces}`
 		? Trim<Char>
 		: S;
+
+/**
+ *  Converts a string to uppercase
+ */
+export type Uppercase<S extends string> = S extends `${infer Char}${infer Characters}` 
+	? Char extends keyof LetterToUppercase 
+		? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
+		: `${Char}${Uppercase<Characters>}`
+	: S;
+
+/**
+ * Converts a string to lowercase
+ */
+export type Lowercase<S extends string> = S extends `${infer Char}${infer Characters}` 
+	? Char extends keyof LetterToLowercase 
+		? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
+		: `${Char}${Lowercase<Characters>}`
+	: S;
+
+/**
+ * Capitalizes the first letter of a word and converts the rest to lowercase
+ */
+export type Capitalize<S extends string, F extends boolean = true> = S extends `${infer Char}${infer Characters}`
+	? F extends boolean
+		? F extends true
+			? `${Uppercase<Char>}${Capitalize<Characters, false>}`
+			: Char extends " "
+				? ` ${Capitalize<Characters, true>}`
+				: `${Lowercase<Char>}${Capitalize<Characters, false>}`
+		: S
+	: S;

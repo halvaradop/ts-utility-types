@@ -32,9 +32,73 @@ export type PrimitiveNullish = number | string | boolean | bigint | symbol | Nul
  * @remarks This type excludes nullish values (null and undefined).
  */
 export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">;
- 
+
 /**
  * Represents a whitespace character: space, newline, tab, carriage return, form feed,
  * line separator, or paragraph separator.
  */
-export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"
+export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029";
+
+/**
+ * Maps lowercase letters to their uppercase equivalents
+ */
+export interface LetterToUppercase {
+    "a": "A",
+    "b": "B",
+    "c": "C",
+    "d": "D",
+    "e": "E",
+    "f": "F",
+    "g": "G",
+    "h": "H",
+    "i": "I",
+    "j": "J",
+    "k": "K",
+    "l": "L",
+    "m": "M",
+    "n": "N",
+    "o": "O",
+    "p": "P",
+    "q": "Q",
+    "r": "R",
+    "s": "S",
+    "t": "T",
+    "u": "U",
+    "v": "V",
+    "w": "W",
+    "x": "X",
+    "y": "Y",
+    "z": "Z"
+};
+
+/**
+ * Maps uppercase letters to their lowercase equivalents
+ */
+export interface LetterToLowercase {
+    "A": "a",
+    "B": "b",
+    "C": "c",
+    "D": "d",
+    "E": "e",
+    "F": "f",
+    "G": "g",
+    "H": "h",
+    "I": "i",
+    "J": "j",
+    "K": "k",
+    "L": "l",
+    "M": "m",
+    "N": "n",
+    "O": "o",
+    "P": "p",
+    "Q": "q",
+    "R": "r",
+    "S": "s",
+    "T": "t",
+    "U": "u",
+    "V": "v",
+    "W": "w",
+    "X": "x",
+    "Y": "y",
+    "Z": "z"
+};

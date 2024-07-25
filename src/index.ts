@@ -13,7 +13,10 @@ export type {
     Omit,
     Trim,
     TrimLeft,
-    TrimRight
+    TrimRight,
+    Lowercase,
+    Uppercase,
+    Capitalize
 } from "./utility-types"
 
 export type { 
@@ -21,7 +24,9 @@ export type {
     Nullish, 
     Primitive,
     PrimitiveNullish,
-    WhiteSpaces
+    WhiteSpaces,
+    LetterToLowercase,
+    LetterToUppercase
 } from "./types"
 
 export {
@@ -36,5 +41,6 @@ export {
 } from "./validate-types"
 
 export type {
-    Equals
+    Equals,
+    Expect
 } from "./test"
