@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import { type Capitalize, type Uppercase, type Lowercase, type TrimLeft, type TrimRight, type Trim, type Merge, Properties } from "../src/utility-types"
+import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim, Merge, Properties } from "../src/utility-types"
 
 
 describe("String mappers", () => {
