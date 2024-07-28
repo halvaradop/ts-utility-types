@@ -172,3 +172,20 @@ export type Capitalize<S extends string, F extends boolean = true> = S extends `
 				: `${Lowercase<Char>}${Capitalize<Characters, false>}`
 		: S
 	: S;
+
+/**
+ * Creates a union of the keys of two objects
+ */
+export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof T2;
+
+/**
+ * Creates a new object by merging two objects. Properties from `S` override properties 
+ * from `F` if they have the same key
+ */
+export type Merge<T1 extends object, T2 extends object> = {
+	[Property in Properties<T1, T2>]: Property extends keyof T2
+		? T2[Property]
+		: Property extends keyof T1
+			? T1[Property]
+			: never;
+};
