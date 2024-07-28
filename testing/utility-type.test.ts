@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim } from "../src/utility-types"
+import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim, Merge, Properties } from "../src/utility-types"
 
 
 describe("String mappers", () => {
@@ -43,5 +43,23 @@ describe("String mappers", () => {
         expectTypeOf<Capitalize<"Foo">>().toMatchTypeOf<"Foo">()
         expectTypeOf<Capitalize<"Foo bar">>().toMatchTypeOf<"Foo Bar">()
         expectTypeOf<Capitalize<"Foo Bar">>().toMatchTypeOf<"Foo Bar">()
+    })
+})
+
+
+describe("Properties with keyof", () => {
+    test("Combines keys of two object types", () => {
+        expectTypeOf<Properties<{ a: number }, { a: string }>>().toEqualTypeOf<"a">()
+        expectTypeOf<Properties<{ a: number }, { b: string }>>().toEqualTypeOf<"a" | "b">()
+        expectTypeOf<Properties<{ a: number }, { b: string, c: number }>>().toEqualTypeOf<"a" | "b" | "c">()
+    })
+})
+
+
+describe("Merge values",  () => {
+    test("Union two object types", () => {
+        expectTypeOf<Merge<{ a: number }, { b: string }>>().toEqualTypeOf<{ a: number, b: string }>()
+        expectTypeOf<Merge<{ a: number }, { b: string, c: boolean }>>().toEqualTypeOf<{ a: number, b: string, c: boolean }>()
+        expectTypeOf<Merge<{ a: number }, { a: string, b: string }>>().toEqualTypeOf<{ a: string, b: string }>()
     })
 })
