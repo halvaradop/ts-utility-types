@@ -1,5 +1,5 @@
 import type { Equals } from "./test";
-import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types";
+import type { ArgsFunction, LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types";
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -30,7 +30,7 @@ export type DeepReadonly<T extends object> = {
  * type StringUnion = ["1", "2", "3"]
  * type Union = TypleToUnion<StringUnion> // "1" | "2" | "3"
  */
-export type TupleToUnion<T extends readonly any[]> = T extends [infer Item, ...infer Spreed]
+export type TupleToUnion<T extends readonly unknown[]> = T extends [infer Item, ...infer Spreed]
     ? Item | TupleToUnion<Spreed>
     : never;
 
@@ -42,7 +42,7 @@ export type TupleToUnion<T extends readonly any[]> = T extends [infer Item, ...i
  * const numbers: number[] = [1, 2, 3, 4, 5];
  * type SizeOfNumbers = Size<typeof numbers>; // SizeOfNumbers = 5
  */
-export type Size<T extends any[]> = T extends any[] ? T["length"] : 0;
+export type Size<T extends unknown[]> = T extends unknown[] ? T["length"] : 0;
 
 
 /**
@@ -50,7 +50,7 @@ export type Size<T extends any[]> = T extends any[] ? T["length"] : 0;
  * @example
  * type LastItem = Last<1, 2, 3, 4> // 4
  */
-export type Last<T extends any[]> = T extends [...any, infer Last] ? Last : never;
+export type Last<T extends unknown[]> = T extends [...any, infer Last] ? Last : never;
 
 /**
  * Removes the last element from an array and returns a new array type with all elements 
@@ -59,7 +59,7 @@ export type Last<T extends any[]> = T extends [...any, infer Last] ? Last : neve
  * type PopStr = Pop<["a", "b", "c"]> // ["a", "b"]
  * type PopNums = Pop<[1, 2, 3]> // [1, 2]
  */
-export type Pop<T extends any[]> = T extends [...infer Items, any] ? Items : [];
+export type Pop<T extends unknown[]> = T extends [...infer Items, unknown] ? Items : [];
 
 /**
  * Exclude properties of type `U` from type `T`
@@ -69,8 +69,8 @@ export type Exclude<T, U> = T extends U ? never : T;
 /**
  * Get the type of the resolved value of a PromiseLike object.
  */
-export type Awaited<T extends PromiseLike<any>> = T extends PromiseLike<infer R> 
-	? R extends PromiseLike<any> 
+export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infer R>
+	? R extends PromiseLike<unknown>
 		? Awaited<R>
 		: R
 	: never;
@@ -83,7 +83,7 @@ export type Awaited<T extends PromiseLike<any>> = T extends PromiseLike<infer R>
  * }
  * type AddParams = Parameters<typeof add>; // AddParams = [number, number]
  */
-export type Parameters<T extends (...args: any) => void> = T extends (...args: infer P) => void ? P : never;
+export type Parameters<T extends ArgsFunction> = T extends (...args: infer P) => void ? P : never;
 
 /**
  * Create a new type with a subset of properties from an object
@@ -95,7 +95,7 @@ export type Pick<T extends object, K extends keyof T> = {
 /**
  * Check if a value exists within a tuple and is equal to a specific value.as
  */
-export type Includes<T extends any[], U> = T extends [infer Compare, ...infer Items]
+export type Includes<T extends unknown[], U> = T extends [infer Compare, ...infer Items]
 	? Equals<Compare, U> extends true
 		? true 
 		: Includes<Items, U>
