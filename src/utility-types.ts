@@ -246,3 +246,17 @@ export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prett
 	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
 	{ [Property in K]?: T[Property] }
 >;
+
+/**
+ * Create a new object based in the keys that are not assignable of type U
+ * @example
+ * interface User {
+ * 	name: string,
+ * 	lastname: string,
+ * 	age: number
+ * }
+ * type UserExcludeStrings = OmitByType<User, string> // { age: number }
+ */
+export type OmitByType<T extends object, U> = {
+	[Property in keyof T as T[Property] extends U ? never : Property]: T[Property];
+};
