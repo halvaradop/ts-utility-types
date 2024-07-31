@@ -231,3 +231,18 @@ export type Diff<O1 extends object, O2 extends object> = {
 export type PickByType<T extends object, U> = {
 	[Property in keyof T as T[Property] extends U ? Property : never]: T[Property];
 };
+
+/**
+ * Converts the specified keys of an object into optional ones
+ * @example
+ * interface User {
+ * 	name: string,
+ * 	lastname: string,
+ *	age: number
+ * }
+ * type UserPartialName = PartialByKeys<User, "name"> // { name?: string, lastname: string, age: number }
+ */
+export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prettify<
+	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
+	{ [Property in K]?: T[Property] }
+>;
