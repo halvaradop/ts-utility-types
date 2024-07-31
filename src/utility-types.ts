@@ -189,3 +189,31 @@ export type Merge<T1 extends object, T2 extends object> = {
 			? T1[Property]
 			: never;
 };
+
+/**
+ * Create a new object based in the difference keys between the objects.
+ * @example
+ * type Foo = {
+ * 	name: string
+ * 	age: string
+ * }
+ * 
+ * type Bar = {
+ * 	ame: string
+ * 	age: string
+ * 	gender: number
+ * }
+ * 
+ * type DiffFoo = Diff<Foo, Bar> // { gender: number }
+ */
+export type Diff<O1 extends object, O2 extends object> = {
+	[P in Properties<O1, O2> as 
+		P extends keyof O1 & keyof O2 
+			? never
+			: P
+	]: P extends keyof O1 
+		? O1[P]
+		: P extends keyof O2
+			? O2[P]
+			: never;
+};
