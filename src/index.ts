@@ -16,7 +16,12 @@ export type {
     TrimRight,
     Lowercase,
     Uppercase,
-    Capitalize
+    Capitalize,
+    Diff,
+    Merge,
+    PartialByKeys,
+    PickByType,
+    Properties
 } from "./utility-types"
 
 export type { 
@@ -44,3 +49,7 @@ export type {
     Equals,
     Expect
 } from "./test"
+
+export type {
+    IsNever
+} from "./type-guards"
