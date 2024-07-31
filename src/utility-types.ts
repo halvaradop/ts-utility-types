@@ -217,3 +217,17 @@ export type Diff<O1 extends object, O2 extends object> = {
 			? O2[P]
 			: never;
 };
+
+/**
+ * Create a new object based in the type of its keys
+ * @example
+ * interface User {
+ * 	name: string,
+ * 	lastname: string,
+ * 	age: number
+ * }
+ * type UserStr = PickByType<User, string> // { name: string, lastname: string }
+ */
+export type PickByType<T extends object, U> = {
+	[Property in keyof T as T[Property] extends U ? Property : never]: T[Property];
+};
