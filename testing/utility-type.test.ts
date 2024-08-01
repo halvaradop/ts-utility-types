@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim, Merge, Properties } from "../src/utility-types"
+import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim, Merge, Properties, ExtractToObject } from "../src/utility-types"
 
 
 describe("String mappers", () => {
@@ -61,5 +61,13 @@ describe("Merge values",  () => {
         expectTypeOf<Merge<{ a: number }, { b: string }>>().toEqualTypeOf<{ a: number, b: string }>()
         expectTypeOf<Merge<{ a: number }, { b: string, c: boolean }>>().toEqualTypeOf<{ a: number, b: string, c: boolean }>()
         expectTypeOf<Merge<{ a: number }, { a: string, b: string }>>().toEqualTypeOf<{ a: string, b: string }>()
+    })
+})
+
+
+describe("Extract property from object", () => {
+    test("Extract the key", () => {
+        expectTypeOf<ExtractToObject<{ name: string, address: { street: string } }, "address">>().toEqualTypeOf<{ name: string, street: string }>()
+        expectTypeOf<ExtractToObject<{ name: string, address: { street: string, avenue: string } }, "address">>().toEqualTypeOf<{ name: string, street: string, avenue: string }>()
     })
 })

@@ -260,3 +260,11 @@ export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prett
 export type OmitByType<T extends object, U> = {
 	[Property in keyof T as T[Property] extends U ? never : Property]: T[Property];
 };
+
+/**
+ * Extracts the value of a key from an object and returns a new object with that value, 
+ * while keeping the other values unchanged.
+ */
+export type ExtractToObject<T extends object, U extends keyof T> = Prettify<{
+	[Property in keyof T as Property extends U ? never: Property]: T[Property]
+} & T[U]>
