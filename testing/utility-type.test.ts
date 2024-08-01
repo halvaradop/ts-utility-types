@@ -1,5 +1,17 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { Capitalize, Uppercase, Lowercase, TrimLeft, TrimRight, Trim, Merge, Properties, ExtractToObject, PublicType } from "../src/utility-types"
+import type { 
+    Capitalize, 
+    Uppercase, 
+    Lowercase, 
+    TrimLeft, 
+    TrimRight, 
+    Trim, 
+    Merge, 
+    Properties, 
+    ExtractToObject, 
+    PublicType,
+    HasKeyObjects
+} from "../src/utility-types"
 
 
 describe("String mappers", () => {
@@ -78,5 +90,14 @@ describe("PublicType", () => {
         expectTypeOf<PublicType<{ foo: string }>>().toEqualTypeOf<{ foo: string }>();
         expectTypeOf<PublicType<{ foo: string, _bar: string }>>().toEqualTypeOf<{ foo: string }>();
         expectTypeOf<PublicType<{ _foo: string, _bar: string }>>().toEqualTypeOf<{}>();
+    })
+})
+
+describe("HasKeyObjects", () => {
+    test("Exist the key within objects", () => {
+        expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
     })
 })
