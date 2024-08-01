@@ -183,11 +183,7 @@ export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof 
  * from `F` if they have the same key
  */
 export type Merge<T1 extends object, T2 extends object> = {
-	[Property in Properties<T1, T2>]: Property extends keyof T2
-		? T2[Property]
-		: Property extends keyof T1
-			? T1[Property]
-			: never;
+	[Property in Properties<T1, T2>]: HasKeyObjects<T2, T1, Property>
 };
 
 /**
@@ -211,11 +207,7 @@ export type Diff<O1 extends object, O2 extends object> = {
 		P extends keyof O1 & keyof O2 
 			? never
 			: P
-	]: P extends keyof O1 
-		? O1[P]
-		: P extends keyof O2
-			? O2[P]
-			: never;
+	]: HasKeyObjects<O1, O2, P>;
 };
 
 /**
