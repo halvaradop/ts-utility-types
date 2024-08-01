@@ -275,3 +275,13 @@ export type ExtractToObject<T extends object, U extends keyof T> = Prettify<{
 export type PublicType<T extends object> = {
 	[Property in keyof T as Property extends `_${string}` ? never : Property]: T[Property];
 };
+
+/**
+ * Checks if a key exists in either of the two objects and returns its value.
+ * If the key does not exist in either object, it returns `never`.
+ */
+export type HasKeyObjects<O1 extends object, O2 extends object, Key> = Key extends keyof O1
+        ? O1[Key]
+        : Key extends keyof O2
+                ? O2[Key]
+                : never;
