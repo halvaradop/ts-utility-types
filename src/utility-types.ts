@@ -268,3 +268,10 @@ export type OmitByType<T extends object, U> = {
 export type ExtractToObject<T extends object, U extends keyof T> = Prettify<{
 	[Property in keyof T as Property extends U ? never: Property]: T[Property]
 } & T[U]>
+
+/**
+ * Removes the properties whose keys start with an underscore (_).
+ */
+export type PublicType<T extends object> = {
+	[Property in keyof T as Property extends `_${string}` ? never : Property]: T[Property];
+};
