@@ -4,8 +4,18 @@ import type {
     Properties, 
     ExtractToObject, 
     PublicType,
-    HasKeyObjects
+    HasKeyObjects,
+    DeepReadonly
 } from "../src/utility-types"
+
+
+describe("Readonly", () => {
+    test("DeepReadonly for objects", () => {
+        expectTypeOf<DeepReadonly<{ foo: string, bar: number }>>().toEqualTypeOf<{ readonly foo: string, readonly bar: number }>()
+        expectTypeOf<DeepReadonly<{ foo: string, bar: { foo: number } }>>().toEqualTypeOf<{ readonly foo: string, readonly bar: { readonly foo: number } }>()
+        expectTypeOf<DeepReadonly<{ foo: { bar: string }, bar: { foo: number } }>>().toEqualTypeOf<{ readonly foo: { readonly bar: string }, readonly bar: { readonly foo: number } }>()
+    })
+})
 
 
 describe("Properties with keyof", () => {
