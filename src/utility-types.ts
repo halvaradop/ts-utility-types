@@ -13,6 +13,15 @@ export type Prettify<T extends object> = {
 
 /**
  * It creates a new type based on your object but marks every property as readonly
+ * @example
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ * type ReadonlyUser = DeepReadonly<User> // { readonly name: string,  address: { readonly street: string, readonly avenue } }
  */
 export type DeepReadonly<T extends object> = {
     readonly [Property in keyof T]: T[Property] extends Function
@@ -78,8 +87,8 @@ export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infe
 /**
  * Get the type of the function's arguments
  * @example
- * function add(x: number, y: number): number { 
- *     return x + y; 
+ * function add(x: number, y: number): number {
+ *     return x + y;
  * }
  * type AddParams = Parameters<typeof add>; // AddParams = [number, number]
  */
@@ -87,13 +96,24 @@ export type Parameters<T extends ArgsFunction> = T extends (...args: infer P) =>
 
 /**
  * Create a new type with a subset of properties from an object
+ * @example
+ * interface User {
+ *   name: string
+ *   lastname: string,
+ *   age: number
+ * }
+ * type PickUser = Pick<User, "age"> // { age: number }
  */
 export type Pick<T extends object, K extends keyof T> = {
 	[Property in K]: T[Property]
 };
 
 /**
- * Check if a value exists within a tuple and is equal to a specific value.as
+ * Check if a value exists within a tuple and is equal to a specific value
+ * @example
+ * type IncludesNumber = Includes<[1, 2, 3], 3> // true
+ * type IncludesString = Includes<["foo", "bar", "foobar"], "bar"> // true
+ * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar"> // false
  */
 export type Includes<T extends unknown[], U> = T extends [infer Compare, ...infer Items]
 	? Equals<Compare, U> extends true
@@ -114,15 +134,37 @@ export type Omit<T extends object, U> = {
 
 /**
  * Creates a union of the keys of two objects
+ * @example
+ * interface Foo {
+ *   foo: string,
+ * }
+ * 
+ * interface Bar {
+ *   bar: number
+ * }
+ *  
+ * type PropsFooBar = Properties<Foo, Bar> // "foo" | "bar"
  */
 export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof T2;
 
 /**
  * Creates a new object by merging two objects. Properties from `S` override properties 
  * from `F` if they have the same key
+ * @example
+ * interface Config {
+ *   storePaths: string[],
+ *   hooks: unknown[]
+ * }
+ * 
+ * interface AppStore {
+ *   path: string,
+ *   hooks: ArgsFunction[]
+ * }
+ * 
+ * type MergeConfig = Merge<Config, AppStore> // { storePaths: string[], path: string, hooks: ArgsFunction[] }
  */
 export type Merge<T1 extends object, T2 extends object> = {
-	[Property in Properties<T1, T2>]: HasKeyObjects<T2, T1, Property>
+	[Property in Properties<T1, T2>]: HasKeyObjects<T2, T1, Property>;
 };
 
 /**
