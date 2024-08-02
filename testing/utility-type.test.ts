@@ -5,7 +5,8 @@ import type {
     ExtractToObject, 
     PublicType,
     HasKeyObjects,
-    DeepReadonly
+    DeepReadonly,
+    TupleToUnion
 } from "../src/utility-types"
 
 
@@ -14,6 +15,15 @@ describe("Readonly", () => {
         expectTypeOf<DeepReadonly<{ foo: string, bar: number }>>().toEqualTypeOf<{ readonly foo: string, readonly bar: number }>()
         expectTypeOf<DeepReadonly<{ foo: string, bar: { foo: number } }>>().toEqualTypeOf<{ readonly foo: string, readonly bar: { readonly foo: number } }>()
         expectTypeOf<DeepReadonly<{ foo: { bar: string }, bar: { foo: number } }>>().toEqualTypeOf<{ readonly foo: { readonly bar: string }, readonly bar: { readonly foo: number } }>()
+    })
+})
+
+
+describe("TupleToUnion", () => {
+    test("Create union type", () => {
+        expectTypeOf<TupleToUnion<["foo", "bar"]>>().toEqualTypeOf<"foo" | "bar">()
+        expectTypeOf<TupleToUnion<[1, 2]>>().toEqualTypeOf<1 | 2>()
+        expectTypeOf<TupleToUnion<["foo", 1, "bar", 2]>>().toEqualTypeOf<"foo" | "bar" | 1 | 2>()
     })
 })
 
