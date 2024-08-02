@@ -11,12 +11,6 @@ export type {
     Parameters, 
     Pick,
     Omit,
-    Trim,
-    TrimLeft,
-    TrimRight,
-    Lowercase,
-    Uppercase,
-    Capitalize,
     Diff,
     Merge,
     PartialByKeys,
@@ -53,3 +47,12 @@ export type {
 export type {
     IsNever
 } from "./type-guards"
+
+export type {
+    Trim,
+    TrimLeft,
+    TrimRight,
+    Lowercase,
+    Uppercase,
+    Capitalize
+} from "./string-mappers"
