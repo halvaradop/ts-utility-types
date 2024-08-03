@@ -8,7 +8,8 @@ import type {
     DeepReadonly,
     TupleToUnion,
     RequiredByKeys,
-    Filter
+    Filter,
+    MergeKeyObjects
 } from "../src/utility-types"
 
 
@@ -90,5 +91,14 @@ describe("Filter", () => {
         expectTypeOf<Filter<[0, 1, 2, 3, 4], 0 | 4>>().toEqualTypeOf<[0, 4]>()
         expectTypeOf<Filter<[0, 0, 1, 1, 1], 1>>().toEqualTypeOf<[1, 1, 1]>()
         expectTypeOf<Filter<["foo", "bar", "foobar"], "bar">>().toEqualTypeOf<["bar"]>()
+    })
+})
+
+
+describe("MergeKeyObjects", () => {
+    test("Merge the types of the properties of two objects.", () => {
+        expectTypeOf<MergeKeyObjects<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string, bar: string }>()
+        expectTypeOf<MergeKeyObjects<{ foo: string }, { foo: number }>>().toEqualTypeOf<{ foo: string | number }>()
+        expectTypeOf<MergeKeyObjects<{ foo: string | number }, { foo: boolean }>>().toEqualTypeOf<{ foo: string | number | boolean }>()
     })
 })

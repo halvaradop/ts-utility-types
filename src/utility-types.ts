@@ -287,3 +287,27 @@ export type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Pret
 export type Filter<T extends unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
 	? Filter<Items, Predicate, Item extends Predicate ? [...Array, Item] : [...Array]>
 	: Array;
+
+/**
+ * 
+ * Merge the properties of two objects and it the properties are repeated the types create an union
+ * 
+ * @example
+ * interface Foo {
+ *   bar: string
+ * }
+ * 
+ * interface Bar {
+ *   bar: number
+ * }
+ * type MergeFooBar = MergeKeyObjects<Foo, Bar> // { bar: string | number }
+ */
+export type MergeKeyObjects<O1 extends object, O2 extends object> = {
+	[Prop in Properties<O1, O2>]: Prop extends keyof O1
+		? Prop extends keyof O2
+			? O1[Prop] | O2[Prop]
+			: O1[Prop]
+		: Prop extends keyof O2
+			? O2[Prop]
+			: never;
+};
