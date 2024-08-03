@@ -258,3 +258,20 @@ export type HasKeyObjects<O1 extends object, O2 extends object, Key> = Key exten
         : Key extends keyof O2
                 ? O2[Key]
                 : never;
+
+/**
+ * Convert to required the keys speficied in the type `K`, and the others fields mantein
+ * their definition. When `K` is not provided, it should make all properties required 
+ * 
+ * @example
+ * interface User {
+ *   name?: string,
+ *   age?: number,
+ *   address?: string
+ * }
+ * type UserRequiredName = RequiredByKeys<User, "name"> // { name: string, age?: number, address?: string }
+ */
+export type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Prettify<
+	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
+	{ [Property in keyof T as Property extends K ? Property : never]-?: T[Property] }
+>;				
