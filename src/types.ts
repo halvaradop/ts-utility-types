@@ -102,3 +102,8 @@ export interface LetterToLowercase {
     "Y": "y",
     "Z": "z"
 };
+
+/**
+ * Represents the empty values
+ */
+export type Falsy = Nullish | 0 | false | "";
