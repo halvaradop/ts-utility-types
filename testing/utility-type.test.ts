@@ -7,7 +7,8 @@ import type {
     HasKeyObjects,
     DeepReadonly,
     TupleToUnion,
-    RequiredByKeys
+    RequiredByKeys,
+    Filter
 } from "../src/utility-types"
 
 
@@ -79,5 +80,15 @@ describe("RequiredByKeys", () => {
         expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }, "foo">>().toEqualTypeOf<{ foo: string, bar?: number }>()
         expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }, "bar">>().toEqualTypeOf<{ foo?: string, bar: number }>()
         expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }>>().toEqualTypeOf<{ foo: string, bar: number }>()
+    })
+})
+
+
+describe("Filter", () => {
+    test("Filter the elements based in the predicate", () => {
+        expectTypeOf<Filter<[0, 1, 2, 3, 4], 0>>().toEqualTypeOf<[0]>()
+        expectTypeOf<Filter<[0, 1, 2, 3, 4], 0 | 4>>().toEqualTypeOf<[0, 4]>()
+        expectTypeOf<Filter<[0, 0, 1, 1, 1], 1>>().toEqualTypeOf<[1, 1, 1]>()
+        expectTypeOf<Filter<["foo", "bar", "foobar"], "bar">>().toEqualTypeOf<["bar"]>()
     })
 })

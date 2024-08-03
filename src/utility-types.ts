@@ -274,4 +274,16 @@ export type HasKeyObjects<O1 extends object, O2 extends object, Key> = Key exten
 export type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Prettify<
 	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
 	{ [Property in keyof T as Property extends K ? Property : never]-?: T[Property] }
->;				
+>;
+
+/**
+ * Filter the items of a tuple of elements based in the predicate provided in the
+ * generic type.
+ * 
+ * @example
+ * type Filter1 = Filter<[0, 1, 2], 2> // [2]
+ * type Filter2 = Filter<[0, 1, 2], 0 | 1> // [0, 1]
+ */
+export type Filter<T extends unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
+	? Filter<Items, Predicate, Item extends Predicate ? [...Array, Item] : [...Array]>
+	: Array;
