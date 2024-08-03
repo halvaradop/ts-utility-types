@@ -6,7 +6,8 @@ import type {
     PublicType,
     HasKeyObjects,
     DeepReadonly,
-    TupleToUnion
+    TupleToUnion,
+    RequiredByKeys
 } from "../src/utility-types"
 
 
@@ -62,11 +63,21 @@ describe("PublicType", () => {
     })
 })
 
+
 describe("HasKeyObjects", () => {
     test("Exist the key within objects", () => {
         expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
         expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
         expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
         expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
+    })
+})
+
+
+describe("RequiredByKeys", () => {
+    test("Convert required properties in an object", () => {
+        expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }, "foo">>().toEqualTypeOf<{ foo: string, bar?: number }>()
+        expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }, "bar">>().toEqualTypeOf<{ foo?: string, bar: number }>()
+        expectTypeOf<RequiredByKeys<{ foo?: string, bar?: number }>>().toEqualTypeOf<{ foo: string, bar: number }>()
     })
 })
