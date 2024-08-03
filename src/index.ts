@@ -15,7 +15,12 @@ export type {
     Merge,
     PartialByKeys,
     PickByType,
-    Properties
+    Properties,
+    ExtractToObject,
+    HasKeyObjects,
+    OmitByType,
+    PublicType,
+    RequiredByKeys
 } from "./utility-types"
 
 export type { 
