@@ -329,3 +329,23 @@ export type MergeKeyObjects<O1 extends object, O2 extends object> = {
 export type Mutable<T extends object> = {
 	-readonly[Property in keyof T]: T[Property]
 }
+
+/**
+ * Converts all properties to non-readonly of alls levels of the object type,
+ * This is an advanced utility type of `Mutable`
+ * 
+ * @example
+ * interface Foo { 
+ *   readonly foo: { 
+ *     readonly bar: {
+ *       readonly foobar: number 
+ *     } 
+ *   } 
+ * }
+ * type NonReadonlyFoo = DeepMutable<Foo> // { foo: { bar: { foobar: number } } }
+ */
+export type DeepMutable<T extends object> = {
+	-readonly[Property in keyof T]: T[Property] extends object
+		? DeepMutable<T[Property]>
+		: T[Property];
+};

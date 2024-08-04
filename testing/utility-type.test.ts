@@ -10,7 +10,8 @@ import type {
     RequiredByKeys,
     Filter,
     MergeKeyObjects,
-    Mutable
+    Mutable,
+    DeepMutable
 } from "../src/utility-types"
 
 
@@ -109,5 +110,40 @@ describe("Mutable", () => {
     test("Converts properties to non readonly only one level", () => {
         expectTypeOf<Mutable<{ readonly foo: string }>>().toEqualTypeOf<{ foo: string }>()
         expectTypeOf<Mutable<{ readonly foo: string, readonly bar: { readonly foobar: number } }>>().toEqualTypeOf<{ foo: string, bar: { readonly foobar: number } }>()
+    })
+})
+
+
+describe("DeepMutable", () => {
+    test("Converts all properties to non readonly of an object type", () => {
+        interface Test5 {
+            foo: [
+                { bar: string },
+                {
+                    foobar: {
+                        foofoo: number
+                    }
+                }
+            ]
+        }
+
+        interface Test6 {
+            foo: {
+                bar: [
+                    {
+                        foobar: string,
+                        barfoo: {
+                            foofoo: number
+                        }
+                    }
+                ]
+            }
+        }
+        expectTypeOf<DeepMutable<DeepReadonly<{ foo: string }>>>().toEqualTypeOf<{ foo: string }>()
+        expectTypeOf<DeepMutable<DeepReadonly<{ foo: { bar: number }}>>>().toEqualTypeOf<{ foo: { bar: number }}>()
+        expectTypeOf<DeepMutable<DeepReadonly<{ foo: { bar: { foobar: number } } }>>>().toEqualTypeOf<{ foo: { bar: { foobar: number } } }>()
+        expectTypeOf<DeepMutable<DeepReadonly<{ foo: [{ bar: string, foobar: number }] }>>>().toEqualTypeOf<{ foo: [{ bar: string, foobar: number }] }>()
+        expectTypeOf<DeepMutable<DeepReadonly<Test5>>>().toEqualTypeOf<Test5>()
+        expectTypeOf<DeepMutable<DeepReadonly<Test6>>>().toEqualTypeOf<Test6>()
     })
 })
