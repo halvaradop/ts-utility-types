@@ -20,7 +20,12 @@ export type {
     HasKeyObjects,
     OmitByType,
     PublicType,
-    RequiredByKeys
+    RequiredByKeys,
+    Filter,
+    Mutable,
+    DeepMutable,
+    MergeKeyObjects,
+    MergeAll,
 } from "./utility-types"
 
 export type { 
