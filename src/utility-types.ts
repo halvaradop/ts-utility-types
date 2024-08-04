@@ -385,3 +385,15 @@ export type MergeAll<Tuple extends readonly object[], Merge extends object = {}>
  * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
  */
 export type ToUnion<T> = T extends [infer Item, ...infer Items] ? Item | ToUnion<Items> : T;
+
+/**
+ * Cleans the elements of a tuple based in the predicated, it returns the values that 
+ * does not match with the predicated
+ * 
+ * @example
+ * type CleanNumbers = Without<[1, 2, 3, 4, 5], [4, 5]> // [1, 2, 3]
+ * type CleanStrings = Without<["foo", "bar", "foobar"], "foo"> // ["bar", "foobar"]
+ */
+export type Without<T extends readonly unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
+		? Without<Items, Predicate, Item extends ToUnion<Predicate> ? Array : [...Array, Item]>
+		: Array;

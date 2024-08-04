@@ -13,7 +13,8 @@ import type {
     Mutable,
     DeepMutable,
     MergeAll,
-    ToUnion
+    ToUnion,
+    Without
 } from "../src/utility-types"
 
 
@@ -171,5 +172,16 @@ describe("ToUnion", () => {
         expectTypeOf<ToUnion<"foo">>().toEqualTypeOf<"foo">()
         expectTypeOf<ToUnion<12 | 21>>().toEqualTypeOf<12 | 21>()
         expectTypeOf<ToUnion<[12, 21, "foo"]>>().toEqualTypeOf<12 | 21 | "foo" | []>()
+    })
+})
+
+
+describe("Without", () => {
+    test("Removes the elements present in the predicate", () => {
+        expectTypeOf<Without<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>
+        expectTypeOf<Without<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>
+        expectTypeOf<Without<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
+        expectTypeOf<Without<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
+        expectTypeOf<Without<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
     })
 })
