@@ -12,7 +12,8 @@ import type {
     MergeKeyObjects,
     Mutable,
     DeepMutable,
-    MergeAll
+    MergeAll,
+    ToUnion
 } from "../src/utility-types"
 
 
@@ -160,5 +161,15 @@ describe("MergeAll", () => {
             foobar: string
         }
         expectTypeOf<MergeAll<[{ foo: string }, { bar: string }, { bar: number, foo: boolean, foobar: string }]>>().toEqualTypeOf<Expect3>()
+    })
+})
+
+
+describe("ToUnion", () => {
+    test("Create an union type", () => {
+        expectTypeOf<ToUnion<12>>().toEqualTypeOf<12>()
+        expectTypeOf<ToUnion<"foo">>().toEqualTypeOf<"foo">()
+        expectTypeOf<ToUnion<12 | 21>>().toEqualTypeOf<12 | 21>()
+        expectTypeOf<ToUnion<[12, 21, "foo"]>>().toEqualTypeOf<12 | 21 | "foo" | []>()
     })
 })

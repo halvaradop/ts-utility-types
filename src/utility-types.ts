@@ -373,3 +373,15 @@ export type MergeAll<Tuple extends readonly object[], Merge extends object = {}>
 	Tuple extends [infer Item, ...infer Items]
 		? MergeAll<Items extends object[] ? Items : never, MergeKeyObjects<Merge, Item extends object ? Item : {}>>
 		: Merge;
+
+/**
+ * Create an union type based in the literal values of the tuple provided.
+ * This utility type is similar to `TupleToUnion` but this utility type 
+ * receive whatever type
+ * 
+ * @example
+ * type TupleNumber = ToUnion<1> // 1
+ * type TupleString = ToUnion<"foo"> // foo
+ * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
+ */
+export type ToUnion<T> = T extends [infer Item, ...infer Items] ? Item | ToUnion<Items> : T;
