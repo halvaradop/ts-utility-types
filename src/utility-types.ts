@@ -311,3 +311,21 @@ export type MergeKeyObjects<O1 extends object, O2 extends object> = {
 			? O2[Prop]
 			: never;
 };
+
+/**
+ * Converts top-level readonly properties of an object to mutable properties.
+ *
+ * **Important:** Only affects top-level properties, not nested properties.
+ *
+ * @example
+ * interface User {
+ *   readonly name: string;
+ *   readonly lastname: string;
+ *   readonly age: number;
+ * }
+ *
+ * type NonReadonlyUser = Mutable<User>; // { name: string, lastname: string, age: number }
+ */
+export type Mutable<T extends object> = {
+	-readonly[Property in keyof T]: T[Property]
+}
