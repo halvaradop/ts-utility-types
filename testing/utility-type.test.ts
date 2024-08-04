@@ -11,7 +11,8 @@ import type {
     Filter,
     MergeKeyObjects,
     Mutable,
-    DeepMutable
+    DeepMutable,
+    MergeAll
 } from "../src/utility-types"
 
 
@@ -145,5 +146,19 @@ describe("DeepMutable", () => {
         expectTypeOf<DeepMutable<DeepReadonly<{ foo: [{ bar: string, foobar: number }] }>>>().toEqualTypeOf<{ foo: [{ bar: string, foobar: number }] }>()
         expectTypeOf<DeepMutable<DeepReadonly<Test5>>>().toEqualTypeOf<Test5>()
         expectTypeOf<DeepMutable<DeepReadonly<Test6>>>().toEqualTypeOf<Test6>()
+    })
+})
+
+
+describe("MergeAll", () => {
+    test("Merge the properties of a tuple of objects", () => {
+        expectTypeOf<MergeAll<[{ foo: string }, { bar: number }]>>().toEqualTypeOf<{ foo: string, bar: number }>()
+        expectTypeOf<MergeAll<[{ foo: string }, { bar: { foobar: number } }]>>().toEqualTypeOf<{ foo: string, bar: { foobar: number } }>()
+        type Expect3 = { 
+            foo: string | boolean, 
+            bar: number | string, 
+            foobar: string
+        }
+        expectTypeOf<MergeAll<[{ foo: string }, { bar: string }, { bar: number, foo: boolean, foobar: string }]>>().toEqualTypeOf<Expect3>()
     })
 })

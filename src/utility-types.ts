@@ -349,3 +349,27 @@ export type DeepMutable<T extends object> = {
 		? DeepMutable<T[Property]>
 		: T[Property];
 };
+
+/**
+ * Create a new object type based in the tuple of object types, if the properties
+ * are duplicated will create an union type.
+ * 
+ * @example
+ * interface Foo {
+ *   foo: string
+ * }
+ * interface Bar {
+ *   bar: string
+ * }
+ * interface FooBar {
+ *   bar: number,
+ *   foo: boolean,
+ *   foobar: string
+ * }
+ * type Merge = MergeAll<[Foo, Bar, FooBar]> 
+ * // { foo: string | boolean, bar: string | number, foobar: string }
+ */
+export type MergeAll<Tuple extends readonly object[], Merge extends object = {}> =
+	Tuple extends [infer Item, ...infer Items]
+		? MergeAll<Items extends object[] ? Items : never, MergeKeyObjects<Merge, Item extends object ? Item : {}>>
+		: Merge;
