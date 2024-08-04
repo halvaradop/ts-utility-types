@@ -9,7 +9,8 @@ import type {
     TupleToUnion,
     RequiredByKeys,
     Filter,
-    MergeKeyObjects
+    MergeKeyObjects,
+    Mutable
 } from "../src/utility-types"
 
 
@@ -100,5 +101,13 @@ describe("MergeKeyObjects", () => {
         expectTypeOf<MergeKeyObjects<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string, bar: string }>()
         expectTypeOf<MergeKeyObjects<{ foo: string }, { foo: number }>>().toEqualTypeOf<{ foo: string | number }>()
         expectTypeOf<MergeKeyObjects<{ foo: string | number }, { foo: boolean }>>().toEqualTypeOf<{ foo: string | number | boolean }>()
+    })
+})
+
+
+describe("Mutable", () => {
+    test("Converts properties to non readonly only one level", () => {
+        expectTypeOf<Mutable<{ readonly foo: string }>>().toEqualTypeOf<{ foo: string }>()
+        expectTypeOf<Mutable<{ readonly foo: string, readonly bar: { readonly foobar: number } }>>().toEqualTypeOf<{ foo: string, bar: { readonly foobar: number } }>()
     })
 })
