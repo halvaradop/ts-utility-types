@@ -423,3 +423,17 @@ export type Without<T extends readonly unknown[], Predicate, Array extends unkno
 export type AppendToObject<T extends object, U extends string, V> = {
 	[Property in keyof T | U]: Property extends keyof T ? T[Property] : V
 }
+
+/**
+ * Change the relative ordern of the elements of a tuple type, reversing
+ * its order
+ * 
+ * @example
+ * type ReverseNumbers = Reverse<[1, 2, 3, 4]> // [1, 2, 3, 4]
+ * type ReverseStrings = Reverse<["a", "b", "c"]> // ["a", "b", "c"]
+ * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>
+ * // [() => void, { foo: number }, "bar", 2, "foo", 1]
+ */
+export type Reverse<T extends unknown[]> = T extends [infer Item, ...infer Items]
+	? [...Reverse<Items>, Item]
+	: T;

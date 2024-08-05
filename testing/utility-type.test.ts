@@ -15,7 +15,8 @@ import type {
     MergeAll,
     ToUnion,
     Without,
-    AppendToObject    
+    AppendToObject,    
+    Reverse
 } from "../src/utility-types"
 
 
@@ -194,5 +195,14 @@ describe("AppendToObject", () => {
         expectTypeOf<AppendToObject<{ foo: string }, "bar", { foobar: number, barfoo: boolean }>>().toEqualTypeOf<{ foo: string, bar: { foobar: number, barfoo: boolean } }>()
         expectTypeOf<AppendToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{ foo: string, bar: [1, 2, 3] }>()
         expectTypeOf<AppendToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{ foo: string, bar: string | boolean | number }>()
+    })
+})
+
+
+describe("Reverse", () => {
+    test("Reverse the elements of a tuple type", () => {
+        expectTypeOf<Reverse<[1, 2, 3, 4]>>().toEqualTypeOf<[4, 3, 2, 1]>()
+        expectTypeOf<Reverse<["a", "b", "c"]>>().toEqualTypeOf<["c", "b", "a"]>()
+        expectTypeOf<Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>>().toEqualTypeOf<[() => void, { foo: number }, "bar", 2, "foo", 1]>()
     })
 })
