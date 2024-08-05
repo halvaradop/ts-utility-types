@@ -63,3 +63,16 @@ export type Capitalize<S extends string, F extends boolean = true> = S extends `
 				: `${Lowercase<Char>}${Capitalize<Characters, false>}`
 		: S
 	: S;
+
+/**
+ * Create a string type based on the values of a tuple type `T`, joining the values
+ * separated by the `Separator` character. The separator can be either a string or a number.
+ * 
+ * @example
+ * type Join1 = Join<["a", "p", "p", "l", "e"], "-"> // "a-p-p-l-e"
+ * type Join2 = Join<["Hello", "World"], " "> // "Hello World"
+ */
+export type Join<T extends unknown[], Separator extends number | string, Str extends string = ""> = 
+	T extends [infer Char, ...infer Chars]
+		? Join<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
+		: Str;

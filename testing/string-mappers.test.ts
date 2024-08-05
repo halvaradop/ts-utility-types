@@ -6,6 +6,7 @@ import type {
     TrimLeft,
     TrimRight,
     Trim,
+    Join
 } from "../src/string-mappers"
 
 
@@ -51,4 +52,12 @@ describe("String mappers", () => {
         expectTypeOf<Capitalize<"Foo bar">>().toMatchTypeOf<"Foo Bar">()
         expectTypeOf<Capitalize<"Foo Bar">>().toMatchTypeOf<"Foo Bar">()
     })
+})
+
+
+describe("Join", () => {
+    test("Join the elements of a tuple separated by a character", () => {})
+    expectTypeOf<Join<["a", "p", "p", "l", "e"], "-">>().toEqualTypeOf<"a-p-p-l-e">()
+    expectTypeOf<Join<["Hello", "World"], " ">>().toEqualTypeOf<"Hello World">()
+    expectTypeOf<Join<["2", "2", "2"], "1">>().toEqualTypeOf<"21212">()
 })
