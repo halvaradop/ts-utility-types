@@ -20,6 +20,9 @@ import { Prettify } from "@halvaradop/ts-utility-types"
 export type Store = Prettify<StoreState & StoreConfig>
 ```
 
+## TypeHero Challenges
+This repository offers solutions to challenges found on [TypeHero](https://typehero.dev/), constructed entirely from scratch without leveraging built-in TypeScript utility types
+
 ## Contributing
 We welcome contributions to `@halvaradop/ts-utility-types`! If you have an idea for a new type or find an improvement to an existing one, please feel free to open an issue or create a pull request. We offer a guide on how to contribute to the project and the necessary steps to do so. Here's how you can contribute, Read our [Contribuing Guideline](https://github.com/halvaradop/.github/blob/master/.github/CONTRIBUTING.md).
 
