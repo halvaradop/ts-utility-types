@@ -437,3 +437,20 @@ export type AppendToObject<T extends object, U extends string, V> = {
 export type Reverse<T extends unknown[]> = T extends [infer Item, ...infer Items]
 	? [...Reverse<Items>, Item]
 	: T;
+
+/**
+ * Returns the first index where the element `U` appears in the tuple type `T`.
+ * If the element `U` does not appear, it returns `-1`.
+ * 
+ * @example
+ * type IndexOf1 = IndexOf<[0, 0, 0], 2> // -1
+ * type IndexOf2 = IndexOf<[string, 1, number, "a"], number> // 2
+ * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any> // 4
+ * type IndexOf4 = IndexOf<[string, "a"], "a"> // 1
+ */
+export type IndexOf<T extends unknown[], U, Index extends unknown[] = []> = 
+	T extends [infer Item, ...infer Items]
+		? Equals<Item, U> extends true
+			? Index["length"]
+			: IndexOf<Items, U, [...Index, Item]>
+		: -1;

@@ -1,4 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
+
 import type { 
     Merge, 
     Properties, 
@@ -16,7 +17,8 @@ import type {
     ToUnion,
     Without,
     AppendToObject,    
-    Reverse
+    Reverse,
+    IndexOf
 } from "../src/utility-types"
 
 
@@ -204,5 +206,15 @@ describe("Reverse", () => {
         expectTypeOf<Reverse<[1, 2, 3, 4]>>().toEqualTypeOf<[4, 3, 2, 1]>()
         expectTypeOf<Reverse<["a", "b", "c"]>>().toEqualTypeOf<["c", "b", "a"]>()
         expectTypeOf<Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>>().toEqualTypeOf<[() => void, { foo: number }, "bar", 2, "foo", 1]>()
+    })
+})
+
+
+describe("IndexOf", () => {
+    test("Get first index of an element", () => {
+            expectTypeOf<IndexOf<[0, 0, 0], 2>>().toEqualTypeOf<-1>()
+            expectTypeOf<IndexOf<[string, 1, number, "a"], number>>().toEqualTypeOf<2>()
+            expectTypeOf<IndexOf<[string, 1, number, "a", any], any>>().toEqualTypeOf<4>()
+            expectTypeOf<IndexOf<[string, "a"], "a">>().toEqualTypeOf<1>()
     })
 })
