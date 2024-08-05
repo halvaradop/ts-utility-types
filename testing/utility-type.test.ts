@@ -14,7 +14,8 @@ import type {
     DeepMutable,
     MergeAll,
     ToUnion,
-    Without
+    Without,
+    AppendToObject    
 } from "../src/utility-types"
 
 
@@ -183,5 +184,15 @@ describe("Without", () => {
         expectTypeOf<Without<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
         expectTypeOf<Without<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
         expectTypeOf<Without<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
+    })
+})
+
+
+describe("AppendToObject", () => {
+    test("Append a new property of an exist object type", () => {
+        expectTypeOf<AppendToObject<{ foo: string }, "bar", number>>().toEqualTypeOf<{ foo: string, bar: number }>()
+        expectTypeOf<AppendToObject<{ foo: string }, "bar", { foobar: number, barfoo: boolean }>>().toEqualTypeOf<{ foo: string, bar: { foobar: number, barfoo: boolean } }>()
+        expectTypeOf<AppendToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{ foo: string, bar: [1, 2, 3] }>()
+        expectTypeOf<AppendToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{ foo: string, bar: string | boolean | number }>()
     })
 })

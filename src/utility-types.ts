@@ -397,3 +397,16 @@ export type ToUnion<T> = T extends [infer Item, ...infer Items] ? Item | ToUnion
 export type Without<T extends readonly unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
 		? Without<Items, Predicate, Item extends ToUnion<Predicate> ? Array : [...Array, Item]>
 		: Array;
+
+/**
+ * Create a new object type appending a new property with its value
+ * 
+ * @example
+ * interface User {
+ *   name: string
+ * }
+ * type UserAppendLastname = AppendToObject<User, "lastname", string>
+ */
+export type AppendToObject<T extends object, U extends string, V> = {
+	[Property in keyof T | U]: Property extends keyof T ? T[Property] : V
+}
