@@ -13,6 +13,7 @@ export type Prettify<T extends object> = {
 
 /**
  * It creates a new type based on your object but marks every property as readonly
+ * 
  * @example
  * interface User {
  *   name: string,
@@ -56,6 +57,7 @@ export type Size<T extends unknown[]> = T extends unknown[] ? T["length"] : 0;
 
 /**
  * Gets the type of the last element in an array, or `never` if the array is empty.
+ * 
  * @example
  * type LastItem = Last<1, 2, 3, 4> // 4
  */
@@ -64,6 +66,7 @@ export type Last<T extends unknown[]> = T extends [...any, infer Last] ? Last : 
 /**
  * Removes the last element from an array and returns a new array type with all elements 
  * except the last. If the array is empty, returns an empty array type
+ * 
  * @example
  * type PopStr = Pop<["a", "b", "c"]> // ["a", "b"]
  * type PopNums = Pop<[1, 2, 3]> // [1, 2]
@@ -86,6 +89,7 @@ export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infe
 
 /**
  * Get the type of the function's arguments
+ * 
  * @example
  * function add(x: number, y: number): number {
  *     return x + y;
@@ -96,6 +100,7 @@ export type Parameters<T extends ArgsFunction> = T extends (...args: infer P) =>
 
 /**
  * Create a new type with a subset of properties from an object
+ * 
  * @example
  * interface User {
  *   name: string
@@ -110,6 +115,7 @@ export type Pick<T extends object, K extends keyof T> = {
 
 /**
  * Check if a value exists within a tuple and is equal to a specific value
+ * 
  * @example
  * type IncludesNumber = Includes<[1, 2, 3], 3> // true
  * type IncludesString = Includes<["foo", "bar", "foobar"], "bar"> // true
@@ -123,6 +129,7 @@ export type Includes<T extends unknown[], U> = T extends [infer Compare, ...infe
 
 /**
  * Creates a new type that omits properties from an object type based on another type
+ * 
  * @example
  * type Person = { name: string; age: number; email: string };
  * type NoEmailPerson = Omit<Person, "email">;  // NoEmailPerson = { name: string; age: number }
@@ -134,6 +141,7 @@ export type Omit<T extends object, U> = {
 
 /**
  * Creates a union of the keys of two objects
+ * 
  * @example
  * interface Foo {
  *   foo: string,
@@ -150,6 +158,7 @@ export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof 
 /**
  * Creates a new object by merging two objects. Properties from `S` override properties 
  * from `F` if they have the same key
+ * 
  * @example
  * interface Config {
  *   storePaths: string[],
@@ -169,6 +178,7 @@ export type Merge<T1 extends object, T2 extends object> = {
 
 /**
  * Create a new object based in the difference keys between the objects.
+ * 
  * @example
  * type Foo = {
  * 	name: string
@@ -193,6 +203,7 @@ export type Diff<O1 extends object, O2 extends object> = {
 
 /**
  * Create a new object based in the type of its keys
+ * 
  * @example
  * interface User {
  * 	name: string,
@@ -207,6 +218,7 @@ export type PickByType<T extends object, U> = {
 
 /**
  * Converts the specified keys of an object into optional ones
+ * 
  * @example
  * interface User {
  * 	name: string,
@@ -222,6 +234,7 @@ export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prett
 
 /**
  * Create a new object based in the keys that are not assignable of type U
+ * 
  * @example
  * interface User {
  * 	name: string,
