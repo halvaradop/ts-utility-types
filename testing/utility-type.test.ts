@@ -18,7 +18,8 @@ import type {
     Without,
     AppendToObject,    
     Reverse,
-    IndexOf
+    IndexOf,
+    LastIndexOf
 } from "../src/utility-types"
 
 
@@ -212,9 +213,17 @@ describe("Reverse", () => {
 
 describe("IndexOf", () => {
     test("Get first index of an element", () => {
-            expectTypeOf<IndexOf<[0, 0, 0], 2>>().toEqualTypeOf<-1>()
-            expectTypeOf<IndexOf<[string, 1, number, "a"], number>>().toEqualTypeOf<2>()
-            expectTypeOf<IndexOf<[string, 1, number, "a", any], any>>().toEqualTypeOf<4>()
-            expectTypeOf<IndexOf<[string, "a"], "a">>().toEqualTypeOf<1>()
+        expectTypeOf<IndexOf<[0, 0, 0], 2>>().toEqualTypeOf<-1>()
+        expectTypeOf<IndexOf<[string, 1, number, "a"], number>>().toEqualTypeOf<2>()
+        expectTypeOf<IndexOf<[string, 1, number, "a", any], any>>().toEqualTypeOf<4>()
+        expectTypeOf<IndexOf<[string, "a"], "a">>().toEqualTypeOf<1>()
+    })
+
+
+    test("Get last index of an element", () => {
+        expectTypeOf<LastIndexOf<[1, 2, 3, 2, 1], 2>>().toEqualTypeOf<3>()
+        expectTypeOf<LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>>().toEqualTypeOf<7>()
+        expectTypeOf<LastIndexOf<[string, 2, number, 'a', number, 1], number>>().toEqualTypeOf<4>()
+        expectTypeOf<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>>().toEqualTypeOf<5>()
     })
 })
