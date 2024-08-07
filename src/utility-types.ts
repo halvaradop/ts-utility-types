@@ -454,3 +454,20 @@ export type IndexOf<T extends unknown[], U, Index extends unknown[] = []> =
 			? Index["length"]
 			: IndexOf<Items, U, [...Index, Item]>
 		: -1;
+
+/**
+ * Returns the last index where the element `U` appears in the tuple type `T`.
+ * If the element `U` does not appear, it returns `-1`.
+ * 
+ * @example
+ * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> // 3
+ * type LastIndexOf2 = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3> // 7
+ * type LastIndexOf3 = LastIndexOf<[string, 2, number, 'a', number, 1], number> // 4
+ * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, 'a', any, 1], any> // 5
+ */
+export type LastIndexOf<T extends unknown[], U, Index extends unknown[] = [], IndexOf extends unknown[] = []> = 
+	T extends [infer Item, ...infer Items]
+		? LastIndexOf<Items, U, [...Index, Item], Equals<Item, U> extends true ? [...IndexOf, Index["length"]] : IndexOf>
+		: IndexOf extends [...any, infer Item]
+			? Item
+			: -1;
