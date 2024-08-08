@@ -26,6 +26,12 @@ export type {
     DeepMutable,
     MergeKeyObjects,
     MergeAll,
+    AppendToObject,
+    ToUnion,
+    Without,
+    Reverse,
+    IndexOf,
+    LastIndexOf
 } from "./utility-types"
 
 export type { 
