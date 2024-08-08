@@ -19,7 +19,8 @@ import type {
     AppendToObject,    
     Reverse,
     IndexOf,
-    LastIndexOf
+    LastIndexOf,
+    Diff
 } from "../src/utility-types"
 
 
@@ -225,5 +226,14 @@ describe("IndexOf", () => {
         expectTypeOf<LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>>().toEqualTypeOf<7>()
         expectTypeOf<LastIndexOf<[string, 2, number, 'a', number, 1], number>>().toEqualTypeOf<4>()
         expectTypeOf<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>>().toEqualTypeOf<5>()
+    })
+})
+
+
+describe("Difference", () => {
+    test("Difference of properties between two objects", () => {
+        expectTypeOf<Diff<{ foo: string }, { foo: number, bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
+        expectTypeOf<Diff<{ foo: string, bar: boolean }, { bar: number, foo: bigint }>>().toEqualTypeOf<{}>()
+        expectTypeOf<Diff<{ foo: string, bar: { bar: number } }, { barfoo: { bar: number }, foo: bigint }>>().toEqualTypeOf<{ bar: { bar: number }, barfoo: { bar: number } }>()
     })
 })
