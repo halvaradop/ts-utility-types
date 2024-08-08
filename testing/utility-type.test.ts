@@ -20,7 +20,10 @@ import type {
     Reverse,
     IndexOf,
     LastIndexOf,
-    Diff
+    Diff,
+    Pop,
+    Last,
+    Size
 } from "../src/utility-types"
 
 
@@ -235,5 +238,26 @@ describe("Difference", () => {
         expectTypeOf<Diff<{ foo: string }, { foo: number, bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
         expectTypeOf<Diff<{ foo: string, bar: boolean }, { bar: number, foo: bigint }>>().toEqualTypeOf<{}>()
         expectTypeOf<Diff<{ foo: string, bar: { bar: number } }, { barfoo: { bar: number }, foo: bigint }>>().toEqualTypeOf<{ bar: { bar: number }, barfoo: { bar: number } }>()
+    })
+})
+
+
+describe("Tuple methods", () => {
+    test("Retrieve the last element of a tuple", () => {
+        expectTypeOf<Last<[]>>().toEqualTypeOf<never>()
+        expectTypeOf<Last<[1, 2, 3]>>().toEqualTypeOf<3>()
+        expectTypeOf<Last<["foo", "bar", "foobar"]>>().toEqualTypeOf<"foobar">()
+    })
+
+    test("Remove the last element of a tuple", () => {
+        expectTypeOf<Pop<[]>>().toEqualTypeOf<[]>()
+        expectTypeOf<Pop<[1, 2, 3]>>().toEqualTypeOf<[1, 2]>()
+        expectTypeOf<Pop<["foo", "bar", "foobar"]>>().toEqualTypeOf<["foo", "bar"]>()
+    })
+
+    test("Returns the size of the tuple", () => {
+        expectTypeOf<Size<[]>>().toEqualTypeOf<0>()
+        expectTypeOf<Size<[1, 2, 3]>>().toEqualTypeOf<3>()
+        expectTypeOf<Size<["foo", "bar", "foobar", 1 , 2, never, () => void, { foo: string }]>>().toEqualTypeOf<8>()
     })
 })
