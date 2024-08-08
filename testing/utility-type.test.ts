@@ -99,16 +99,6 @@ describe("RequiredByKeys", () => {
 })
 
 
-describe("Filter", () => {
-    test("Filter the elements based in the predicate", () => {
-        expectTypeOf<Filter<[0, 1, 2, 3, 4], 0>>().toEqualTypeOf<[0]>()
-        expectTypeOf<Filter<[0, 1, 2, 3, 4], 0 | 4>>().toEqualTypeOf<[0, 4]>()
-        expectTypeOf<Filter<[0, 0, 1, 1, 1], 1>>().toEqualTypeOf<[1, 1, 1]>()
-        expectTypeOf<Filter<["foo", "bar", "foobar"], "bar">>().toEqualTypeOf<["bar"]>()
-    })
-})
-
-
 describe("MergeKeyObjects", () => {
     test("Merge the types of the properties of two objects.", () => {
         expectTypeOf<MergeKeyObjects<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string, bar: string }>()
@@ -185,50 +175,12 @@ describe("ToUnion", () => {
 })
 
 
-describe("Without", () => {
-    test("Removes the elements present in the predicate", () => {
-        expectTypeOf<Without<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>
-        expectTypeOf<Without<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>
-        expectTypeOf<Without<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
-        expectTypeOf<Without<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
-        expectTypeOf<Without<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
-    })
-})
-
-
 describe("AppendToObject", () => {
     test("Append a new property of an exist object type", () => {
         expectTypeOf<AppendToObject<{ foo: string }, "bar", number>>().toEqualTypeOf<{ foo: string, bar: number }>()
         expectTypeOf<AppendToObject<{ foo: string }, "bar", { foobar: number, barfoo: boolean }>>().toEqualTypeOf<{ foo: string, bar: { foobar: number, barfoo: boolean } }>()
         expectTypeOf<AppendToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{ foo: string, bar: [1, 2, 3] }>()
         expectTypeOf<AppendToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{ foo: string, bar: string | boolean | number }>()
-    })
-})
-
-
-describe("Reverse", () => {
-    test("Reverse the elements of a tuple type", () => {
-        expectTypeOf<Reverse<[1, 2, 3, 4]>>().toEqualTypeOf<[4, 3, 2, 1]>()
-        expectTypeOf<Reverse<["a", "b", "c"]>>().toEqualTypeOf<["c", "b", "a"]>()
-        expectTypeOf<Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>>().toEqualTypeOf<[() => void, { foo: number }, "bar", 2, "foo", 1]>()
-    })
-})
-
-
-describe("IndexOf", () => {
-    test("Get first index of an element", () => {
-        expectTypeOf<IndexOf<[0, 0, 0], 2>>().toEqualTypeOf<-1>()
-        expectTypeOf<IndexOf<[string, 1, number, "a"], number>>().toEqualTypeOf<2>()
-        expectTypeOf<IndexOf<[string, 1, number, "a", any], any>>().toEqualTypeOf<4>()
-        expectTypeOf<IndexOf<[string, "a"], "a">>().toEqualTypeOf<1>()
-    })
-
-
-    test("Get last index of an element", () => {
-        expectTypeOf<LastIndexOf<[1, 2, 3, 2, 1], 2>>().toEqualTypeOf<3>()
-        expectTypeOf<LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>>().toEqualTypeOf<7>()
-        expectTypeOf<LastIndexOf<[string, 2, number, 'a', number, 1], number>>().toEqualTypeOf<4>()
-        expectTypeOf<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>>().toEqualTypeOf<5>()
     })
 })
 
@@ -243,21 +195,76 @@ describe("Difference", () => {
 
 
 describe("Tuple methods", () => {
-    test("Retrieve the last element of a tuple", () => {
-        expectTypeOf<Last<[]>>().toEqualTypeOf<never>()
-        expectTypeOf<Last<[1, 2, 3]>>().toEqualTypeOf<3>()
-        expectTypeOf<Last<["foo", "bar", "foobar"]>>().toEqualTypeOf<"foobar">()
+    describe("Last", () => {    
+        test("Retrieve the last element of a tuple", () => {
+            expectTypeOf<Last<[]>>().toEqualTypeOf<never>()
+            expectTypeOf<Last<[1, 2, 3]>>().toEqualTypeOf<3>()
+            expectTypeOf<Last<["foo", "bar", "foobar"]>>().toEqualTypeOf<"foobar">()
+        })
     })
 
-    test("Remove the last element of a tuple", () => {
-        expectTypeOf<Pop<[]>>().toEqualTypeOf<[]>()
-        expectTypeOf<Pop<[1, 2, 3]>>().toEqualTypeOf<[1, 2]>()
-        expectTypeOf<Pop<["foo", "bar", "foobar"]>>().toEqualTypeOf<["foo", "bar"]>()
+
+    describe("Pop", () => {
+        test("Remove the last element of a tuple", () => {
+            expectTypeOf<Pop<[]>>().toEqualTypeOf<[]>()
+            expectTypeOf<Pop<[1, 2, 3]>>().toEqualTypeOf<[1, 2]>()
+            expectTypeOf<Pop<["foo", "bar", "foobar"]>>().toEqualTypeOf<["foo", "bar"]>()
+        })
     })
 
-    test("Returns the size of the tuple", () => {
-        expectTypeOf<Size<[]>>().toEqualTypeOf<0>()
-        expectTypeOf<Size<[1, 2, 3]>>().toEqualTypeOf<3>()
-        expectTypeOf<Size<["foo", "bar", "foobar", 1 , 2, never, () => void, { foo: string }]>>().toEqualTypeOf<8>()
+
+    describe("Size", () => {
+        test("Returns the size of the tuple", () => {
+            expectTypeOf<Size<[]>>().toEqualTypeOf<0>()
+            expectTypeOf<Size<[1, 2, 3]>>().toEqualTypeOf<3>()
+            expectTypeOf<Size<["foo", "bar", "foobar", 1 , 2, never, () => void, { foo: string }]>>().toEqualTypeOf<8>()
+        })
+    })
+
+
+    describe("Filter", () => {
+        test("Filter the elements based in the predicate", () => {
+            expectTypeOf<Filter<[0, 1, 2, 3, 4], 0>>().toEqualTypeOf<[0]>()
+            expectTypeOf<Filter<[0, 1, 2, 3, 4], 0 | 4>>().toEqualTypeOf<[0, 4]>()
+            expectTypeOf<Filter<[0, 0, 1, 1, 1], 1>>().toEqualTypeOf<[1, 1, 1]>()
+            expectTypeOf<Filter<["foo", "bar", "foobar"], "bar">>().toEqualTypeOf<["bar"]>()
+        })
+    })
+
+
+    describe("Without", () => {
+        test("Removes the elements present in the predicate", () => {
+            expectTypeOf<Without<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>
+            expectTypeOf<Without<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>
+            expectTypeOf<Without<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
+            expectTypeOf<Without<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
+            expectTypeOf<Without<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
+        })
+    })
+
+
+    describe("Reverse", () => {
+        test("Reverse the elements of a tuple type", () => {
+            expectTypeOf<Reverse<[1, 2, 3, 4]>>().toEqualTypeOf<[4, 3, 2, 1]>()
+            expectTypeOf<Reverse<["a", "b", "c"]>>().toEqualTypeOf<["c", "b", "a"]>()
+            expectTypeOf<Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>>().toEqualTypeOf<[() => void, { foo: number }, "bar", 2, "foo", 1]>()
+        })
+    })
+    
+    
+    describe("IndexOf", () => {
+        test("Get first index of an element", () => {
+            expectTypeOf<IndexOf<[0, 0, 0], 2>>().toEqualTypeOf<-1>()
+            expectTypeOf<IndexOf<[string, 1, number, "a"], number>>().toEqualTypeOf<2>()
+            expectTypeOf<IndexOf<[string, 1, number, "a", any], any>>().toEqualTypeOf<4>()
+            expectTypeOf<IndexOf<[string, "a"], "a">>().toEqualTypeOf<1>()
+        })    
+    
+        test("Get last index of an element", () => {
+            expectTypeOf<LastIndexOf<[1, 2, 3, 2, 1], 2>>().toEqualTypeOf<3>()
+            expectTypeOf<LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>>().toEqualTypeOf<7>()
+            expectTypeOf<LastIndexOf<[string, 2, number, 'a', number, 1], number>>().toEqualTypeOf<4>()
+            expectTypeOf<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>>().toEqualTypeOf<5>()
+        })
     })
 })
