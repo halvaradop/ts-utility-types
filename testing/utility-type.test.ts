@@ -23,7 +23,8 @@ import type {
     Diff,
     Pop,
     Last,
-    Size
+    Size,
+    PercentageParser
 } from "../src/utility-types"
 
 
@@ -266,5 +267,15 @@ describe("Tuple methods", () => {
             expectTypeOf<LastIndexOf<[string, 2, number, 'a', number, 1], number>>().toEqualTypeOf<4>()
             expectTypeOf<LastIndexOf<[string, any, 1, number, 'a', any, 1], any>>().toEqualTypeOf<5>()
         })
+    })
+})
+
+
+describe("PercentageParser", () => {
+    test("Parses a percentage string into a tuple", () => {
+        expectTypeOf<PercentageParser<"foobar">>().toEqualTypeOf<never>()
+        expectTypeOf<PercentageParser<"2024">>().toEqualTypeOf<["", "2024", ""]>()
+        expectTypeOf<PercentageParser<"-89">>().toEqualTypeOf<["-", "89", ""]>()
+        expectTypeOf<PercentageParser<"+89%">>().toEqualTypeOf<["+", "89", "%"]>()
     })
 })

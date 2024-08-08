@@ -471,3 +471,26 @@ export type LastIndexOf<T extends unknown[], U, Index extends unknown[] = [], In
 		: IndexOf extends [...any, infer Item]
 			? Item
 			: -1;
+
+/**
+ * Parses a percentage string into a tuple of [Sign, Number, Unit].
+ * - `Sign` can be "+" or "-" or an empty string if no sign is present.
+ * - `Number` is the numerical part of the percentage.
+ * - `Unit` is the percentage symbol "%" or an empty string if no unit is present.
+ * 
+ * @example
+ * type Test1 = PercentageParser<"-12"> // ["-", "12", ""]
+ * type Test2 = PercentageParser<"+89%"> // ["+", "89", "%"]
+ */
+export type PercentageParser<Percentage extends string, Sign extends string = "", Num extends string = "", Unit extends string = ""> =
+	Percentage extends `${infer Char}${infer Chars}`
+	? Char extends "+" | "-"
+		? PercentageParser<Chars, Char, Num, Unit>
+		: Char extends "%"
+			? PercentageParser<Chars, Sign, Num, "%">
+			: Char extends `${number}` 
+				? PercentageParser<Chars, Sign, `${Num}${Char}`, Unit>
+				: Char extends "." | ","
+					? PercentageParser<Char, Sign, `${Num}${Char}`, Unit>
+					: never
+	: [Sign, Num, Unit];
