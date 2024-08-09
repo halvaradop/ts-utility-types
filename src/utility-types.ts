@@ -494,3 +494,20 @@ export type PercentageParser<Percentage extends string, Sign extends string = ""
 					? PercentageParser<Char, Sign, `${Num}${Char}`, Unit>
 					: never
 	: [Sign, Num, Unit];
+
+/**
+ * Helper type to create a tuple with a specific length, repeating a given value
+ * Avoids the `Type instantiation is excessively deep and possibly infinite` error
+ */
+type RepeatConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> = Array["length"] extends Length
+	? Array
+	: RepeatConstructTuple<Length, Value, [...Array, Value]>;
+
+/**
+ * reate a tuple with a defined size, where each element is of a specified type
+ * 
+ * @example
+ * type TupleSize2 = ConstructTuple<2> // [unknown, unknown]
+ * type TupleSize3 = ConstructTuple<2, ""> // ["", ""]
+ */
+export type ConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> = RepeatConstructTuple<Length, Value, Array>;

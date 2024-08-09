@@ -28,7 +28,8 @@ import type {
     Omit,
     OmitByType,
     Parameters,
-    Includes    
+    Includes,
+    ConstructTuple
 } from "../src/utility-types"
 
 
@@ -322,5 +323,14 @@ describe("Includes", () => {
         expectTypeOf<Includes<[string, 1, () => void, {}], string>>().toEqualTypeOf<true>()
         expectTypeOf<Includes<[string, number, () => void, {}], number>>().toEqualTypeOf<true>()
         expectTypeOf<Includes<[true, false, true], number>>().toEqualTypeOf<false>()
+    })
+})
+
+
+describe("ConstructTuple", () => {
+    test("Create a tuple with a defined size", () => {
+        expectTypeOf<ConstructTuple<2>>().toEqualTypeOf<[unknown, unknown]>()
+        expectTypeOf<ConstructTuple<2, string>>().toEqualTypeOf<[string, string]>()
+        expectTypeOf<ConstructTuple<5, any>>().toEqualTypeOf<[any, any, any, any, any]>()        
     })
 })
