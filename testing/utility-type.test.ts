@@ -26,7 +26,8 @@ import type {
     Size,
     PercentageParser,
     Omit,
-    OmitByType
+    OmitByType,
+    Parameters
 } from "../src/utility-types"
 
 
@@ -298,5 +299,15 @@ describe("Omit Properties", () => {
             expectTypeOf<OmitByType<{ foo: string, bar: number, foobar: boolean }, string | boolean>>().toEqualTypeOf<{ bar: number }>()
             expectTypeOf<OmitByType<{ foo: () => void, bar: () => void, foobar: { barbar: number } }, () => void>>().toEqualTypeOf<{ foobar: { barbar: number } }>()
         })
+    })
+})
+
+
+describe("Parameters", () => {
+    test("Returns the parameters of a function", () => {
+        expectTypeOf<Parameters<() => void>>().toEqualTypeOf<[]>()
+        expectTypeOf<Parameters<(foo: string) => void>>().toEqualTypeOf<[string]>()
+        expectTypeOf<Parameters<(foo: string, bar: number) => void>>().toEqualTypeOf<[string, number]>()
+        expectTypeOf<Parameters<(foo: { bar: number }) => void>>().toEqualTypeOf<[{ bar: number }]>()    
     })
 })
