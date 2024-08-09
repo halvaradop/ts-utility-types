@@ -27,7 +27,8 @@ import type {
     PercentageParser,
     Omit,
     OmitByType,
-    Parameters
+    Parameters,
+    Includes    
 } from "../src/utility-types"
 
 
@@ -309,5 +310,17 @@ describe("Parameters", () => {
         expectTypeOf<Parameters<(foo: string) => void>>().toEqualTypeOf<[string]>()
         expectTypeOf<Parameters<(foo: string, bar: number) => void>>().toEqualTypeOf<[string, number]>()
         expectTypeOf<Parameters<(foo: { bar: number }) => void>>().toEqualTypeOf<[{ bar: number }]>()    
+    })
+})
+
+
+describe("Includes", () => {
+    test("Check if an element exist withins a tuple", () => {
+        expectTypeOf<Includes<[], any>>().toEqualTypeOf<false>()
+        expectTypeOf<Includes<[1, 2, "foo", "bar"], 2>>().toEqualTypeOf<true>()
+        expectTypeOf<Includes<["foo", "bar", () => void, {}], () => void>>().toEqualTypeOf<true>()
+        expectTypeOf<Includes<[string, 1, () => void, {}], string>>().toEqualTypeOf<true>()
+        expectTypeOf<Includes<[string, number, () => void, {}], number>>().toEqualTypeOf<true>()
+        expectTypeOf<Includes<[true, false, true], number>>().toEqualTypeOf<false>()
     })
 })
