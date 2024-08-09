@@ -24,7 +24,9 @@ import type {
     Pop,
     Last,
     Size,
-    PercentageParser
+    PercentageParser,
+    Omit,
+    OmitByType
 } from "../src/utility-types"
 
 
@@ -277,5 +279,24 @@ describe("PercentageParser", () => {
         expectTypeOf<PercentageParser<"2024">>().toEqualTypeOf<["", "2024", ""]>()
         expectTypeOf<PercentageParser<"-89">>().toEqualTypeOf<["-", "89", ""]>()
         expectTypeOf<PercentageParser<"+89%">>().toEqualTypeOf<["+", "89", "%"]>()
+    })
+})
+
+
+describe("Omit Properties", () => {
+    describe("Omit", () => {
+        test("Omit the properties based on the key type", () => {
+            expectTypeOf<Omit<{ foo: string }, "">>().toEqualTypeOf<{ foo: string }>()
+            expectTypeOf<Omit<{ foo: string, bar: number }, "foo">>().toEqualTypeOf<{ bar: number }>()
+            expectTypeOf<Omit<{ foo: () => void, bar: { foobar: number } }, "foo">>().toEqualTypeOf<{ bar: { foobar: number } }>()
+        })    
+    })
+
+    describe("OmitByType", () => {
+        test("Omit the properties based on the type", () => {
+            expectTypeOf<OmitByType<{ foo: string, bar: string, foobar: number }, string>>().toEqualTypeOf<{ foobar: number }>()
+            expectTypeOf<OmitByType<{ foo: string, bar: number, foobar: boolean }, string | boolean>>().toEqualTypeOf<{ bar: number }>()
+            expectTypeOf<OmitByType<{ foo: () => void, bar: () => void, foobar: { barbar: number } }, () => void>>().toEqualTypeOf<{ foobar: { barbar: number } }>()
+        })
     })
 })
