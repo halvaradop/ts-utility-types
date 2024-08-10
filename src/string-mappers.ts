@@ -97,3 +97,12 @@ export type StartsWith<T extends string, U extends string> = T extends `${U}${st
 export type DropChar<Str extends string, Match extends string, Build extends string = ""> = Str extends `${infer Char}${infer Chars}`
 	? DropChar<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
 	: Build;
+
+/**
+ * Checks if a string type matchs start with a strig `U`
+ * 
+ * @example
+ * type Test1 = EndsWith<'abc', 'bc'> // true
+ * type Test2 = EndsWith<'abc', 'ac'> // false
+ */
+export type EndsWith<T extends string, U extends string> = T extends `${string}${U}` ? true : false;
