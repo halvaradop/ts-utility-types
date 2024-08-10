@@ -31,7 +31,10 @@ export type {
     Without,
     Reverse,
     IndexOf,
-    LastIndexOf
+    LastIndexOf,
+    PercentageParser,
+    ConstructTuple,
+    CheckRepeatedTuple
 } from "./utility-types"
 
 export type { 
@@ -41,7 +44,10 @@ export type {
     PrimitiveNullish,
     WhiteSpaces,
     LetterToLowercase,
-    LetterToUppercase
+    LetterToUppercase,
+    Falsy,
+    Even,
+    Odd
 } from "./types"
 
 export {
@@ -61,7 +67,8 @@ export type {
 } from "./test"
 
 export type {
-    IsNever
+    IsNever,
+    IsOdd
 } from "./type-guards"
 
 export type {
@@ -70,5 +77,9 @@ export type {
     TrimRight,
     Lowercase,
     Uppercase,
-    Capitalize
+    Capitalize,
+    Join,
+    DropChar,
+    StartsWith,
+    EndsWith
 } from "./string-mappers"
