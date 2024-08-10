@@ -86,3 +86,15 @@ export type Join<T extends unknown[], Separator extends number | string, Str ext
  * type Test3 = StartsWith<'abc', 'abcd'> // false
  */
 export type StartsWith<T extends string, U extends string> = T extends `${U}${string}` ? true : false;
+
+/**
+ * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
+ * 
+ * @example
+ * type Test1 = DropChar<'butter fly!', ''> // butterfly!
+ * type Test2 = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
+ */
+export type DropChar<Str extends string, Match extends string, Build extends string = ""> = 
+	Str extends `${infer Char}${infer Chars}`
+		? DropChar<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
+		: Build;

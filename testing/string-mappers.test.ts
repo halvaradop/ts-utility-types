@@ -7,7 +7,8 @@ import type {
     TrimRight,
     Trim,
     Join,
-    StartsWith
+    StartsWith,
+    DropChar
 } from "../src/string-mappers"
 
 
@@ -72,5 +73,14 @@ describe("Match strings", () => {
         expectTypeOf<StartsWith<"foobar", "foobarr">>().toEqualTypeOf<false>()
         expectTypeOf<StartsWith<"foobar", "">>().toEqualTypeOf<true>()
         expectTypeOf<StartsWith<"", "">>().toEqualTypeOf<true>()
+    })
+})
+
+
+describe("DropChar", () => {
+    test("Remove the characters that match with the given char", () => {
+        expectTypeOf<DropChar<"foobar foo!", " ">>().toEqualTypeOf<"foobarfoo!">()
+        expectTypeOf<DropChar<"f o o b a r f o o !", " ">>().toEqualTypeOf<"foobarfoo!">()
+        expectTypeOf<DropChar<"f o o b a r f o o !", any>>().toEqualTypeOf<"">()
     })
 })

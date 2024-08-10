@@ -511,11 +511,3 @@ type RepeatConstructTuple<Length extends number, Value extends unknown = unknown
  * type TupleSize3 = ConstructTuple<2, ""> // ["", ""]
  */
 export type ConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> = RepeatConstructTuple<Length, Value, Array>;
-
-/**
- * 
- */
-export type DropChar<S extends string, C extends string, Str extends string = ""> = 
-	S extends `${infer Char}${infer Chars}`
-		? DropChar<Chars, C, Char extends C ? Str : `${Str}${Char}`>
-		: Str;
