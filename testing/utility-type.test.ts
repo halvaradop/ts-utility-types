@@ -29,8 +29,7 @@ import type {
     OmitByType,
     Parameters,
     Includes,
-    ConstructTuple,
-    DropChar
+    ConstructTuple,    
 } from "../src/utility-types"
 
 
