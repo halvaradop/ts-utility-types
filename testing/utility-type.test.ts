@@ -29,7 +29,8 @@ import type {
     OmitByType,
     Parameters,
     Includes,
-    ConstructTuple,    
+    ConstructTuple,
+    CheckRepeatedTuple    
 } from "../src/utility-types"
 
 
@@ -332,5 +333,16 @@ describe("ConstructTuple", () => {
         expectTypeOf<ConstructTuple<2>>().toEqualTypeOf<[unknown, unknown]>()
         expectTypeOf<ConstructTuple<2, string>>().toEqualTypeOf<[string, string]>()
         expectTypeOf<ConstructTuple<5, any>>().toEqualTypeOf<[any, any, any, any, any]>()        
+    })
+})
+
+
+describe("CheckRepeatedTuple", () => {
+    test("Check if there are duplicated elements", () => {
+        expectTypeOf<CheckRepeatedTuple<[]>>().toEqualTypeOf<false>()
+        expectTypeOf<CheckRepeatedTuple<[1, 2, 1]>>().toEqualTypeOf<true>()
+        expectTypeOf<CheckRepeatedTuple<["foo", "bar", 1, 5]>>().toEqualTypeOf<false>()
+        expectTypeOf<CheckRepeatedTuple<[() => void, () => void]>>().toEqualTypeOf<true>()
+        expectTypeOf<CheckRepeatedTuple<[{ foo: string }, { foo: string }]>>().toEqualTypeOf<true>()
     })
 })

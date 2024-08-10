@@ -511,3 +511,16 @@ type RepeatConstructTuple<Length extends number, Value extends unknown = unknown
  * type TupleSize3 = ConstructTuple<2, ""> // ["", ""]
  */
 export type ConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> = RepeatConstructTuple<Length, Value, Array>;
+
+/**
+ * Check if there are duplidated elements inside the tuple
+ * 
+ * @example
+ * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]> // false
+ * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]> // true
+ */
+export type CheckRepeatedTuple<T extends unknown[], Array extends unknown = ""> = T extends [infer Item, ...infer Items]
+	? Item extends Array 
+		? true
+		: CheckRepeatedTuple<Items, Array | Item>
+	: false;
