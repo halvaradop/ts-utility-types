@@ -1,4 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
+
 import type {
     Capitalize,
     Uppercase,
@@ -8,7 +9,8 @@ import type {
     Trim,
     Join,
     StartsWith,
-    DropChar
+    DropChar,
+    EndsWith
 } from "../src/string-mappers"
 
 
@@ -73,6 +75,16 @@ describe("Match strings", () => {
         expectTypeOf<StartsWith<"foobar", "foobarr">>().toEqualTypeOf<false>()
         expectTypeOf<StartsWith<"foobar", "">>().toEqualTypeOf<true>()
         expectTypeOf<StartsWith<"", "">>().toEqualTypeOf<true>()
+    })
+
+
+    test("EndsWith", () => {
+        expectTypeOf<EndsWith<"foobar", "foo">>().toEqualTypeOf<false>()
+        expectTypeOf<EndsWith<"foobar", "bar">>().toEqualTypeOf<true>()
+        expectTypeOf<EndsWith<"bar", "br">>().toEqualTypeOf<false>()
+        expectTypeOf<EndsWith<"foobar", " ">>().toEqualTypeOf<false>()
+        expectTypeOf<EndsWith<"foobar", "">>().toEqualTypeOf<true>()
+        expectTypeOf<EndsWith<"", "">>().toEqualTypeOf<true>()
     })
 })
 
