@@ -107,3 +107,13 @@ export interface LetterToLowercase {
  * Represents the empty values
  */
 export type Falsy = Nullish | 0 | false | "";
+
+/**
+ * The odd digits
+ */
+export type Odd = 1 | 3 | 5 | 7 | 9;
+
+/**
+ * The even digits
+ */
+export type Even = 0 | 2 | 4 | 6 | 8;
