@@ -6,7 +6,8 @@ import type {
     TrimLeft,
     TrimRight,
     Trim,
-    Join
+    Join,
+    StartsWith
 } from "../src/string-mappers"
 
 
@@ -60,4 +61,16 @@ describe("Join", () => {
     expectTypeOf<Join<["a", "p", "p", "l", "e"], "-">>().toEqualTypeOf<"a-p-p-l-e">()
     expectTypeOf<Join<["Hello", "World"], " ">>().toEqualTypeOf<"Hello World">()
     expectTypeOf<Join<["2", "2", "2"], "1">>().toEqualTypeOf<"21212">()
+})
+
+
+describe("Match strings", () => {
+    test("StartsWith", () => {
+        expectTypeOf<StartsWith<"foobar", "foo">>().toEqualTypeOf<true>()
+        expectTypeOf<StartsWith<"foobar", "bar">>().toEqualTypeOf<false>()
+        expectTypeOf<StartsWith<"foobar", "obar">>().toEqualTypeOf<false>()
+        expectTypeOf<StartsWith<"foobar", "foobarr">>().toEqualTypeOf<false>()
+        expectTypeOf<StartsWith<"foobar", "">>().toEqualTypeOf<true>()
+        expectTypeOf<StartsWith<"", "">>().toEqualTypeOf<true>()
+    })
 })

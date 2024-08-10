@@ -76,3 +76,13 @@ export type Join<T extends unknown[], Separator extends number | string, Str ext
 	T extends [infer Char, ...infer Chars]
 		? Join<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
 		: Str;
+
+/**
+ * Checks if a string type matchs start with a strig `U`
+ * 
+ * @example
+ * type Test1 = StartsWith<'abc', 'ac'> // false
+ * type Test2 = StartsWith<'abc', 'ab'> // true
+ * type Test3 = StartsWith<'abc', 'abcd'> // false
+ */
+export type StartsWith<T extends string, U extends string> = T extends `${U}${string}` ? true : false;
