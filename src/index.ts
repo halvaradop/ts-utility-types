@@ -35,7 +35,8 @@ export type {
     PercentageParser,
     ConstructTuple,
     CheckRepeatedTuple,
-    Absolute
+    Absolute,
+    ObjectEntries
 } from "./utility-types"
 
 export type { 

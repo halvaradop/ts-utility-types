@@ -530,3 +530,19 @@ export type CheckRepeatedTuple<T extends unknown[], Array extends unknown = ""> 
  * Returns the absolute version of a number, string or bigint as a string
  */
 export type Absolute<T extends number | string | bigint> = DropChar<`${T}`, "-" | "n">;
+
+/**
+ * Returns a union type of the entries of the provided object
+ * 
+ * @example
+ * interface Foo {
+ *   foo: string,
+ *   bar: number,
+ *   foobar?: boolean
+ * }
+ * 
+ * type FooEntries = ObjectEntries<Foo> // ["foo", string] | ["bar", number] | ["foobar", boolean]
+ */
+export type ObjectEntries<Obj extends object, RequiredObj extends object = Required<Obj>> = {
+	[Property in keyof RequiredObj]: [Property, RequiredObj[Property] extends undefined ? undefined : RequiredObj[Property]];
+}[keyof RequiredObj];
