@@ -365,5 +365,6 @@ describe("ObjectEntries", () => {
         expectTypeOf<ObjectEntries<{ foo: string }>>().toEqualTypeOf<["foo", string]>()
         expectTypeOf<ObjectEntries<{ foo?: string }>>().toEqualTypeOf<["foo", string]>()
         expectTypeOf<ObjectEntries<{ foo?: string, bar?: number }>>().toEqualTypeOf<["foo", string] | [ "bar", number]>()
+        expectTypeOf<ObjectEntries<{ foo?: undefined, bar: undefined | string }>>().toEqualTypeOf<["foo", undefined] | ["bar", undefined | string]>()
     })
 })
