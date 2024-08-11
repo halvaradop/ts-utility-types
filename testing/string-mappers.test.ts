@@ -10,7 +10,8 @@ import type {
     Join,
     StartsWith,
     DropChar,
-    EndsWith
+    EndsWith,
+    LengthOfString
 } from "../src/string-mappers"
 
 
@@ -94,5 +95,15 @@ describe("DropChar", () => {
         expectTypeOf<DropChar<"foobar foo!", " ">>().toEqualTypeOf<"foobarfoo!">()
         expectTypeOf<DropChar<"f o o b a r f o o !", " ">>().toEqualTypeOf<"foobarfoo!">()
         expectTypeOf<DropChar<"f o o b a r f o o !", any>>().toEqualTypeOf<"">()
+    })
+})
+
+
+describe("LengthOfString", () => {
+    test("Returns the length of a string type", () => {
+        expectTypeOf<LengthOfString<"">>().toEqualTypeOf<0>()
+        expectTypeOf<LengthOfString<any>>().toEqualTypeOf<0>()
+        expectTypeOf<LengthOfString<never>>().toEqualTypeOf<never>()
+        expectTypeOf<LengthOfString<"foobarfoobar">>().toEqualTypeOf<12>()
     })
 })

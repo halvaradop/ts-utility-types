@@ -106,3 +106,14 @@ export type DropChar<Str extends string, Match extends string, Build extends str
  * type Test2 = EndsWith<'abc', 'ac'> // false
  */
 export type EndsWith<T extends string, U extends string> = T extends `${string}${U}` ? true : false;
+
+/**
+ * Returns the length of a string type
+ * 
+ * @example
+ * type Length2 = LengthOfString<"foo"> // 3
+ * type Length6 = LengthOfString<"foobar"> // 6
+ */
+export type LengthOfString<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
+	? LengthOfString<Chars, [...Length, Char]>
+	: Length["length"];

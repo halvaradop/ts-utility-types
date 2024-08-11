@@ -81,5 +81,6 @@ export type {
     Join,
     DropChar,
     StartsWith,
-    EndsWith
+    EndsWith,
+    LengthOfString
 } from "./string-mappers"
