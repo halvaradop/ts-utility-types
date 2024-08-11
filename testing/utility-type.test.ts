@@ -31,7 +31,8 @@ import type {
     Includes,
     ConstructTuple,
     CheckRepeatedTuple,
-    Absolute
+    Absolute,
+    ObjectEntries
 } from "../src/utility-types"
 
 
@@ -355,5 +356,15 @@ describe("Absolute", () => {
         expectTypeOf<Absolute<-0>>().toEqualTypeOf<"0">()
         expectTypeOf<Absolute<-999_999_999_999>>().toEqualTypeOf<"999999999999">()
         expectTypeOf<Absolute<-999_999_999_999_999n>>().toEqualTypeOf<"999999999999999">()
+    })
+})
+
+
+describe("ObjectEntries", () => {
+    test("Returns the entries from an object", () => {
+        expectTypeOf<ObjectEntries<{ foo: string }>>().toEqualTypeOf<["foo", string]>()
+        expectTypeOf<ObjectEntries<{ foo?: string }>>().toEqualTypeOf<["foo", string]>()
+        expectTypeOf<ObjectEntries<{ foo?: string, bar?: number }>>().toEqualTypeOf<["foo", string] | [ "bar", number]>()
+        expectTypeOf<ObjectEntries<{ foo?: undefined, bar: undefined | string }>>().toEqualTypeOf<["foo", undefined] | ["bar", undefined | string]>()
     })
 })
