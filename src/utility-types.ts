@@ -1,3 +1,4 @@
+import type { DropChar } from "./string-mappers";
 import type { Equals } from "./test";
 import type { ArgsFunction } from "./types";
 
@@ -524,3 +525,8 @@ export type CheckRepeatedTuple<T extends unknown[], Array extends unknown = ""> 
 		? true
 		: CheckRepeatedTuple<Items, Array | Item>
 	: false;
+
+/**
+ * Returns the absolute version of a number, string or bigint as a string
+ */
+export type Absolute<T extends number | string | bigint> = DropChar<`${T}`, "-" | "n">;

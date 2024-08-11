@@ -34,7 +34,8 @@ export type {
     LastIndexOf,
     PercentageParser,
     ConstructTuple,
-    CheckRepeatedTuple
+    CheckRepeatedTuple,
+    Absolute
 } from "./utility-types"
 
 export type { 

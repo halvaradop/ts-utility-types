@@ -30,7 +30,8 @@ import type {
     Parameters,
     Includes,
     ConstructTuple,
-    CheckRepeatedTuple    
+    CheckRepeatedTuple,
+    Absolute
 } from "../src/utility-types"
 
 
@@ -344,5 +345,15 @@ describe("CheckRepeatedTuple", () => {
         expectTypeOf<CheckRepeatedTuple<["foo", "bar", 1, 5]>>().toEqualTypeOf<false>()
         expectTypeOf<CheckRepeatedTuple<[() => void, () => void]>>().toEqualTypeOf<true>()
         expectTypeOf<CheckRepeatedTuple<[{ foo: string }, { foo: string }]>>().toEqualTypeOf<true>()
+    })
+})
+
+
+describe("Absolute", () => {
+    test("Returns the absolute version of a number", () => {
+        expectTypeOf<Absolute<-100>>().toEqualTypeOf<"100">()
+        expectTypeOf<Absolute<-0>>().toEqualTypeOf<"0">()
+        expectTypeOf<Absolute<-999_999_999_999>>().toEqualTypeOf<"999999999999">()
+        expectTypeOf<Absolute<-999_999_999_999_999n>>().toEqualTypeOf<"999999999999999">()
     })
 })
