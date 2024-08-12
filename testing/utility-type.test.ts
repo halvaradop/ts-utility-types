@@ -32,7 +32,8 @@ import type {
     ConstructTuple,
     CheckRepeatedTuple,
     Absolute,
-    ObjectEntries
+    ObjectEntries,
+    AllEquals
 } from "../src/utility-types"
 
 
@@ -366,5 +367,18 @@ describe("ObjectEntries", () => {
         expectTypeOf<ObjectEntries<{ foo?: string }>>().toEqualTypeOf<["foo", string]>()
         expectTypeOf<ObjectEntries<{ foo?: string, bar?: number }>>().toEqualTypeOf<["foo", string] | [ "bar", number]>()
         expectTypeOf<ObjectEntries<{ foo?: undefined, bar: undefined | string }>>().toEqualTypeOf<["foo", undefined] | ["bar", undefined | string]>()
+    })
+})
+
+
+describe("AllEquals", () => {
+    test("Check if all elements are equal", () => {
+        expectTypeOf<AllEquals<[0, 0, 0, 0], 1>>().toEqualTypeOf<false>()
+        expectTypeOf<AllEquals<[0, 0, 0, 0], 0>>().toEqualTypeOf<true>()
+        expectTypeOf<AllEquals<[0, 0, 1, 0], 1>>().toEqualTypeOf<false>()
+        expectTypeOf<AllEquals<[number, number, number, number], number>>().toEqualTypeOf<true>()
+        expectTypeOf<AllEquals<[[1], [1], [1]], [1]>>().toEqualTypeOf<true>()
+        expectTypeOf<AllEquals<[{}, {}, {}], {}>>().toEqualTypeOf<true>()
+        expectTypeOf<AllEquals<[1, 1, 2], 1 | 2>>().toEqualTypeOf<false>()
     })
 })
