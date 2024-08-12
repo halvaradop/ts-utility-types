@@ -546,3 +546,16 @@ export type Absolute<T extends number | string | bigint> = DropChar<`${T}`, "-" 
 export type ObjectEntries<Obj extends object, RequiredObj extends object = Required<Obj>> = {
 	[Property in keyof RequiredObj]: [Property, RequiredObj[Property] extends undefined ? undefined : RequiredObj[Property]];
 }[keyof RequiredObj];
+
+/**
+ * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
+ * 
+ * @example
+ * type Test1 = AllEquals<[number, number, number], number> // true
+ * type Test2 = AllEquals<[[1], [1], [1]], [1]> // true
+ */
+export type AllEquals<T extends unknown[], Comparator> = T extends [infer Item, ...infer Items]
+	? Equals<Item, Comparator> extends true
+		? AllEquals<Items, Comparator>
+		: false
+	: true;

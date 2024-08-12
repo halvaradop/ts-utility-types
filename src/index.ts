@@ -36,7 +36,8 @@ export type {
     ConstructTuple,
     CheckRepeatedTuple,
     Absolute,
-    ObjectEntries
+    ObjectEntries,
+    AllEquals
 } from "./utility-types"
 
 export type { 
