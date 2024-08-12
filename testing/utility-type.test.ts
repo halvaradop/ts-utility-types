@@ -372,6 +372,7 @@ describe("ObjectEntries", () => {
     })
 })
 
+
 describe("AllEquals", () => {
     test("Check if all elements are equal", () => {
         expectTypeOf<AllEquals<[0, 0, 0, 0], 1>>().toEqualTypeOf<false>()
@@ -383,6 +384,7 @@ describe("AllEquals", () => {
         expectTypeOf<AllEquals<[1, 1, 2], 1 | 2>>().toEqualTypeOf<false>()
     })
 })
+
 
 describe("Pick Utilities", () => {
     describe("Pick", () => {
