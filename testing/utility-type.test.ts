@@ -33,7 +33,9 @@ import type {
     CheckRepeatedTuple,
     Absolute,
     ObjectEntries,
-    AllEquals
+    AllEquals,
+    Pick,
+    PickByType
 } from "../src/utility-types"
 
 
@@ -380,5 +382,26 @@ describe("AllEquals", () => {
         expectTypeOf<AllEquals<[[1], [1], [1]], [1]>>().toEqualTypeOf<true>()
         expectTypeOf<AllEquals<[{}, {}, {}], {}>>().toEqualTypeOf<true>()
         expectTypeOf<AllEquals<[1, 1, 2], 1 | 2>>().toEqualTypeOf<false>()
+    })
+})
+
+
+describe("Pick Utilities", () => {
+    describe("Pick", () => {
+        test("Pick by keys", () => {
+            expectTypeOf<Pick<{ foo: string, bar: number }, never>>().toEqualTypeOf<{}>()
+            expectTypeOf<Pick<{ foo: string, bar: number }, "bar">>().toEqualTypeOf<{ bar: number }>()
+            expectTypeOf<Pick<{ foo: string, bar: number }, "bar" | "foo">>().toEqualTypeOf<{ foo: string, bar: number }>()
+        })
+    })
+
+    describe("PickByType", () => {
+        test("Pick by type", () => {
+            expectTypeOf<PickByType<{ foo: string, bar: number, foofoo: string }, number>>().toEqualTypeOf<{ bar: number }>()
+            expectTypeOf<PickByType<{ foo: string, bar: number, foofoo: string }, string>>().toEqualTypeOf<{ foo: string, foofoo: string }>()
+            expectTypeOf<PickByType<{ foo: () => {}, bar: number }, string>>().toEqualTypeOf<{}>()
+            expectTypeOf<PickByType<{ foo: () => {}, bar: number, foobar: {} }, never>>().toEqualTypeOf<{}>()
+            expectTypeOf<PickByType<{ foo: () => {}, bar: number, foobar: {} }, () => {}>>().toEqualTypeOf<{ foo: () => {}}>()
+        })
     })
 })
