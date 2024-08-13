@@ -11,7 +11,7 @@ export type {
     Parameters, 
     Pick,
     Omit,
-    Diff,
+    Intersection,
     Merge,
     PartialByKeys,
     PickByType,
