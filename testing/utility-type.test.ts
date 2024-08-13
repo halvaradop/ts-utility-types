@@ -20,7 +20,7 @@ import type {
     Reverse,
     IndexOf,
     LastIndexOf,
-    Diff,
+    Intersection,
     Pop,
     Last,
     Size,
@@ -199,9 +199,9 @@ describe("AppendToObject", () => {
 
 describe("Difference", () => {
     test("Difference of properties between two objects", () => {
-        expectTypeOf<Diff<{ foo: string }, { foo: number, bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
-        expectTypeOf<Diff<{ foo: string, bar: boolean }, { bar: number, foo: bigint }>>().toEqualTypeOf<{}>()
-        expectTypeOf<Diff<{ foo: string, bar: { bar: number } }, { barfoo: { bar: number }, foo: bigint }>>().toEqualTypeOf<{ bar: { bar: number }, barfoo: { bar: number } }>()
+        expectTypeOf<Intersection<{ foo: string }, { foo: number, bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
+        expectTypeOf<Intersection<{ foo: string, bar: boolean }, { bar: number, foo: bigint }>>().toEqualTypeOf<{}>()
+        expectTypeOf<Intersection<{ foo: string, bar: { bar: number } }, { barfoo: { bar: number }, foo: bigint }>>().toEqualTypeOf<{ bar: { bar: number }, barfoo: { bar: number } }>()
     })
 })
 

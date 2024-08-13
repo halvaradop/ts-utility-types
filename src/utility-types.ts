@@ -187,19 +187,15 @@ export type Merge<T1 extends object, T2 extends object> = {
  * }
  * 
  * type Bar = {
- * 	ame: string
+ * 	name: string
  * 	age: string
  * 	gender: number
  * }
  * 
- * type DiffFoo = Diff<Foo, Bar> // { gender: number }
+ * type DiffFoo = Intersection<Foo, Bar> // { gender: number }
  */
-export type Diff<O1 extends object, O2 extends object> = {
-	[P in Properties<O1, O2> as 
-		P extends keyof O1 & keyof O2 
-			? never
-			: P
-	]: HasKeyObjects<O1, O2, P>;
+export type Intersection<O1 extends object, O2 extends object> = {
+	[P in Properties<O1, O2> as P extends keyof O1 & keyof O2 ? never : P]: HasKeyObjects<O1, O2, P>;
 };
 
 /**
