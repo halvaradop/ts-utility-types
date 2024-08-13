@@ -295,6 +295,7 @@ describe("PercentageParser", () => {
 describe("Omit Properties", () => {
     describe("Omit", () => {
         test("Omit the properties based on the key type", () => {
+            // @ts-expect-error
             expectTypeOf<Omit<{ foo: string }, "">>().toEqualTypeOf<{ foo: string }>()
             expectTypeOf<Omit<{ foo: string, bar: number }, "foo">>().toEqualTypeOf<{ bar: number }>()
             expectTypeOf<Omit<{ foo: () => void, bar: { foobar: number } }, "foo">>().toEqualTypeOf<{ bar: { foobar: number } }>()
