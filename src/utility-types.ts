@@ -8,8 +8,8 @@ import type { ArgsFunction } from "./types";
  * 
  * It doesn't change the original object type.
  */
-export type Prettify<T extends object> = {
-    [Property in keyof T]: T[Property]
+export type Prettify<Obj extends object> = {
+    [Property in keyof Obj]: Obj[Property]
 } & {};
 
 /**
@@ -25,12 +25,12 @@ export type Prettify<T extends object> = {
  * }
  * type ReadonlyUser = DeepReadonly<User> // { readonly name: string,  address: { readonly street: string, readonly avenue } }
  */
-export type DeepReadonly<T extends object> = {
-    readonly [Property in keyof T]: T[Property] extends Function
-        ? T[Property]
-        : T[Property] extends object
-            ? DeepReadonly<T[Property]>
-            : T[Property];
+export type DeepReadonly<Obj extends object> = {
+    readonly [Property in keyof Obj]: Obj[Property] extends Function
+        ? Obj[Property]
+        : Obj[Property] extends object
+            ? DeepReadonly<Obj[Property]>
+            : Obj[Property];
 };
 
 /**
@@ -41,8 +41,8 @@ export type DeepReadonly<T extends object> = {
  * type StringUnion = ["1", "2", "3"]
  * type Union = TypleToUnion<StringUnion> // "1" | "2" | "3"
  */
-export type TupleToUnion<T extends readonly unknown[]> = T extends [infer Item, ...infer Spreed]
-    ? Item | TupleToUnion<Spreed>
+export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
+    ? Item | TupleToUnion<Spread>
     : never;
 
 
@@ -53,7 +53,7 @@ export type TupleToUnion<T extends readonly unknown[]> = T extends [infer Item, 
  * const numbers: number[] = [1, 2, 3, 4, 5];
  * type SizeOfNumbers = Size<typeof numbers>; // SizeOfNumbers = 5
  */
-export type Size<T extends unknown[]> = T extends unknown[] ? T["length"] : 0;
+export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0;
 
 
 /**
@@ -62,7 +62,7 @@ export type Size<T extends unknown[]> = T extends unknown[] ? T["length"] : 0;
  * @example
  * type LastItem = Last<1, 2, 3, 4> // 4
  */
-export type Last<T extends unknown[]> = T extends [...any, infer Last] ? Last : never;
+export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ? Last : never;
 
 /**
  * Removes the last element from an array and returns a new array type with all elements 
@@ -72,20 +72,20 @@ export type Last<T extends unknown[]> = T extends [...any, infer Last] ? Last : 
  * type PopStr = Pop<["a", "b", "c"]> // ["a", "b"]
  * type PopNums = Pop<[1, 2, 3]> // [1, 2]
  */
-export type Pop<T extends unknown[]> = T extends [...infer Items, unknown] ? Items : [];
+export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unknown] ? Spread : [];
 
 /**
- * Exclude properties of type `U` from type `T`
+ * Exclude properties of type `Match` from type `T`
  */
-export type Exclude<T, U> = T extends U ? never : T;
+export type Exclude<T, Match> = T extends Match ? never : T;
 
 /**
  * Get the type of the resolved value of a PromiseLike object.
  */
-export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infer R>
-	? R extends PromiseLike<unknown>
-		? Awaited<R>
-		: R
+export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infer ResolveType>
+	? ResolveType extends PromiseLike<unknown>
+		? Awaited<ResolveType>
+		: ResolveType
 	: never;
 
 /**
@@ -97,7 +97,7 @@ export type Awaited<T extends PromiseLike<unknown>> = T extends PromiseLike<infe
  * }
  * type AddParams = Parameters<typeof add>; // AddParams = [number, number]
  */
-export type Parameters<T extends ArgsFunction> = T extends (...args: infer P) => void ? P : never;
+export type Parameters<Function extends ArgsFunction> = Function extends (...args: infer Params) => void ? Params : never;
 
 /**
  * Create a new type with a subset of properties from an object
@@ -110,8 +110,8 @@ export type Parameters<T extends ArgsFunction> = T extends (...args: infer P) =>
  * }
  * type PickUser = Pick<User, "age"> // { age: number }
  */
-export type Pick<T extends object, K extends keyof T> = {
-	[Property in K]: T[Property]
+export type Pick<Obj extends object, Keys extends keyof Obj> = {
+	[Property in Keys]: Obj[Property]
 };
 
 /**
@@ -122,10 +122,10 @@ export type Pick<T extends object, K extends keyof T> = {
  * type IncludesString = Includes<["foo", "bar", "foobar"], "bar"> // true
  * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar"> // false
  */
-export type Includes<T extends unknown[], U> = T extends [infer Compare, ...infer Items]
-	? Equals<Compare, U> extends true
+export type Includes<Array extends unknown[], Match> = Array extends [infer Compare, ...infer Spread]
+	? Equals<Compare, Match> extends true
 		? true 
-		: Includes<Items, U>
+		: Includes<Spread, Match>
 	: false;
 
 /**
@@ -135,8 +135,8 @@ export type Includes<T extends unknown[], U> = T extends [infer Compare, ...infe
  * type Person = { name: string; age: number; email: string };
  * type NoEmailPerson = Omit<Person, "email">;  // NoEmailPerson = { name: string; age: number }
  */
-export type Omit<T extends object, U> = {
-	[Property in keyof T as Property extends U ? never : Property]: T[Property]
+export type Omit<Obj extends object, Keys extends keyof Obj> = {
+	[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property]
 };
 
 
@@ -154,7 +154,7 @@ export type Omit<T extends object, U> = {
  *  
  * type PropsFooBar = Properties<Foo, Bar> // "foo" | "bar"
  */
-export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof T2;
+export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | keyof Obj2;
 
 /**
  * Creates a new object by merging two objects. Properties from `S` override properties 
@@ -173,8 +173,8 @@ export type Properties<T1 extends object, T2 extends object> = keyof T1 | keyof 
  * 
  * type MergeConfig = Merge<Config, AppStore> // { storePaths: string[], path: string, hooks: ArgsFunction[] }
  */
-export type Merge<T1 extends object, T2 extends object> = {
-	[Property in Properties<T1, T2>]: HasKeyObjects<T2, T1, Property>;
+export type Merge<Obj1 extends object, Obj2 extends object> = {
+	[Property in Properties<Obj1, Obj2>]: HasKeyObjects<Obj2, Obj1, Property>;
 };
 
 /**
@@ -194,8 +194,8 @@ export type Merge<T1 extends object, T2 extends object> = {
  * 
  * type DiffFoo = Intersection<Foo, Bar> // { gender: number }
  */
-export type Intersection<O1 extends object, O2 extends object> = {
-	[P in Properties<O1, O2> as P extends keyof O1 & keyof O2 ? never : P]: HasKeyObjects<O1, O2, P>;
+export type Intersection<Obj1 extends object, Obj2 extends object> = {
+	[Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 & keyof Obj2 ? never : Property]: HasKeyObjects<Obj1, Obj2, Property>;
 };
 
 /**
@@ -209,8 +209,8 @@ export type Intersection<O1 extends object, O2 extends object> = {
  * }
  * type UserStr = PickByType<User, string> // { name: string, lastname: string }
  */
-export type PickByType<T extends object, U> = {
-	[Property in keyof T as T[Property] extends U ? Property : never]: T[Property];
+export type PickByType<Obj extends object, Type> = {
+	[Property in keyof Obj as Obj[Property] extends Type ? Property : never]: Obj[Property];
 };
 
 /**
@@ -224,9 +224,9 @@ export type PickByType<T extends object, U> = {
  * }
  * type UserPartialName = PartialByKeys<User, "name"> // { name?: string, lastname: string, age: number }
  */
-export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prettify<
-	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
-	{ [Property in K]?: T[Property] }
+export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
+	{ [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property] } & 
+	{ [Property in Keys]?: Obj[Property] }
 >;
 
 /**
@@ -240,33 +240,33 @@ export type PartialByKeys<T extends object, K extends keyof T = keyof T> = Prett
  * }
  * type UserExcludeStrings = OmitByType<User, string> // { age: number }
  */
-export type OmitByType<T extends object, U> = {
-	[Property in keyof T as T[Property] extends U ? never : Property]: T[Property];
+export type OmitByType<Obj extends object, Type> = {
+	[Property in keyof Obj as Obj[Property] extends Type ? never : Property]: Obj[Property];
 };
 
 /**
  * Extracts the value of a key from an object and returns a new object with that value, 
  * while keeping the other values unchanged.
  */
-export type ExtractToObject<T extends object, U extends keyof T> = Prettify<{
-	[Property in keyof T as Property extends U ? never: Property]: T[Property]
-} & T[U]>
+export type ExtractToObject<Obj extends object, Keys extends keyof Obj> = Prettify<{
+	[Property in keyof Obj as Property extends Keys ? never: Property]: Obj[Property]
+} & Obj[Keys]>
 
 /**
  * Removes the properties whose keys start with an underscore (_).
  */
-export type PublicType<T extends object> = {
-	[Property in keyof T as Property extends `_${string}` ? never : Property]: T[Property];
+export type PublicType<Obj extends object> = {
+	[Property in keyof Obj as Property extends `_${string}` ? never : Property]: Obj[Property];
 };
 
 /**
  * Checks if a key exists in either of the two objects and returns its value.
  * If the key does not exist in either object, it returns `never`.
  */
-export type HasKeyObjects<O1 extends object, O2 extends object, Key> = Key extends keyof O1
-        ? O1[Key]
-        : Key extends keyof O2
-                ? O2[Key]
+export type HasKeyObjects<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
+        ? Obj1[Key]
+        : Key extends keyof Obj2
+                ? Obj2[Key]
                 : never;
 
 /**
@@ -281,9 +281,9 @@ export type HasKeyObjects<O1 extends object, O2 extends object, Key> = Key exten
  * }
  * type UserRequiredName = RequiredByKeys<User, "name"> // { name: string, age?: number, address?: string }
  */
-export type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Prettify<
-	{ [Property in keyof T as Property extends K ? never : Property]: T[Property] } & 
-	{ [Property in keyof T as Property extends K ? Property : never]-?: T[Property] }
+export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
+	{ [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property] } & 
+	{ [Property in keyof Obj as Property extends Keys ? Property : never]-?: Obj[Property] }
 >;
 
 /**
@@ -294,9 +294,9 @@ export type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Pret
  * type Filter1 = Filter<[0, 1, 2], 2> // [2]
  * type Filter2 = Filter<[0, 1, 2], 0 | 1> // [0, 1]
  */
-export type Filter<T extends unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
-	? Filter<Items, Predicate, Item extends Predicate ? [...Array, Item] : [...Array]>
-	: Array;
+export type Filter<Array extends unknown[], Predicate, Build extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
+	? Filter<Spread, Predicate, Item extends Predicate ? [...Build, Item] : [...Build]>
+	: Build;
 
 /**
  * 
@@ -312,13 +312,13 @@ export type Filter<T extends unknown[], Predicate, Array extends unknown[] = []>
  * }
  * type MergeFooBar = MergeKeyObjects<Foo, Bar> // { bar: string | number }
  */
-export type MergeKeyObjects<O1 extends object, O2 extends object> = {
-	[Prop in Properties<O1, O2>]: Prop extends keyof O1
-		? Prop extends keyof O2
-			? O1[Prop] | O2[Prop]
-			: O1[Prop]
-		: Prop extends keyof O2
-			? O2[Prop]
+export type MergeKeyObjects<Obj1 extends object, Obj2 extends object> = {
+	[Prop in Properties<Obj1, Obj2>]: Prop extends keyof Obj1
+		? Prop extends keyof Obj2
+			? Obj1[Prop] | Obj2[Prop]
+			: Obj1[Prop]
+		: Prop extends keyof Obj2
+			? Obj2[Prop]
 			: never;
 };
 
@@ -336,8 +336,8 @@ export type MergeKeyObjects<O1 extends object, O2 extends object> = {
  *
  * type NonReadonlyUser = Mutable<User>; // { name: string, lastname: string, age: number }
  */
-export type Mutable<T extends object> = {
-	-readonly[Property in keyof T]: T[Property]
+export type Mutable<Obj extends object> = {
+	-readonly[Property in keyof Obj]: Obj[Property]
 }
 
 /**
@@ -354,10 +354,10 @@ export type Mutable<T extends object> = {
  * }
  * type NonReadonlyFoo = DeepMutable<Foo> // { foo: { bar: { foobar: number } } }
  */
-export type DeepMutable<T extends object> = {
-	-readonly[Property in keyof T]: T[Property] extends object
-		? DeepMutable<T[Property]>
-		: T[Property];
+export type DeepMutable<Obj extends object> = {
+	-readonly[Property in keyof Obj]: Obj[Property] extends object
+		? DeepMutable<Obj[Property]>
+		: Obj[Property];
 };
 
 /**
@@ -379,9 +379,9 @@ export type DeepMutable<T extends object> = {
  * type Merge = MergeAll<[Foo, Bar, FooBar]> 
  * // { foo: string | boolean, bar: string | number, foobar: string }
  */
-export type MergeAll<Tuple extends readonly object[], Merge extends object = {}> =
-	Tuple extends [infer Item, ...infer Items]
-		? MergeAll<Items extends object[] ? Items : never, MergeKeyObjects<Merge, Item extends object ? Item : {}>>
+export type MergeAll<Array extends readonly object[], Merge extends object = {}> =
+	Array extends [infer Item, ...infer Spread]
+		? MergeAll<Spread extends object[] ? Spread : never, MergeKeyObjects<Merge, Item extends object ? Item : {}>>
 		: Merge;
 
 /**
@@ -394,7 +394,7 @@ export type MergeAll<Tuple extends readonly object[], Merge extends object = {}>
  * type TupleString = ToUnion<"foo"> // foo
  * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
  */
-export type ToUnion<T> = T extends [infer Item, ...infer Items] ? Item | ToUnion<Items> : T;
+export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnion<Spread> : T;
 
 /**
  * Cleans the elements of a tuple based in the predicated, it returns the values that 
@@ -404,9 +404,9 @@ export type ToUnion<T> = T extends [infer Item, ...infer Items] ? Item | ToUnion
  * type CleanNumbers = Without<[1, 2, 3, 4, 5], [4, 5]> // [1, 2, 3]
  * type CleanStrings = Without<["foo", "bar", "foobar"], "foo"> // ["bar", "foobar"]
  */
-export type Without<T extends readonly unknown[], Predicate, Array extends unknown[] = []> = T extends [infer Item, ...infer Items]
-		? Without<Items, Predicate, Item extends ToUnion<Predicate> ? Array : [...Array, Item]>
-		: Array;
+export type Without<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [infer Item, ...infer Items]
+		? Without<Items, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
+		: Build;
 
 /**
  * Create a new object type appending a new property with its value
