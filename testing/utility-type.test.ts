@@ -3,20 +3,20 @@ import { describe, test, expectTypeOf } from "vitest"
 import type { 
     Merge, 
     Properties, 
-    ExtractToObject, 
-    PublicType,
-    HasKeyObjects,
+    FlattenProperties, 
+    PublicOnly,
+    RetrieveKeyValue,
     DeepReadonly,
     TupleToUnion,
     RequiredByKeys,
     Filter,
-    MergeKeyObjects,
+    UnionMerge,
     Mutable,
     DeepMutable,
     MergeAll,
     ToUnion,
-    Without,
-    AppendToObject,    
+    FilterOut,
+    AddPropertyToObject,    
     Reverse,
     IndexOf,
     LastIndexOf,
@@ -75,29 +75,29 @@ describe("Merge values",  () => {
 })
 
 
-describe("Extract property from object", () => {
-    test("Extract the key", () => {
-        expectTypeOf<ExtractToObject<{ name: string, address: { street: string } }, "address">>().toEqualTypeOf<{ name: string, street: string }>()
-        expectTypeOf<ExtractToObject<{ name: string, address: { street: string, avenue: string } }, "address">>().toEqualTypeOf<{ name: string, street: string, avenue: string }>()
+describe("FlattenProperties", () => {
+    test("Extract property from object", () => {
+        expectTypeOf<FlattenProperties<{ name: string, address: { street: string } }, "address">>().toEqualTypeOf<{ name: string, street: string }>()
+        expectTypeOf<FlattenProperties<{ name: string, address: { street: string, avenue: string } }, "address">>().toEqualTypeOf<{ name: string, street: string, avenue: string }>()
     })
 })
 
 
-describe("PublicType", () => {
+describe("PublicOnly", () => {
     test("Remove properties beginning with (_)", () => {
-        expectTypeOf<PublicType<{ foo: string }>>().toEqualTypeOf<{ foo: string }>();
-        expectTypeOf<PublicType<{ foo: string, _bar: string }>>().toEqualTypeOf<{ foo: string }>();
-        expectTypeOf<PublicType<{ _foo: string, _bar: string }>>().toEqualTypeOf<{}>();
+        expectTypeOf<PublicOnly<{ foo: string }>>().toEqualTypeOf<{ foo: string }>();
+        expectTypeOf<PublicOnly<{ foo: string, _bar: string }>>().toEqualTypeOf<{ foo: string }>();
+        expectTypeOf<PublicOnly<{ _foo: string, _bar: string }>>().toEqualTypeOf<{}>();
     })
 })
 
 
-describe("HasKeyObjects", () => {
+describe("RetrieveKeyValue", () => {
     test("Exist the key within objects", () => {
-        expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<HasKeyObjects<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
-        expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<HasKeyObjects<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
+        expectTypeOf<RetrieveKeyValue<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<RetrieveKeyValue<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<RetrieveKeyValue<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<RetrieveKeyValue<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
     })
 })
 
@@ -111,11 +111,11 @@ describe("RequiredByKeys", () => {
 })
 
 
-describe("MergeKeyObjects", () => {
+describe("UnionMerge", () => {
     test("Merge the types of the properties of two objects.", () => {
-        expectTypeOf<MergeKeyObjects<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string, bar: string }>()
-        expectTypeOf<MergeKeyObjects<{ foo: string }, { foo: number }>>().toEqualTypeOf<{ foo: string | number }>()
-        expectTypeOf<MergeKeyObjects<{ foo: string | number }, { foo: boolean }>>().toEqualTypeOf<{ foo: string | number | boolean }>()
+        expectTypeOf<UnionMerge<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string, bar: string }>()
+        expectTypeOf<UnionMerge<{ foo: string }, { foo: number }>>().toEqualTypeOf<{ foo: string | number }>()
+        expectTypeOf<UnionMerge<{ foo: string | number }, { foo: boolean }>>().toEqualTypeOf<{ foo: string | number | boolean }>()
     })
 })
 
@@ -187,18 +187,18 @@ describe("ToUnion", () => {
 })
 
 
-describe("AppendToObject", () => {
+describe("AddPropertyToObject", () => {
     test("Append a new property of an exist object type", () => {
-        expectTypeOf<AppendToObject<{ foo: string }, "bar", number>>().toEqualTypeOf<{ foo: string, bar: number }>()
-        expectTypeOf<AppendToObject<{ foo: string }, "bar", { foobar: number, barfoo: boolean }>>().toEqualTypeOf<{ foo: string, bar: { foobar: number, barfoo: boolean } }>()
-        expectTypeOf<AppendToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{ foo: string, bar: [1, 2, 3] }>()
-        expectTypeOf<AppendToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{ foo: string, bar: string | boolean | number }>()
+        expectTypeOf<AddPropertyToObject<{ foo: string }, "bar", number>>().toEqualTypeOf<{ foo: string, bar: number }>()
+        expectTypeOf<AddPropertyToObject<{ foo: string }, "bar", { foobar: number, barfoo: boolean }>>().toEqualTypeOf<{ foo: string, bar: { foobar: number, barfoo: boolean } }>()
+        expectTypeOf<AddPropertyToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{ foo: string, bar: [1, 2, 3] }>()
+        expectTypeOf<AddPropertyToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{ foo: string, bar: string | boolean | number }>()
     })
 })
 
 
-describe("Difference", () => {
-    test("Difference of properties between two objects", () => {
+describe("Intersection", () => {
+    test("Intersection of properties between two objects", () => {
         expectTypeOf<Intersection<{ foo: string }, { foo: number, bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
         expectTypeOf<Intersection<{ foo: string, bar: boolean }, { bar: number, foo: bigint }>>().toEqualTypeOf<{}>()
         expectTypeOf<Intersection<{ foo: string, bar: { bar: number } }, { barfoo: { bar: number }, foo: bigint }>>().toEqualTypeOf<{ bar: { bar: number }, barfoo: { bar: number } }>()
@@ -244,13 +244,13 @@ describe("Tuple methods", () => {
     })
 
 
-    describe("Without", () => {
+    describe("FilterOut", () => {
         test("Removes the elements present in the predicate", () => {
-            expectTypeOf<Without<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>
-            expectTypeOf<Without<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>
-            expectTypeOf<Without<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
-            expectTypeOf<Without<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
-            expectTypeOf<Without<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
+            expectTypeOf<FilterOut<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>
+            expectTypeOf<FilterOut<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>
+            expectTypeOf<FilterOut<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>
+            expectTypeOf<FilterOut<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>>().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>
+            expectTypeOf<FilterOut<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>
         })
     })
 
