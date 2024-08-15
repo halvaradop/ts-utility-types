@@ -157,8 +157,8 @@ export type Omit<Obj extends object, Keys extends keyof Obj> = {
 export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | keyof Obj2;
 
 /**
- * Creates a new object by merging two objects. Properties from `S` override properties 
- * from `F` if they have the same key
+ * Creates a new object by merging two objects. Properties from `Obj1` override properties 
+ * from `Obj2` if they have the same key
  * 
  * @example
  * interface Config {
@@ -230,7 +230,7 @@ export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj
 >;
 
 /**
- * Create a new object based in the keys that are not assignable of type U
+ * Create a new object based in the keys that are not assignable of type `Type`
  * 
  * @example
  * interface User {
@@ -270,8 +270,8 @@ export type HasKeyObjects<Obj1 extends object, Obj2 extends object, Key> = Key e
                 : never;
 
 /**
- * Convert to required the keys speficied in the type `K`, and the others fields mantein
- * their definition. When `K` is not provided, it should make all properties required 
+ * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
+ * their definition. When `Keys` is not provided, it should make all properties required 
  * 
  * @example
  * interface User {
@@ -404,8 +404,8 @@ export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnio
  * type CleanNumbers = Without<[1, 2, 3, 4, 5], [4, 5]> // [1, 2, 3]
  * type CleanStrings = Without<["foo", "bar", "foobar"], "foo"> // ["bar", "foobar"]
  */
-export type Without<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [infer Item, ...infer Items]
-		? Without<Items, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
+export type Without<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
+		? Without<Spread, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
 		: Build;
 
 /**
@@ -417,8 +417,8 @@ export type Without<Array extends readonly unknown[], Predicate, Build extends u
  * }
  * type UserAppendLastname = AppendToObject<User, "lastname", string>
  */
-export type AppendToObject<T extends object, U extends string, V> = {
-	[Property in keyof T | U]: Property extends keyof T ? T[Property] : V
+export type AppendToObject<Obj extends object, NewProp extends string, TypeValue> = {
+	[Property in keyof Obj | NewProp]: Property extends keyof Obj ? Obj[Property] : TypeValue
 }
 
 /**
@@ -431,13 +431,13 @@ export type AppendToObject<T extends object, U extends string, V> = {
  * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>
  * // [() => void, { foo: number }, "bar", 2, "foo", 1]
  */
-export type Reverse<T extends unknown[]> = T extends [infer Item, ...infer Items]
-	? [...Reverse<Items>, Item]
-	: T;
+export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...infer Spread]
+	? [...Reverse<Spread>, Item]
+	: Array;
 
 /**
- * Returns the first index where the element `U` appears in the tuple type `T`.
- * If the element `U` does not appear, it returns `-1`.
+ * Returns the first index where the element `Match` appears in the tuple type `Array`.
+ * If the element `Match` does not appear, it returns `-1`.
  * 
  * @example
  * type IndexOf1 = IndexOf<[0, 0, 0], 2> // -1
@@ -445,16 +445,16 @@ export type Reverse<T extends unknown[]> = T extends [infer Item, ...infer Items
  * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any> // 4
  * type IndexOf4 = IndexOf<[string, "a"], "a"> // 1
  */
-export type IndexOf<T extends unknown[], U, Index extends unknown[] = []> = 
-	T extends [infer Item, ...infer Items]
-		? Equals<Item, U> extends true
+export type IndexOf<Array extends unknown[], Match, Index extends unknown[] = []> = 
+	Array extends [infer Item, ...infer Spread]
+		? Equals<Item, Match> extends true
 			? Index["length"]
-			: IndexOf<Items, U, [...Index, Item]>
+			: IndexOf<Spread, Match, [...Index, Item]>
 		: -1;
 
 /**
- * Returns the last index where the element `U` appears in the tuple type `T`.
- * If the element `U` does not appear, it returns `-1`.
+ * Returns the last index where the element `Match` appears in the tuple type `Array`.
+ * If the element `Match` does not appear, it returns `-1`.
  * 
  * @example
  * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> // 3
@@ -462,11 +462,11 @@ export type IndexOf<T extends unknown[], U, Index extends unknown[] = []> =
  * type LastIndexOf3 = LastIndexOf<[string, 2, number, 'a', number, 1], number> // 4
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, 'a', any, 1], any> // 5
  */
-export type LastIndexOf<T extends unknown[], U, Index extends unknown[] = [], IndexOf extends unknown[] = []> = 
-	T extends [infer Item, ...infer Items]
-		? LastIndexOf<Items, U, [...Index, Item], Equals<Item, U> extends true ? [...IndexOf, Index["length"]] : IndexOf>
-		: IndexOf extends [...any, infer Item]
-			? Item
+export type LastIndexOf<Array extends unknown[], Match, Index extends unknown[] = [], IndexOf extends unknown[] = []> =
+	Array extends [infer Item, ...infer Spread]
+		? LastIndexOf<Spread, Match, [...Index, Item], Equals<Item, Match> extends true ? [...IndexOf, Index["length"]] : IndexOf>
+		: IndexOf extends [...any, infer LastIndex]
+			? LastIndex
 			: -1;
 
 /**
@@ -516,16 +516,16 @@ export type ConstructTuple<Length extends number, Value extends unknown = unknow
  * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]> // false
  * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]> // true
  */
-export type CheckRepeatedTuple<T extends unknown[], Array extends unknown = ""> = T extends [infer Item, ...infer Items]
-	? Item extends Array 
+export type CheckRepeatedTuple<Array extends unknown[], Build extends unknown = ""> = Array extends [infer Item, ...infer Spread]
+	? Item extends Build 
 		? true
-		: CheckRepeatedTuple<Items, Array | Item>
+		: CheckRepeatedTuple<Spread, Build | Item>
 	: false;
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
  */
-export type Absolute<T extends number | string | bigint> = DropChar<`${T}`, "-" | "n">;
+export type Absolute<Expression extends number | string | bigint> = DropChar<`${Expression}`, "-" | "n">;
 
 /**
  * Returns a union type of the entries of the provided object
@@ -550,8 +550,8 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * type Test1 = AllEquals<[number, number, number], number> // true
  * type Test2 = AllEquals<[[1], [1], [1]], [1]> // true
  */
-export type AllEquals<T extends unknown[], Comparator> = T extends [infer Item, ...infer Items]
+export type AllEquals<Array extends unknown[], Comparator> = Array extends [infer Item, ...infer Spread]
 	? Equals<Item, Comparator> extends true
-		? AllEquals<Items, Comparator>
+		? AllEquals<Spread, Comparator>
 		: false
 	: true;
