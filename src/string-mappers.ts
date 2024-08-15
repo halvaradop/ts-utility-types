@@ -6,9 +6,9 @@ import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types"
  * type Str = "  hello world  ";
  * type TrimmedLeft = TrimLeft<Str>; // TrimmedLeft = "hello world  "
  */
-export type TrimLeft<S extends string> = S extends `${WhiteSpaces}${infer Characters}`
+export type TrimLeft<Str extends string> = Str extends `${WhiteSpaces}${infer Characters}`
 	? TrimLeft<Characters>
-	: S;
+	: Str;
 
 /**
  * Removes trailing whitespace characters from a string type
@@ -16,9 +16,9 @@ export type TrimLeft<S extends string> = S extends `${WhiteSpaces}${infer Charac
  * type Str = "hello world  ";
  * type TrimmedRight = TrimRight<Str>; // TrimmedRight = "hello world"
  */
-export type TrimRight<S extends string> = S extends `${infer Char}${WhiteSpaces}`
+export type TrimRight<Str extends string> = Str extends `${infer Char}${WhiteSpaces}`
 	? TrimRight<Char>
-	: S;
+	: Str;
 
 
 /**
@@ -27,42 +27,42 @@ export type TrimRight<S extends string> = S extends `${infer Char}${WhiteSpaces}
  * type Str = "  hello world  ";
  * type Trimmed = Trim<Str>; // Trimmed = "hello world"
  */
-export type Trim<S extends string> = S extends `${WhiteSpaces}${infer Characters}`
+export type Trim<Str extends string> = Str extends `${WhiteSpaces}${infer Characters}`
 	? Trim<Characters>
-	: S extends `${infer Char}${WhiteSpaces}`
+	: Str extends `${infer Char}${WhiteSpaces}`
 		? Trim<Char>
-		: S;
+		: Str;
 
 /**
  *  Converts a string to uppercase
  */
-export type Uppercase<S extends string> = S extends `${infer Char}${infer Characters}` 
+export type Uppercase<Str extends string> = Str extends `${infer Char}${infer Characters}` 
 	? Char extends keyof LetterToUppercase 
 		? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
 		: `${Char}${Uppercase<Characters>}`
-	: S;
+	: Str;
 
 /**
  * Converts a string to lowercase
  */
-export type Lowercase<S extends string> = S extends `${infer Char}${infer Characters}` 
+export type Lowercase<Str extends string> = Str extends `${infer Char}${infer Characters}` 
 	? Char extends keyof LetterToLowercase
 		? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
 		: `${Char}${Lowercase<Characters>}`
-	: S;
+	: Str;
 
 /**
  * Capitalizes the first letter of a word and converts the rest to lowercase
  */
-export type Capitalize<S extends string, F extends boolean = true> = S extends `${infer Char}${infer Characters}`
-	? F extends boolean
-		? F extends true
+export type Capitalize<Str extends string, FirstWord extends boolean = true> = Str extends `${infer Char}${infer Characters}`
+	? FirstWord extends boolean
+		? FirstWord extends true
 			? `${Uppercase<Char>}${Capitalize<Characters, false>}`
 			: Char extends " "
 				? ` ${Capitalize<Characters, true>}`
 				: `${Lowercase<Char>}${Capitalize<Characters, false>}`
-		: S
-	: S;
+		: Str
+	: Str;
 
 /**
  * Create a string type based on the values of a tuple type `T`, joining the values
@@ -72,8 +72,8 @@ export type Capitalize<S extends string, F extends boolean = true> = S extends `
  * type Join1 = Join<["a", "p", "p", "l", "e"], "-"> // "a-p-p-l-e"
  * type Join2 = Join<["Hello", "World"], " "> // "Hello World"
  */
-export type Join<T extends unknown[], Separator extends number | string, Str extends string = ""> = 
-	T extends [infer Char, ...infer Chars]
+export type Join<Array extends unknown[], Separator extends number | string, Str extends string = ""> = 
+	Array extends [infer Char, ...infer Chars]
 		? Join<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
 		: Str;
 
@@ -85,7 +85,7 @@ export type Join<T extends unknown[], Separator extends number | string, Str ext
  * type Test2 = StartsWith<'abc', 'ab'> // true
  * type Test3 = StartsWith<'abc', 'abcd'> // false
  */
-export type StartsWith<T extends string, U extends string> = T extends `${U}${string}` ? true : false;
+export type StartsWith<Str extends string, Match extends string> = Str extends `${Match}${string}` ? true : false;
 
 /**
  * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
@@ -99,13 +99,13 @@ export type DropChar<Str extends string, Match extends string, Build extends str
 	: Build;
 
 /**
- * Checks if a string type matchs start with a strig `U`
+ * Checks if a string type matchs start with a strig `Match`
  * 
  * @example
  * type Test1 = EndsWith<'abc', 'bc'> // true
  * type Test2 = EndsWith<'abc', 'ac'> // false
  */
-export type EndsWith<T extends string, U extends string> = T extends `${string}${U}` ? true : false;
+export type EndsWith<Str extends string, Match extends string> = Str extends `${string}${Match}` ? true : false;
 
 /**
  * Returns the length of a string type
