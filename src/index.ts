@@ -85,5 +85,7 @@ export type {
     DropChar,
     StartsWith,
     EndsWith,
-    LengthOfString
+    LengthOfString,
+    IndexOfString,
+    FirstUniqueCharIndex
 } from "./string-mappers"

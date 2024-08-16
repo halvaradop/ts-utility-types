@@ -12,7 +12,8 @@ import type {
     DropChar,
     EndsWith,
     LengthOfString,
-    IndexOfString
+    IndexOfString,
+    FirstUniqueCharIndex
 } from "../src/string-mappers"
 
 
@@ -117,5 +118,16 @@ describe("IndexOfString", () => {
         expectTypeOf<IndexOfString<"foobar", "b">>().toEqualTypeOf<3>()
         expectTypeOf<IndexOfString<"foobar", "r">>().toEqualTypeOf<5>()
         expectTypeOf<IndexOfString<"foobar", "x">>().toEqualTypeOf<-1>()
+    })
+})
+
+
+describe("FirstUniqueCharIndex", () => {
+    test("Returns the first index of a character that is not repeated", () => {
+        expectTypeOf<FirstUniqueCharIndex<"">>().toEqualTypeOf<-1>()
+        expectTypeOf<FirstUniqueCharIndex<"comparator">>().toEqualTypeOf<0>()
+        expectTypeOf<FirstUniqueCharIndex<"comparator and comparable">>().toEqualTypeOf<7>()
+        expectTypeOf<FirstUniqueCharIndex<"aabbcc">>().toEqualTypeOf<-1>()
+        expectTypeOf<FirstUniqueCharIndex<"aabcb">>().toEqualTypeOf<3>()
     })
 })
