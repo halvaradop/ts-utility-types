@@ -11,7 +11,8 @@ import type {
     StartsWith,
     DropChar,
     EndsWith,
-    LengthOfString
+    LengthOfString,
+    IndexOfString
 } from "../src/string-mappers"
 
 
@@ -61,7 +62,7 @@ describe("String mappers", () => {
 
 
 describe("Join", () => {
-    test("Join the elements of a tuple separated by a character", () => {})
+    test("Join the elements of a tuple separated by a character", () => { })
     expectTypeOf<Join<["a", "p", "p", "l", "e"], "-">>().toEqualTypeOf<"a-p-p-l-e">()
     expectTypeOf<Join<["Hello", "World"], " ">>().toEqualTypeOf<"Hello World">()
     expectTypeOf<Join<["2", "2", "2"], "1">>().toEqualTypeOf<"21212">()
@@ -105,5 +106,16 @@ describe("LengthOfString", () => {
         expectTypeOf<LengthOfString<any>>().toEqualTypeOf<0>()
         expectTypeOf<LengthOfString<never>>().toEqualTypeOf<never>()
         expectTypeOf<LengthOfString<"foobarfoobar">>().toEqualTypeOf<12>()
+    })
+})
+
+
+describe("IndexOfString", () => {
+    test("Returns the first index occurrence of a character", () => {
+        expectTypeOf<IndexOfString<"", never>>().toEqualTypeOf<-1>()
+        expectTypeOf<IndexOfString<"foobar", "f">>().toEqualTypeOf<0>()
+        expectTypeOf<IndexOfString<"foobar", "b">>().toEqualTypeOf<3>()
+        expectTypeOf<IndexOfString<"foobar", "r">>().toEqualTypeOf<5>()
+        expectTypeOf<IndexOfString<"foobar", "x">>().toEqualTypeOf<-1>()
     })
 })

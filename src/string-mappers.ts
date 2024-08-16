@@ -1,3 +1,4 @@
+import type { Equals } from "./test";
 import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types";
 
 /**
@@ -117,3 +118,17 @@ export type EndsWith<Str extends string, Match extends string> = Str extends `${
 export type LengthOfString<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
 	? LengthOfString<Chars, [...Length, Char]>
 	: Length["length"];
+
+/**
+ * Returns the first index of the character that matches `Match`. 
+ * Otherwise, it returns -1.
+ * 
+ * @example
+ * type IndexOfA = IndexOfString<"comparator is a function", "i"> // 12
+ * type IndexOfOutBound = IndexOfString<"comparator is a function", "z"> // -1
+ */
+export type IndexOfString<Str extends string, Match extends string, Index extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
+	? Equals<Char, Match> extends true
+		? Index["length"]
+		: IndexOfString<Chars, Match, [...Index, 1]>
+	: -1;
