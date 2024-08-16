@@ -132,3 +132,19 @@ export type IndexOfString<Str extends string, Match extends string, Index extend
 		? Index["length"]
 		: IndexOfString<Chars, Match, [...Index, 1]>
 	: -1;
+
+/**
+ * Returns the first index of a character that is unique within the given string.
+ * If all of the characters are repeated, it returns -1.
+ * 
+ * @example
+ * type IndexOfC = FirstUniqueCharIndex<"aabcb"> // 3
+ * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc"> // -1
+ */
+export type FirstUniqueCharIndex<Str extends string, Index extends unknown[] = [], Build extends string = ""> = Str extends `${infer Char}${infer Chars}`
+	? IndexOfString<Chars, Char> extends -1
+		? Char extends Build
+			? FirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
+			: Index["length"]
+		: FirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
+	: -1;
