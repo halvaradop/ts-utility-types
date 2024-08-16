@@ -138,8 +138,8 @@ export type IndexOfString<Str extends string, Match extends string, Index extend
  * If all of the characters are repeated, it returns -1.
  * 
  * @example
- * type IndexOfC = FirstUniqueCharIndex<"aabcb"> // -1
- * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc"> // 1
+ * type IndexOfC = FirstUniqueCharIndex<"aabcb"> // 3
+ * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc"> // -1
  */
 export type FirstUniqueCharIndex<Str extends string, Index extends unknown[] = [], Build extends string = ""> = Str extends `${infer Char}${infer Chars}`
 	? IndexOfString<Chars, Char> extends -1
