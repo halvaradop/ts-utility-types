@@ -1,0 +1,9 @@
+# Build
+node_modules
+dist
+.github
+
+# Configurations
+package.json
+package-lock.json
+tsconfig.json
