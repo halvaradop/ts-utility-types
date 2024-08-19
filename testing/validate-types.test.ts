@@ -1,10 +1,17 @@
 import { describe, test, expect } from "vitest"
-import { isPrimitive, isPrimitiveNullish, isBoolean, isNumber, isString, isObject, isArray } from './../src/validate-types';
-
+import {
+    isPrimitive,
+    isPrimitiveNullish,
+    isBoolean,
+    isNumber,
+    isString,
+    isObject,
+    isArray,
+} from "./../src/validate-types"
 
 describe("Primitive Validation", () => {
     describe("isPrimitive", () => {
-        test("should return true for primitive values", ({  }) => {
+        test("should return true for primitive values", ({}) => {
             expect(isPrimitive(1)).toBeTruthy()
             expect(isPrimitive("str")).toBeTruthy()
             expect(isPrimitive(true)).toBeTruthy()
@@ -37,7 +44,6 @@ describe("Primitive Validation", () => {
     })
 })
 
-
 describe("Types validation", () => {
     describe("isNumber", () => {
         test("should return true for numbers", () => {
@@ -57,7 +63,7 @@ describe("Types validation", () => {
         test("should return true for booleans", () => {
             expect(isBoolean(false)).toBeTruthy()
         })
-        
+
         test("should return false for non-booleans", () => {
             expect(isBoolean(1)).toBeFalsy()
             expect(isBoolean("str")).toBeFalsy()
@@ -71,7 +77,7 @@ describe("Types validation", () => {
         test("should return true for strings", () => {
             expect(isString("str")).toBeTruthy()
         })
-        
+
         test("should return false for non-strings", () => {
             expect(isString(1)).toBeFalsy()
             expect(isString(false)).toBeFalsy()
@@ -85,7 +91,7 @@ describe("Types validation", () => {
         test("should return true for objects", () => {
             expect(isObject({})).toBeTruthy()
         })
-        
+
         test("should return false for non-objects", () => {
             expect(isObject(1)).toBeFalsy()
             expect(isObject(false)).toBeFalsy()
@@ -100,7 +106,7 @@ describe("Types validation", () => {
             expect(isArray([])).toBeTruthy()
             expect(isArray([1, 2, 3])).toBeTruthy()
         })
-        
+
         test("should return false for non-arrays", () => {
             expect(isArray(1)).toBeFalsy()
             expect(isArray(false)).toBeFalsy()

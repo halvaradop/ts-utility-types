@@ -13,9 +13,8 @@ import type {
     EndsWith,
     LengthOfString,
     IndexOfString,
-    FirstUniqueCharIndex
+    FirstUniqueCharIndex,
 } from "../src/string-mappers"
-
 
 describe("String mappers", () => {
     test("TrimLeft", () => {
@@ -36,7 +35,6 @@ describe("String mappers", () => {
         expectTypeOf<Trim<"  foo  ">>().toMatchTypeOf<"foo">()
         expectTypeOf<Trim<"\r\n foo \r\n">>().toMatchTypeOf<"foo">()
     })
-
 
     test("Uppercase", () => {
         expectTypeOf<Uppercase<"foo">>().toMatchTypeOf<"FOO">()
@@ -61,14 +59,14 @@ describe("String mappers", () => {
     })
 })
 
-
 describe("Join", () => {
-    test("Join the elements of a tuple separated by a character", () => { })
-    expectTypeOf<Join<["a", "p", "p", "l", "e"], "-">>().toEqualTypeOf<"a-p-p-l-e">()
+    test("Join the elements of a tuple separated by a character", () => {})
+    expectTypeOf<
+        Join<["a", "p", "p", "l", "e"], "-">
+    >().toEqualTypeOf<"a-p-p-l-e">()
     expectTypeOf<Join<["Hello", "World"], " ">>().toEqualTypeOf<"Hello World">()
     expectTypeOf<Join<["2", "2", "2"], "1">>().toEqualTypeOf<"21212">()
 })
-
 
 describe("Match strings", () => {
     test("StartsWith", () => {
@@ -80,7 +78,6 @@ describe("Match strings", () => {
         expectTypeOf<StartsWith<"", "">>().toEqualTypeOf<true>()
     })
 
-
     test("EndsWith", () => {
         expectTypeOf<EndsWith<"foobar", "foo">>().toEqualTypeOf<false>()
         expectTypeOf<EndsWith<"foobar", "bar">>().toEqualTypeOf<true>()
@@ -91,15 +88,17 @@ describe("Match strings", () => {
     })
 })
 
-
 describe("DropChar", () => {
     test("Remove the characters that match with the given char", () => {
-        expectTypeOf<DropChar<"foobar foo!", " ">>().toEqualTypeOf<"foobarfoo!">()
-        expectTypeOf<DropChar<"f o o b a r f o o !", " ">>().toEqualTypeOf<"foobarfoo!">()
+        expectTypeOf<
+            DropChar<"foobar foo!", " ">
+        >().toEqualTypeOf<"foobarfoo!">()
+        expectTypeOf<
+            DropChar<"f o o b a r f o o !", " ">
+        >().toEqualTypeOf<"foobarfoo!">()
         expectTypeOf<DropChar<"f o o b a r f o o !", any>>().toEqualTypeOf<"">()
     })
 })
-
 
 describe("LengthOfString", () => {
     test("Returns the length of a string type", () => {
@@ -109,7 +108,6 @@ describe("LengthOfString", () => {
         expectTypeOf<LengthOfString<"foobarfoobar">>().toEqualTypeOf<12>()
     })
 })
-
 
 describe("IndexOfString", () => {
     test("Returns the first index occurrence of a character", () => {
@@ -121,12 +119,13 @@ describe("IndexOfString", () => {
     })
 })
 
-
 describe("FirstUniqueCharIndex", () => {
     test("Returns the first index of a character that is not repeated", () => {
         expectTypeOf<FirstUniqueCharIndex<"">>().toEqualTypeOf<-1>()
         expectTypeOf<FirstUniqueCharIndex<"comparator">>().toEqualTypeOf<0>()
-        expectTypeOf<FirstUniqueCharIndex<"comparator and comparable">>().toEqualTypeOf<7>()
+        expectTypeOf<
+            FirstUniqueCharIndex<"comparator and comparable">
+        >().toEqualTypeOf<7>()
         expectTypeOf<FirstUniqueCharIndex<"aabbcc">>().toEqualTypeOf<-1>()
         expectTypeOf<FirstUniqueCharIndex<"aabcb">>().toEqualTypeOf<3>()
     })

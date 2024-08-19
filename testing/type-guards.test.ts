@@ -13,7 +13,6 @@ describe("Utility types for type guards", () => {
         })
     })
 
-
     describe("IsOdd", () => {
         test("Check if a number is odd", () => {
             expectTypeOf<IsOdd<0>>().toEqualTypeOf<false>()
