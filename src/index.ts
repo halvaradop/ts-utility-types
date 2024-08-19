@@ -38,7 +38,7 @@ export type {
     Absolute,
     ObjectEntries,
     AllEquals,
-} from "./utility-types"
+} from "./utility-types";
 
 export type {
     ArgsFunction,
@@ -51,7 +51,7 @@ export type {
     Falsy,
     Even,
     Odd,
-} from "./types"
+} from "./types";
 
 export {
     isPrimitive,
@@ -62,11 +62,11 @@ export {
     isNumber,
     isObject,
     isString,
-} from "./validate-types"
+} from "./validate-types";
 
-export type { Equals, Expect } from "./test"
+export type { Equals, Expect } from "./test";
 
-export type { IsNever, IsOdd } from "./type-guards"
+export type { IsNever, IsOdd } from "./type-guards";
 
 export type {
     Trim,
@@ -82,4 +82,4 @@ export type {
     LengthOfString,
     IndexOfString,
     FirstUniqueCharIndex,
-} from "./string-mappers"
+} from "./string-mappers";

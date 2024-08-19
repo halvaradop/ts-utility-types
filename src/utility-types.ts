@@ -1,6 +1,6 @@
-import type { DropChar } from "./string-mappers"
-import type { Equals } from "./test"
-import type { ArgsFunction } from "./types"
+import type { DropChar } from "./string-mappers";
+import type { Equals } from "./test";
+import type { ArgsFunction } from "./types";
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -9,8 +9,8 @@ import type { ArgsFunction } from "./types"
  * It doesn't change the original object type.
  */
 export type Prettify<Obj extends object> = {
-    [Property in keyof Obj]: Obj[Property]
-} & {}
+    [Property in keyof Obj]: Obj[Property];
+} & {};
 
 /**
  * It creates a new type based on your object but marks every property as readonly
@@ -30,8 +30,8 @@ export type DeepReadonly<Obj extends object> = {
         ? Obj[Property]
         : Obj[Property] extends object
           ? DeepReadonly<Obj[Property]>
-          : Obj[Property]
-}
+          : Obj[Property];
+};
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -46,7 +46,7 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [
     ...infer Spread,
 ]
     ? Item | TupleToUnion<Spread>
-    : never
+    : never;
 
 /**
  * Gets the length (size) of an array.
@@ -57,7 +57,7 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [
  */
 export type Size<Array extends unknown[]> = Array extends unknown[]
     ? Array["length"]
-    : 0
+    : 0;
 
 /**
  * Gets the type of the last element in an array, or `never` if the array is empty.
@@ -67,7 +67,7 @@ export type Size<Array extends unknown[]> = Array extends unknown[]
  */
 export type Last<Array extends unknown[]> = Array extends [...any, infer Last]
     ? Last
-    : never
+    : never;
 
 /**
  * Removes the last element from an array and returns a new array type with all elements
@@ -82,12 +82,12 @@ export type Pop<Array extends unknown[]> = Array extends [
     unknown,
 ]
     ? Spread
-    : []
+    : [];
 
 /**
  * Exclude properties of type `Match` from type `T`
  */
-export type Exclude<T, Match> = T extends Match ? never : T
+export type Exclude<T, Match> = T extends Match ? never : T;
 
 /**
  * Get the type of the resolved value of a PromiseLike object.
@@ -97,7 +97,7 @@ export type Awaited<T extends PromiseLike<unknown>> =
         ? ResolveType extends PromiseLike<unknown>
             ? Awaited<ResolveType>
             : ResolveType
-        : never
+        : never;
 
 /**
  * Get the type of the function's arguments
@@ -112,7 +112,7 @@ export type Parameters<Function extends ArgsFunction> = Function extends (
     ...args: infer Params
 ) => void
     ? Params
-    : never
+    : never;
 
 /**
  * Create a new type with a subset of properties from an object
@@ -126,8 +126,8 @@ export type Parameters<Function extends ArgsFunction> = Function extends (
  * type PickUser = Pick<User, "age"> // { age: number }
  */
 export type Pick<Obj extends object, Keys extends keyof Obj> = {
-    [Property in Keys]: Obj[Property]
-}
+    [Property in Keys]: Obj[Property];
+};
 
 /**
  * Check if a value exists within a tuple and is equal to a specific value
@@ -144,7 +144,7 @@ export type Includes<Array extends unknown[], Match> = Array extends [
     ? Equals<Compare, Match> extends true
         ? true
         : Includes<Spread, Match>
-    : false
+    : false;
 
 /**
  * Creates a new type that omits properties from an object type based on another type
@@ -156,8 +156,8 @@ export type Includes<Array extends unknown[], Match> = Array extends [
 export type Omit<Obj extends object, Keys extends keyof Obj> = {
     [Property in keyof Obj as Property extends Keys
         ? never
-        : Property]: Obj[Property]
-}
+        : Property]: Obj[Property];
+};
 
 /**
  * Creates a union of the keys of two objects
@@ -175,7 +175,7 @@ export type Omit<Obj extends object, Keys extends keyof Obj> = {
  */
 export type Properties<Obj1 extends object, Obj2 extends object> =
     | keyof Obj1
-    | keyof Obj2
+    | keyof Obj2;
 
 /**
  * Creates a new object by merging two objects. Properties from `Obj1` override properties
@@ -195,8 +195,12 @@ export type Properties<Obj1 extends object, Obj2 extends object> =
  * type MergeConfig = Merge<Config, AppStore> // { storePaths: string[], path: string, hooks: ArgsFunction[] }
  */
 export type Merge<Obj1 extends object, Obj2 extends object> = {
-    [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>
-}
+    [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<
+        Obj2,
+        Obj1,
+        Property
+    >;
+};
 
 /**
  * Create a new object based in the difference keys between the objects.
@@ -219,8 +223,8 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
     [Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 &
         keyof Obj2
         ? never
-        : Property]: RetrieveKeyValue<Obj1, Obj2, Property>
-}
+        : Property]: RetrieveKeyValue<Obj1, Obj2, Property>;
+};
 
 /**
  * Create a new object based in the type of its keys
@@ -236,8 +240,8 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
 export type PickByType<Obj extends object, Type> = {
     [Property in keyof Obj as Obj[Property] extends Type
         ? Property
-        : never]: Obj[Property]
-}
+        : never]: Obj[Property];
+};
 
 /**
  * Converts the specified keys of an object into optional ones
@@ -257,9 +261,9 @@ export type PartialByKeys<
     {
         [Property in keyof Obj as Property extends Keys
             ? never
-            : Property]: Obj[Property]
+            : Property]: Obj[Property];
     } & { [Property in Keys]?: Obj[Property] }
->
+>;
 
 /**
  * Create a new object based in the keys that are not assignable of type `Type`
@@ -275,8 +279,8 @@ export type PartialByKeys<
 export type OmitByType<Obj extends object, Type> = {
     [Property in keyof Obj as Obj[Property] extends Type
         ? never
-        : Property]: Obj[Property]
-}
+        : Property]: Obj[Property];
+};
 
 /**
  * Extracts the value of a key from an object and returns a new object with that value,
@@ -289,9 +293,9 @@ export type FlattenProperties<
     {
         [Property in keyof Obj as Property extends Keys
             ? never
-            : Property]: Obj[Property]
+            : Property]: Obj[Property];
     } & Obj[Keys]
->
+>;
 
 /**
  * Removes the properties whose keys start with an underscore (_).
@@ -299,8 +303,8 @@ export type FlattenProperties<
 export type PublicOnly<Obj extends object> = {
     [Property in keyof Obj as Property extends `_${string}`
         ? never
-        : Property]: Obj[Property]
-}
+        : Property]: Obj[Property];
+};
 
 /**
  * Checks if a key exists in either of the two objects and returns its value.
@@ -314,7 +318,7 @@ export type RetrieveKeyValue<
     ? Obj1[Key]
     : Key extends keyof Obj2
       ? Obj2[Key]
-      : never
+      : never;
 
 /**
  * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
@@ -335,13 +339,13 @@ export type RequiredByKeys<
     {
         [Property in keyof Obj as Property extends Keys
             ? never
-            : Property]: Obj[Property]
+            : Property]: Obj[Property];
     } & {
         [Property in keyof Obj as Property extends Keys
             ? Property
-            : never]-?: Obj[Property]
+            : never]-?: Obj[Property];
     }
->
+>;
 
 /**
  * Filter the items of a tuple of elements based in the predicate provided in the
@@ -361,7 +365,7 @@ export type Filter<
           Predicate,
           Item extends Predicate ? [...Build, Item] : [...Build]
       >
-    : Build
+    : Build;
 
 /**
  *
@@ -384,8 +388,8 @@ export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
             : Obj1[Prop]
         : Prop extends keyof Obj2
           ? Obj2[Prop]
-          : never
-}
+          : never;
+};
 
 /**
  * Converts top-level readonly properties of an object to mutable properties.
@@ -402,8 +406,8 @@ export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
  * type NonReadonlyUser = Mutable<User>; // { name: string, lastname: string, age: number }
  */
 export type Mutable<Obj extends object> = {
-    -readonly [Property in keyof Obj]: Obj[Property]
-}
+    -readonly [Property in keyof Obj]: Obj[Property];
+};
 
 /**
  * Converts all properties to non-readonly of alls levels of the object type,
@@ -422,8 +426,8 @@ export type Mutable<Obj extends object> = {
 export type DeepMutable<Obj extends object> = {
     -readonly [Property in keyof Obj]: Obj[Property] extends object
         ? DeepMutable<Obj[Property]>
-        : Obj[Property]
-}
+        : Obj[Property];
+};
 
 /**
  * Create a new object type based in the tuple of object types, if the properties
@@ -452,7 +456,7 @@ export type MergeAll<
           Spread extends object[] ? Spread : never,
           UnionMerge<Merge, Item extends object ? Item : {}>
       >
-    : Merge
+    : Merge;
 
 /**
  * Create an union type based in the literal values of the tuple provided.
@@ -466,7 +470,7 @@ export type MergeAll<
  */
 export type ToUnion<T> = T extends [infer Item, ...infer Spread]
     ? Item | ToUnion<Spread>
-    : T
+    : T;
 
 /**
  * Cleans the elements of a tuple based in the predicated, it returns the values that
@@ -486,7 +490,7 @@ export type FilterOut<
           Predicate,
           Item extends ToUnion<Predicate> ? Build : [...Build, Item]
       >
-    : Build
+    : Build;
 
 /**
  * Create a new object type appending a new property with its value
@@ -504,8 +508,8 @@ export type AddPropertyToObject<
 > = {
     [Property in keyof Obj | NewProp]: Property extends keyof Obj
         ? Obj[Property]
-        : TypeValue
-}
+        : TypeValue;
+};
 
 /**
  * Change the relative ordern of the elements of a tuple type, reversing
@@ -522,7 +526,7 @@ export type Reverse<Array extends unknown[]> = Array extends [
     ...infer Spread,
 ]
     ? [...Reverse<Spread>, Item]
-    : Array
+    : Array;
 
 /**
  * Returns the first index where the element `Match` appears in the tuple type `Array`.
@@ -542,7 +546,7 @@ export type IndexOf<
     ? Equals<Item, Match> extends true
         ? Index["length"]
         : IndexOf<Spread, Match, [...Index, Item]>
-    : -1
+    : -1;
 
 /**
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
@@ -570,7 +574,7 @@ export type LastIndexOf<
       >
     : IndexOf extends [...any, infer LastIndex]
       ? LastIndex
-      : -1
+      : -1;
 
 /**
  * Parses a percentage string into a tuple of [Sign, Number, Unit].
@@ -597,7 +601,7 @@ export type PercentageParser<
             : Char extends "." | ","
               ? PercentageParser<Char, Sign, `${Num}${Char}`, Unit>
               : never
-    : [Sign, Num, Unit]
+    : [Sign, Num, Unit];
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
@@ -609,7 +613,7 @@ type RepeatConstructTuple<
     Array extends unknown[] = [],
 > = Array["length"] extends Length
     ? Array
-    : RepeatConstructTuple<Length, Value, [...Array, Value]>
+    : RepeatConstructTuple<Length, Value, [...Array, Value]>;
 
 /**
  * reate a tuple with a defined size, where each element is of a specified type
@@ -622,7 +626,7 @@ export type ConstructTuple<
     Length extends number,
     Value extends unknown = unknown,
     Array extends unknown[] = [],
-> = RepeatConstructTuple<Length, Value, Array>
+> = RepeatConstructTuple<Length, Value, Array>;
 
 /**
  * Check if there are duplidated elements inside the tuple
@@ -638,7 +642,7 @@ export type CheckRepeatedTuple<
     ? Item extends Build
         ? true
         : CheckRepeatedTuple<Spread, Build | Item>
-    : false
+    : false;
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
@@ -646,7 +650,7 @@ export type CheckRepeatedTuple<
 export type Absolute<Expression extends number | string | bigint> = DropChar<
     `${Expression}`,
     "-" | "n"
->
+>;
 
 /**
  * Returns a union type of the entries of the provided object
@@ -669,8 +673,8 @@ export type ObjectEntries<
         RequiredObj[Property] extends undefined
             ? undefined
             : RequiredObj[Property],
-    ]
-}[keyof RequiredObj]
+    ];
+}[keyof RequiredObj];
 
 /**
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
@@ -686,4 +690,4 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [
     ? Equals<Item, Comparator> extends true
         ? AllEquals<Spread, Comparator>
         : false
-    : true
+    : true;

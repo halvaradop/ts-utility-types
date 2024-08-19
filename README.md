@@ -18,9 +18,9 @@ npm i -D @halvaradop/ts-utility-types
 Once installed, you can import the types from your typescript files
 
 ```ts
-import { Prettify } from "@halvaradop/ts-utility-types"
+import { Prettify } from "@halvaradop/ts-utility-types";
 
-export type Store = Prettify<StoreState & StoreConfig>
+export type Store = Prettify<StoreState & StoreConfig>;
 ```
 
 ## TypeHero Challenges

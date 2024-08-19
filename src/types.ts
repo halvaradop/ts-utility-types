@@ -9,14 +9,14 @@
  *  callback((x: number, y: number, z: number) => {})
  * }
  */
-export type ArgsFunction = (...args: any) => void
+export type ArgsFunction = (...args: any) => void;
 
 /**
  * Represents the absence of a value, typically `null` or `undefined`.
  * This type is useful for checking for optional values or indicating
  * a lack of data.
  */
-export type Nullish = null | undefined
+export type Nullish = null | undefined;
 
 /**
  * Represents a primitive data type that can also be null or undefined.
@@ -29,7 +29,7 @@ export type PrimitiveNullish =
     | boolean
     | bigint
     | symbol
-    | Nullish
+    | Nullish;
 
 /**
  * Represents a primitive data type: number, string, boolean, bigint, or symbol.
@@ -37,89 +37,89 @@ export type PrimitiveNullish =
  *
  * @remarks This type excludes nullish values (null and undefined).
  */
-export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">
+export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">;
 
 /**
  * Represents a whitespace character: space, newline, tab, carriage return, form feed,
  * line separator, or paragraph separator.
  */
-export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"
+export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029";
 
 /**
  * Maps lowercase letters to their uppercase equivalents
  */
 export interface LetterToUppercase {
-    a: "A"
-    b: "B"
-    c: "C"
-    d: "D"
-    e: "E"
-    f: "F"
-    g: "G"
-    h: "H"
-    i: "I"
-    j: "J"
-    k: "K"
-    l: "L"
-    m: "M"
-    n: "N"
-    o: "O"
-    p: "P"
-    q: "Q"
-    r: "R"
-    s: "S"
-    t: "T"
-    u: "U"
-    v: "V"
-    w: "W"
-    x: "X"
-    y: "Y"
-    z: "Z"
+    a: "A";
+    b: "B";
+    c: "C";
+    d: "D";
+    e: "E";
+    f: "F";
+    g: "G";
+    h: "H";
+    i: "I";
+    j: "J";
+    k: "K";
+    l: "L";
+    m: "M";
+    n: "N";
+    o: "O";
+    p: "P";
+    q: "Q";
+    r: "R";
+    s: "S";
+    t: "T";
+    u: "U";
+    v: "V";
+    w: "W";
+    x: "X";
+    y: "Y";
+    z: "Z";
 }
 
 /**
  * Maps uppercase letters to their lowercase equivalents
  */
 export interface LetterToLowercase {
-    A: "a"
-    B: "b"
-    C: "c"
-    D: "d"
-    E: "e"
-    F: "f"
-    G: "g"
-    H: "h"
-    I: "i"
-    J: "j"
-    K: "k"
-    L: "l"
-    M: "m"
-    N: "n"
-    O: "o"
-    P: "p"
-    Q: "q"
-    R: "r"
-    S: "s"
-    T: "t"
-    U: "u"
-    V: "v"
-    W: "w"
-    X: "x"
-    Y: "y"
-    Z: "z"
+    A: "a";
+    B: "b";
+    C: "c";
+    D: "d";
+    E: "e";
+    F: "f";
+    G: "g";
+    H: "h";
+    I: "i";
+    J: "j";
+    K: "k";
+    L: "l";
+    M: "m";
+    N: "n";
+    O: "o";
+    P: "p";
+    Q: "q";
+    R: "r";
+    S: "s";
+    T: "t";
+    U: "u";
+    V: "v";
+    W: "w";
+    X: "x";
+    Y: "y";
+    Z: "z";
 }
 
 /**
  * Represents the empty values
  */
-export type Falsy = Nullish | 0 | false | ""
+export type Falsy = Nullish | 0 | false | "";
 
 /**
  * The odd digits
  */
-export type Odd = 1 | 3 | 5 | 7 | 9
+export type Odd = 1 | 3 | 5 | 7 | 9;
 
 /**
  * The even digits
  */
-export type Even = 0 | 2 | 4 | 6 | 8
+export type Even = 0 | 2 | 4 | 6 | 8;

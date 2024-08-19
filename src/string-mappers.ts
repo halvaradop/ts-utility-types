@@ -1,5 +1,9 @@
-import type { Equals } from "./test"
-import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types"
+import type { Equals } from "./test";
+import type {
+    LetterToLowercase,
+    LetterToUppercase,
+    WhiteSpaces,
+} from "./types";
 
 /**
  * Removes leading whitespace characters from a string type
@@ -8,7 +12,9 @@ import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types"
  * type TrimmedLeft = TrimLeft<Str>; // TrimmedLeft = "hello world  "
  */
 export type TrimLeft<Str extends string> =
-    Str extends `${WhiteSpaces}${infer Characters}` ? TrimLeft<Characters> : Str
+    Str extends `${WhiteSpaces}${infer Characters}`
+        ? TrimLeft<Characters>
+        : Str;
 
 /**
  * Removes trailing whitespace characters from a string type
@@ -17,7 +23,7 @@ export type TrimLeft<Str extends string> =
  * type TrimmedRight = TrimRight<Str>; // TrimmedRight = "hello world"
  */
 export type TrimRight<Str extends string> =
-    Str extends `${infer Char}${WhiteSpaces}` ? TrimRight<Char> : Str
+    Str extends `${infer Char}${WhiteSpaces}` ? TrimRight<Char> : Str;
 
 /**
  * Removes leading and trailing whitespace characters from a string type
@@ -30,7 +36,7 @@ export type Trim<Str extends string> =
         ? Trim<Characters>
         : Str extends `${infer Char}${WhiteSpaces}`
           ? Trim<Char>
-          : Str
+          : Str;
 
 /**
  *  Converts a string to uppercase
@@ -40,7 +46,7 @@ export type Uppercase<Str extends string> =
         ? Char extends keyof LetterToUppercase
             ? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
             : `${Char}${Uppercase<Characters>}`
-        : Str
+        : Str;
 
 /**
  * Converts a string to lowercase
@@ -50,7 +56,7 @@ export type Lowercase<Str extends string> =
         ? Char extends keyof LetterToLowercase
             ? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
             : `${Char}${Lowercase<Characters>}`
-        : Str
+        : Str;
 
 /**
  * Capitalizes the first letter of a word and converts the rest to lowercase
@@ -66,7 +72,7 @@ export type Capitalize<
               ? ` ${Capitalize<Characters, true>}`
               : `${Lowercase<Char>}${Capitalize<Characters, false>}`
         : Str
-    : Str
+    : Str;
 
 /**
  * Create a string type based on the values of a tuple type `T`, joining the values
@@ -86,7 +92,7 @@ export type Join<
           Separator,
           `${Str}${Str extends "" ? "" : Separator}${Char & string}`
       >
-    : Str
+    : Str;
 
 /**
  * Checks if a string type matchs start with a strig `U`
@@ -99,7 +105,7 @@ export type Join<
 export type StartsWith<
     Str extends string,
     Match extends string,
-> = Str extends `${Match}${string}` ? true : false
+> = Str extends `${Match}${string}` ? true : false;
 
 /**
  * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
@@ -114,7 +120,7 @@ export type DropChar<
     Build extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
     ? DropChar<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
-    : Build
+    : Build;
 
 /**
  * Checks if a string type matchs start with a strig `Match`
@@ -126,7 +132,7 @@ export type DropChar<
 export type EndsWith<
     Str extends string,
     Match extends string,
-> = Str extends `${string}${Match}` ? true : false
+> = Str extends `${string}${Match}` ? true : false;
 
 /**
  * Returns the length of a string type
@@ -140,7 +146,7 @@ export type LengthOfString<
     Length extends unknown[] = [],
 > = Str extends `${infer Char}${infer Chars}`
     ? LengthOfString<Chars, [...Length, Char]>
-    : Length["length"]
+    : Length["length"];
 
 /**
  * Returns the first index of the character that matches `Match`.
@@ -158,7 +164,7 @@ export type IndexOfString<
     ? Equals<Char, Match> extends true
         ? Index["length"]
         : IndexOfString<Chars, Match, [...Index, 1]>
-    : -1
+    : -1;
 
 /**
  * Returns the first index of a character that is unique within the given string.
@@ -178,4 +184,4 @@ export type FirstUniqueCharIndex<
             ? FirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
             : Index["length"]
         : FirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
-    : -1
+    : -1;
