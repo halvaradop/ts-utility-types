@@ -18,9 +18,19 @@ npm i -D @halvaradop/ts-utility-types
 Once installed, you can import the types from your typescript files
 
 ```ts
-import { Prettify } from "@halvaradop/ts-utility-types";
+import { Merge } from "@halvaradop/ts-utility-types";
 
-export type Store = Prettify<StoreState & StoreConfig>;
+interface Config {
+    storePaths: string[];
+    hooks: unknown[];
+}
+
+interface AppStore {
+    path: string;
+    hooks: ArgsFunction[];
+}
+// Expect: { storePaths: string[], path: string, hooks: ArgsFunction[] }
+export type Store = Merge<Config, AppStore>;
 ```
 
 ## TypeHero Challenges
