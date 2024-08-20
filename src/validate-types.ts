@@ -7,17 +7,17 @@ const primitives = ["number", "string", "boolean", "bigint", "symbol"];
 
 /**
  * Checks if a value is a primitive data type (number, string, boolean, bigint, or symbol)
- * 
+ *
  * @param value The value to check
  * @returns {boolean} `true` if the value is a primitive type, `false` otherwise
  */
 export const isPrimitive = (value: unknown): value is Primitive => {
-    return primitives.some(primitive => typeof value === primitive)
+    return primitives.some((primitive) => typeof value === primitive);
 };
 
 /**
  * Checks if a value is a primitive data type (including null and undefined).
- * 
+ *
  * @param value The value to check
  * @returns {boolean} `true` if the value is a primitive type with nullish values, `false` otherwise
  */
@@ -28,7 +28,7 @@ export const isPrimitiveNullish = (value: unknown): value is PrimitiveNullish =>
  * @param value The value to check
  * @returns `true` if the value is nullish, `false` otherwise
  */
-export const isNullish = (value: unknown): value is Nullish => value === null || value === undefined
+export const isNullish = (value: unknown): value is Nullish => value === null || value === undefined;
 
 /**
  * Checks if a value is a boolean type

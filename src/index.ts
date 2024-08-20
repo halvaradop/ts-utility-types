@@ -1,14 +1,14 @@
-export type { 
-    Prettify, 
-    DeepReadonly, 
-    TupleToUnion, 
-    Last, 
-    Pop, 
-    Size, 
-    Awaited, 
-    Exclude, 
-    Includes, 
-    Parameters, 
+export type {
+    Prettify,
+    DeepReadonly,
+    TupleToUnion,
+    Last,
+    Pop,
+    Size,
+    Awaited,
+    Exclude,
+    Includes,
+    Parameters,
     Pick,
     Omit,
     Intersection,
@@ -37,12 +37,12 @@ export type {
     CheckRepeatedTuple,
     Absolute,
     ObjectEntries,
-    AllEquals
-} from "./utility-types"
+    AllEquals,
+} from "./utility-types";
 
-export type { 
-    ArgsFunction, 
-    Nullish, 
+export type {
+    ArgsFunction,
+    Nullish,
     Primitive,
     PrimitiveNullish,
     WhiteSpaces,
@@ -50,29 +50,14 @@ export type {
     LetterToUppercase,
     Falsy,
     Even,
-    Odd
-} from "./types"
+    Odd,
+} from "./types";
 
-export {
-    isPrimitive,
-    isPrimitiveNullish,
-    isArray,
-    isBoolean,
-    isNullish,
-    isNumber,
-    isObject,
-    isString
-} from "./validate-types"
+export { isPrimitive, isPrimitiveNullish, isArray, isBoolean, isNullish, isNumber, isObject, isString } from "./validate-types";
 
-export type {
-    Equals,
-    Expect
-} from "./test"
+export type { Equals, Expect } from "./test";
 
-export type {
-    IsNever,
-    IsOdd
-} from "./type-guards"
+export type { IsNever, IsOdd } from "./type-guards";
 
 export type {
     Trim,
@@ -87,5 +72,5 @@ export type {
     EndsWith,
     LengthOfString,
     IndexOfString,
-    FirstUniqueCharIndex
-} from "./string-mappers"
+    FirstUniqueCharIndex,
+} from "./string-mappers";

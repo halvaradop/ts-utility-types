@@ -41,8 +41,9 @@
     "dist"
   ],
   "prettier": {
-    "semi": false,
+    "semi": true,
     "singleQuote": false,
-    "tabWidth": 4
+    "tabWidth": 4,
+    "printWidth": 130
   }
 }
