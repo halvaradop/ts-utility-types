@@ -155,3 +155,16 @@ export type FirstUniqueCharIndex<
             : Index["length"]
         : FirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
     : -1;
+
+/**
+ * Replaces the first match of the substring `From` in the string `S` with the new value `To`
+ *
+ * @example
+ * type Replace1 = Replace<'foobar', 'bar', 'foo'> // 'foofoo'
+ * type Replace2 = Replace<'foobarbar', 'bar', 'foo'> // 'foofoobar'
+ */
+export type Replace<S extends string, From extends string, To extends string> = From extends ""
+    ? S
+    : S extends `${infer Head}${From}${infer Tail}`
+      ? `${Head}${To}${Tail}`
+      : S;
