@@ -14,6 +14,7 @@ import type {
     LengthOfString,
     IndexOfString,
     FirstUniqueCharIndex,
+    Replace,
 } from "../src/string-mappers";
 
 describe("String mappers", () => {
@@ -120,5 +121,14 @@ describe("FirstUniqueCharIndex", () => {
         expectTypeOf<FirstUniqueCharIndex<"comparator and comparable">>().toEqualTypeOf<7>();
         expectTypeOf<FirstUniqueCharIndex<"aabbcc">>().toEqualTypeOf<-1>();
         expectTypeOf<FirstUniqueCharIndex<"aabcb">>().toEqualTypeOf<3>();
+    });
+});
+
+describe("Replace", () => {
+    test("Replace the first match with a new value", () => {
+        expectTypeOf<Replace<"foobar", "bar", "foo">>().toEqualTypeOf<"foofoo">();
+        expectTypeOf<Replace<"foobarbar", "bar", "foo">>().toEqualTypeOf<"foofoobar">();
+        expectTypeOf<Replace<"foobarbar", "", "foo">>().toEqualTypeOf<"foobarbar">();
+        expectTypeOf<Replace<"foobarbar", "bar", "">>().toEqualTypeOf<"foobar">();
     });
 });
