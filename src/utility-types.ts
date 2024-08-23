@@ -574,3 +574,24 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
         ? AllEquals<Spread, Comparator>
         : false
     : true;
+
+/**
+ * Replaces the types of the keys in an object with new types defined in the `Replace` object.
+ * If a key in `Keys` is not found in `Replace`, it defaults to the `Default` type.
+ *
+ * @example
+ * interface Foo {
+ *     foo: string,
+ *     bar: number,
+ *     foobar: boolean
+ * }
+ * //Expected: { foo: number, bar: number, foobar: number }
+ * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>
+ */
+export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends object, Default = unknown> = {
+    [Property in keyof Obj]: Property extends Keys
+        ? Property extends keyof Replace
+            ? Replace[Property]
+            : Default
+        : Obj[Property];
+};
