@@ -38,6 +38,7 @@ export type {
     Absolute,
     ObjectEntries,
     AllEquals,
+    ReplaceKeys,
 } from "./utility-types";
 
 export type {
@@ -73,4 +74,5 @@ export type {
     LengthOfString,
     IndexOfString,
     FirstUniqueCharIndex,
+    Replace,
 } from "./string-mappers";

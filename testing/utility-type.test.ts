@@ -36,6 +36,7 @@ import type {
     AllEquals,
     Pick,
     PickByType,
+    ReplaceKeys,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -443,5 +444,26 @@ describe("Pick Utilities", () => {
             expectTypeOf<PickByType<{ foo: () => {}; bar: number; foobar: {} }, never>>().toEqualTypeOf<{}>();
             expectTypeOf<PickByType<{ foo: () => {}; bar: number; foobar: {} }, () => {}>>().toEqualTypeOf<{ foo: () => {} }>();
         });
+    });
+});
+
+describe("ReplaceKeys", () => {
+    test("Replace the key types", () => {
+        expectTypeOf<ReplaceKeys<{ foo: string; bar: number }, "bar", { bar: string }>>().toEqualTypeOf<{
+            foo: string;
+            bar: string;
+        }>();
+        expectTypeOf<ReplaceKeys<{ foo: string; bar: number }, "foobar", { bar: string }>>().toEqualTypeOf<{
+            foo: string;
+            bar: number;
+        }>();
+        expectTypeOf<ReplaceKeys<{ foo: string; bar: number }, "bar", { foobar: string }>>().toEqualTypeOf<{
+            foo: string;
+            bar: unknown;
+        }>();
+        expectTypeOf<ReplaceKeys<{ foo: string; bar: number }, "foo" | "bar", { foo: number; bar: boolean }>>().toEqualTypeOf<{
+            foo: number;
+            bar: boolean;
+        }>();
     });
 });
