@@ -39,6 +39,7 @@ export type {
     ObjectEntries,
     AllEquals,
     ReplaceKeys,
+    MapTypes,
 } from "./utility-types";
 
 export type {

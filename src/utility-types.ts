@@ -595,3 +595,24 @@ export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends
             : Default
         : Obj[Property];
 };
+
+/**
+ * Transforms the types of the keys in an object that match the `from` type in the `Mapper`,
+ * replacing them with the `to` type in the `Mapper`.
+ *
+ * @example
+ * // Expected: { foo: string, bar: boolean }
+ * type ReplaceTypesI = MapTypes<{ foo: string, bar: number }, { from: number, to: boolean }>
+ *
+ * // Expected: { foo: number, bar: number  }
+ * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>
+ */
+export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unknown }> = {
+    [Property in keyof Obj]: Obj[Property] extends Mapper["from"]
+        ? Mapper extends { from: infer From; to: infer To }
+            ? Obj[Property] extends From
+                ? To
+                : never
+            : Obj[Property]
+        : Obj[Property];
+};
