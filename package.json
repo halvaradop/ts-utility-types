@@ -1,14 +1,14 @@
 {
   "name": "@halvaradop/ts-utility-types",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Utility types tools to enhances the productivity using typescript",
-  "main": "dist/index.d.ts",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsc -w",
     "test": "vitest",
     "coverage": "vitest run",
-    "build:js": "tsc src/validate-types.ts --outDir dist && rm dist/types.js",
+    "build": "tsc",
     "publish": "tsc && npm run build:js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
