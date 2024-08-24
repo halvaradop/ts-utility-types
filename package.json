@@ -9,7 +9,7 @@
     "test": "vitest",
     "coverage": "vitest run",
     "build": "tsc",
-    "publish": "tsc && npm run build:js",
+    "publish": "tsc && npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
