@@ -37,6 +37,7 @@ import type {
     Pick,
     PickByType,
     ReplaceKeys,
+    MapTypes,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -465,5 +466,29 @@ describe("ReplaceKeys", () => {
             foo: number;
             bar: boolean;
         }>();
+    });
+});
+
+describe("MapTypes", () => {
+    test("Replace the types of the keys that match with Mapper type", () => {
+        expectTypeOf<MapTypes<{ foo: string; bar: number }, { from: string; to: number }>>().toEqualTypeOf<{
+            foo: number;
+            bar: number;
+        }>();
+        expectTypeOf<MapTypes<{ foo: number; bar: number }, { from: number; to: string }>>().toEqualTypeOf<{
+            foo: string;
+            bar: string;
+        }>();
+        expectTypeOf<MapTypes<{ foo: string; bar: number }, { from: boolean; to: number }>>().toEqualTypeOf<{
+            foo: string;
+            bar: number;
+        }>();
+        expectTypeOf<MapTypes<{ foo: () => {}; bar: string }, { from: () => {}; to: never }>>().toEqualTypeOf<{
+            foo: never;
+            bar: string;
+        }>();
+        expectTypeOf<
+            MapTypes<{ foo: string; bar: number }, { from: string; to: boolean } | { from: number; to: bigint }>
+        >().toEqualTypeOf<{ foo: boolean; bar: bigint }>();
     });
 });
