@@ -40,7 +40,7 @@ export type {
     AllEquals,
     ReplaceKeys,
     MapTypes,
-} from "./utility-types";
+} from "./utility-types.js";
 
 export type {
     ArgsFunction,
@@ -53,13 +53,22 @@ export type {
     Falsy,
     Even,
     Odd,
-} from "./types";
+} from "./types.js";
 
-export { isPrimitive, isPrimitiveNullish, isArray, isBoolean, isNullish, isNumber, isObject, isString } from "./validate-types";
+export {
+    isPrimitive,
+    isPrimitiveNullish,
+    isArray,
+    isBoolean,
+    isNullish,
+    isNumber,
+    isObject,
+    isString,
+} from "./validate-types.js";
 
-export type { Equals, Expect } from "./test";
+export type { Equals, Expect } from "./test.js";
 
-export type { IsNever, IsOdd } from "./type-guards";
+export type { IsNever, IsOdd } from "./type-guards.js";
 
 export type {
     Trim,
@@ -76,4 +85,4 @@ export type {
     IndexOfString,
     FirstUniqueCharIndex,
     Replace,
-} from "./string-mappers";
+} from "./string-mappers.js";
