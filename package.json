@@ -43,15 +43,5 @@
     "singleQuote": false,
     "tabWidth": 4,
     "printWidth": 130
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/validate-types.js",
-      "default": "./dist/index.d.ts"
-    },
-    "./utils/*": {
-      "import": "./dist/*.js"
-    }
   }
 }
