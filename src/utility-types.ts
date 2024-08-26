@@ -628,6 +628,6 @@ export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.$
     ? "0"
     : `${Math}` extends `${infer Chars}.${number}`
       ? Chars extends `-0${string}`
-        ? "0"
-        : Chars
+          ? "0"
+          : Chars
       : `${Math}`;
