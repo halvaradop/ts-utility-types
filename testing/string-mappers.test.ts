@@ -15,6 +15,7 @@ import type {
 	IndexOfString,
 	FirstUniqueCharIndex,
 	Replace,
+	CheckRepeatedChars,
 } from "../src/string-mappers";
 
 describe("String mappers", () => {
@@ -130,5 +131,14 @@ describe("Replace", () => {
 		expectTypeOf<Replace<"foobarbar", "bar", "foo">>().toEqualTypeOf<"foofoobar">();
 		expectTypeOf<Replace<"foobarbar", "", "foo">>().toEqualTypeOf<"foobarbar">();
 		expectTypeOf<Replace<"foobarbar", "bar", "">>().toEqualTypeOf<"foobar">();
+	});
+});
+
+describe("CheckRepeatedChars", () => {
+	test("Check if there are repeated characters in the string", () => {
+		expectTypeOf<CheckRepeatedChars<"">>().toEqualTypeOf<false>();
+		expectTypeOf<CheckRepeatedChars<"aba">>().toEqualTypeOf<true>();
+		expectTypeOf<CheckRepeatedChars<"abcza">>().toEqualTypeOf<true>();
+		expectTypeOf<CheckRepeatedChars<"añlamnhj">>().toEqualTypeOf<true>();
 	});
 });
