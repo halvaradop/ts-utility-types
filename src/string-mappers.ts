@@ -171,17 +171,16 @@ export type Replace<S extends string, From extends string, To extends string> = 
 
 /**
  * Check if there are repeated characters in a string type
- * 
+ *
  * @example
  * // Expected: No repeated characters
  * type Check11 = CheckRepeatedChars<"hello"> // false
- * 
+ *
  * // Expected: Repeated characters
  * type Check1 = CheckRepeatedChars<"hello world"> // true
  */
-export type CheckRepeatedChars<Str extends string, Characters extends string = ""> = 
-	Str extends `${infer Char}${infer Chars}`
-		? Char extends Characters
-			? true
-			: CheckRepeatedChars<Chars, Characters | Char>
-		: false;
+export type CheckRepeatedChars<Str extends string, Characters extends string = ""> = Str extends `${infer Char}${infer Chars}`
+	? Char extends Characters
+		? true
+		: CheckRepeatedChars<Chars, Characters | Char>
+	: false;

@@ -15,7 +15,7 @@ import type {
 	IndexOfString,
 	FirstUniqueCharIndex,
 	Replace,
-	CheckRepeatedChars
+	CheckRepeatedChars,
 } from "../src/string-mappers";
 
 describe("String mappers", () => {
