@@ -184,3 +184,21 @@ export type CheckRepeatedChars<Str extends string, Characters extends string = "
 		? true
 		: CheckRepeatedChars<Chars, Characters | Char>
 	: false;
+
+/**
+ * eturns a union type of the dynamic route parameters in a URL pattern
+ *
+ * @example
+ * type Test1 = ParseUrlParams<"users/:id"> // "id"
+ * type Test2 = ParseUrlParams<"users/:id/posts/:postId"> // "id" | "postId"
+ */
+export type ParseUrlParams<
+	URLParams extends string,
+	Params extends string = never,
+> = URLParams extends `${infer Segment}/${infer Route}`
+	? Segment extends `:${infer WithoutDots}`
+		? ParseUrlParams<Route, Params | WithoutDots>
+		: ParseUrlParams<Route, Params>
+	: URLParams extends `:${infer WithoutDots}`
+		? Params | WithoutDots
+		: Params;

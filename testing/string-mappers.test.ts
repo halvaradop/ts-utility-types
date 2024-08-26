@@ -16,6 +16,7 @@ import type {
 	FirstUniqueCharIndex,
 	Replace,
 	CheckRepeatedChars,
+	ParseUrlParams,
 } from "../src/string-mappers";
 
 describe("String mappers", () => {
@@ -140,5 +141,15 @@ describe("CheckRepeatedChars", () => {
 		expectTypeOf<CheckRepeatedChars<"aba">>().toEqualTypeOf<true>();
 		expectTypeOf<CheckRepeatedChars<"abcza">>().toEqualTypeOf<true>();
 		expectTypeOf<CheckRepeatedChars<"añlamnhj">>().toEqualTypeOf<true>();
+	});
+});
+
+describe("ParseUrlParams", () => {
+	test("Parse the URL parameters", () => {
+		expectTypeOf<ParseUrlParams<"posts/:id">>().toEqualTypeOf<"id">();
+		expectTypeOf<ParseUrlParams<":posts/:id">>().toEqualTypeOf<"posts" | "id">();
+		expectTypeOf<ParseUrlParams<"user/:id/posts/:postId">>().toEqualTypeOf<"id" | "postId">();
+		expectTypeOf<ParseUrlParams<":posts/:id">>().toEqualTypeOf<"posts" | "id">();
+		expectTypeOf<ParseUrlParams<"posts/:id/:items/likes">>().toEqualTypeOf<"id" | "items">();
 	});
 });
