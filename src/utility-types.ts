@@ -616,3 +616,18 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
             : Obj[Property]
         : Obj[Property];
 };
+
+/**
+ * Truncates a number to its integer part.
+ *
+ * @example
+ * type Truncated = Trunc<3.14>; // 3
+ * type TruncatedNegative = Trunc<-2.99>; // -2
+ */
+export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.${number}`
+    ? "0"
+    : `${Math}` extends `${infer Chars}.${number}`
+      ? Chars extends `-0${string}`
+        ? "0"
+        : Chars
+      : `${Math}`;

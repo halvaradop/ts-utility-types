@@ -38,6 +38,7 @@ import type {
     PickByType,
     ReplaceKeys,
     MapTypes,
+    Trunc,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -490,5 +491,17 @@ describe("MapTypes", () => {
         expectTypeOf<
             MapTypes<{ foo: string; bar: number }, { from: string; to: boolean } | { from: number; to: bigint }>
         >().toEqualTypeOf<{ foo: boolean; bar: bigint }>();
+    });
+});
+
+describe("Trunc", () => {
+    test("Truncate a number to its integer part", () => {
+        expectTypeOf<Trunc<3.14159>>().toEqualTypeOf<"3">();
+        expectTypeOf<Trunc<-3.14159>>().toEqualTypeOf<"-3">();
+        expectTypeOf<Trunc<42.1>>().toEqualTypeOf<"42">();
+        expectTypeOf<Trunc<0>>().toEqualTypeOf<"0">();
+        expectTypeOf<Trunc<1289n>>().toEqualTypeOf<"1289">();
+        expectTypeOf<Trunc<-0.98>>().toEqualTypeOf<"0">();
+        expectTypeOf<Trunc<-90000.98>>().toEqualTypeOf<"-90000">();
     });
 });
