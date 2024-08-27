@@ -1,0 +1,43 @@
+name: deploy-to-development-env
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    paths:
+      - "src/**"
+      - "testing/**"
+    types: closed
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "18.x"
+
+    - run: npm install
+    - run: npm run build
+
+  test:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm test
+
+  deploy:
+    if: github.event.pull_request.merged == true
+    needs: [build, test]
+    runs-on: ubuntu-20.04
+    environment: development
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to development environment
+        run: echo "Deploying to development environment"
