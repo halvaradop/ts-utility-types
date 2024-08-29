@@ -17,6 +17,7 @@ import type {
 	Replace,
 	CheckRepeatedChars,
 	ParseUrlParams,
+	FindAll,
 } from "../src/string-mappers";
 
 describe("String mappers", () => {
@@ -151,5 +152,16 @@ describe("ParseUrlParams", () => {
 		expectTypeOf<ParseUrlParams<"user/:id/posts/:postId">>().toEqualTypeOf<"id" | "postId">();
 		expectTypeOf<ParseUrlParams<":posts/:id">>().toEqualTypeOf<"posts" | "id">();
 		expectTypeOf<ParseUrlParams<"posts/:id/:items/likes">>().toEqualTypeOf<"id" | "items">();
+	});
+});
+
+describe("FindAll", () => {
+	test("Find all the indexes of a substring in a string", () => {
+		expectTypeOf<FindAll<"", "">>().toEqualTypeOf<[]>();
+		expectTypeOf<FindAll<"ooooo", "">>().toEqualTypeOf<[]>();
+		expectTypeOf<FindAll<"", "foobar">>().toEqualTypeOf<[]>();
+		expectTypeOf<FindAll<"foobar", "o">>().toEqualTypeOf<[1, 2]>();
+		expectTypeOf<FindAll<"foooo", "o">>().toEqualTypeOf<[1, 2, 3, 4]>();
+		expectTypeOf<FindAll<"ooooo", "oo">>().toEqualTypeOf<[0, 1, 2, 3]>();
 	});
 });
