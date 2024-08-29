@@ -520,8 +520,11 @@ describe("DeepOmit", () => {
 			foo: string;
 			bar: { foobar: number };
 		}>();
-		expectTypeOf<DeepOmit<{ foo: string; bar: { foobar: number, nested: { baz: string } } }, "bar.nested.baz">>().toEqualTypeOf<{
-            foo: string; bar: { foobar: number, nested: {} };
-        }>();
+		expectTypeOf<
+			DeepOmit<{ foo: string; bar: { foobar: number; nested: { baz: string } } }, "bar.nested.baz">
+		>().toEqualTypeOf<{
+			foo: string;
+			bar: { foobar: number; nested: {} };
+		}>();
 	});
 });
