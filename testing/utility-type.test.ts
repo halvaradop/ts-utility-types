@@ -39,6 +39,7 @@ import type {
 	ReplaceKeys,
 	MapTypes,
 	Trunc,
+	DeepOmit,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -503,5 +504,24 @@ describe("Trunc", () => {
 		expectTypeOf<Trunc<1289n>>().toEqualTypeOf<"1289">();
 		expectTypeOf<Trunc<-0.98>>().toEqualTypeOf<"0">();
 		expectTypeOf<Trunc<-90000.98>>().toEqualTypeOf<"-90000">();
+	});
+});
+
+describe("DeepOmit", () => {
+	test("Omit properties from nested objects", () => {
+		expectTypeOf<DeepOmit<{ foo: string; bar: { foobar: number } }, "foo">>().toEqualTypeOf<{
+			bar: { foobar: number };
+		}>();
+		expectTypeOf<DeepOmit<{ foo: string; bar: { foobar: number } }, "bar.foobar">>().toEqualTypeOf<{
+			foo: string;
+			bar: {};
+		}>();
+		expectTypeOf<DeepOmit<{ foo: string; bar: { foobar: number } }, "foobar">>().toEqualTypeOf<{
+			foo: string;
+			bar: { foobar: number };
+		}>();
+		expectTypeOf<DeepOmit<{ foo: string; bar: { foobar: number, nested: { baz: string } } }, "bar.nested.baz">>().toEqualTypeOf<{
+            foo: string; bar: { foobar: number, nested: {} };
+        }>();
 	});
 });
