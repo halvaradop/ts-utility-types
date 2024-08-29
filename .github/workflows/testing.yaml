@@ -3,6 +3,7 @@ name: testing
 on:
   pull_request:
     branches: master
+    types: [opened, reopened, synchronize]
   push:
     branches: master
 
@@ -25,4 +26,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - run: npm install
       - run: npm run test
