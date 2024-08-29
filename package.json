@@ -1,6 +1,6 @@
 {
   "name": "@halvaradop/ts-utility-types",
-  "version": "0.6.2",
+  "version": "0.7",
   "description": "Utility types tools to enhances the productivity using typescript",
   "main": "dist/index.js",
   "scripts": {
