@@ -631,3 +631,35 @@ export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.$
 			? "0"
 			: Chars
 		: `${Math}`;
+
+/**
+ * Omits properties of an object at any depth based on the provided pattern.
+ *
+ * @example
+ * type User = {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: { name: string, address: { street: string } }
+ * type OmitAvenueUser = DeepOmit<User, "addresss.avenue">
+ *
+ * // Expected: { address: { street: string, avenue: string } }
+ * type OmitNameUser = DeepOmit<User, "name">
+ */
+export type DeepOmit<Obj extends object, Pattern extends string> = {
+	[Property in keyof Obj as Pattern extends `${string}.${string}`
+		? Property
+		: Property extends Pattern
+			? never
+			: Property]: Pattern extends `${infer StartsWith}.${infer Spread}`
+		? Property extends StartsWith
+			? Obj[Property] extends object
+				? DeepOmit<Obj[Property], Spread>
+				: Obj[Property]
+			: Obj[Property]
+		: Obj[Property];
+};
