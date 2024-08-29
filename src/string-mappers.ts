@@ -202,3 +202,23 @@ export type ParseUrlParams<
 	: URLParams extends `:${infer WithoutDots}`
 		? Params | WithoutDots
 		: Params;
+
+/**
+ * Returns indexes the substring that matches `Match` in the string `Str`
+ *
+ * @example
+ * type Test1 = FindAll<"hello world", "o"> // [4, 7]
+ * type Test2 = FindAll<"hello world", "l"> // [2, 3, 9]
+ */
+export type FindAll<
+	Str extends string,
+	Match extends string,
+	Index extends unknown[] = [],
+	Indexes extends unknown[] = [],
+> = Match extends ""
+	? Indexes
+	: Str extends `${infer Char}${infer Characters}`
+		? Str extends `${Match}${string}`
+			? FindAll<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
+			: FindAll<Characters, Match, [...Index, 1], Indexes>
+		: Indexes;
