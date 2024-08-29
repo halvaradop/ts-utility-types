@@ -7,6 +7,7 @@
     "dev": "tsc -w",
     "test:watch": "vitest",
     "test": "vitest --run",
+    "build": "tsc",
     "publish": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

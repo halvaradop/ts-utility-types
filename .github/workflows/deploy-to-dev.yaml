@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-      - run: npm test
+      - run: npm run test
 
   deploy:
     if: github.event.pull_request.merged == true
