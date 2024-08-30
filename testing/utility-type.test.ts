@@ -40,6 +40,7 @@ import type {
 	MapTypes,
 	Trunc,
 	DeepOmit,
+	Chunk,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -526,5 +527,17 @@ describe("DeepOmit", () => {
 			foo: string;
 			bar: { foobar: number; nested: {} };
 		}>();
+	});
+});
+
+describe("Chunk", () => {
+	test("Split an array into chunks", () => {
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 1>>().toEqualTypeOf<[[1], [2], [3], [4], [5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 2>>().toEqualTypeOf<[[1, 2], [3, 4], [5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 3>>().toEqualTypeOf<[[1, 2, 3], [4, 5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 4>>().toEqualTypeOf<[[1, 2, 3, 4], [5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 5>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 6>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
+		expectTypeOf<Chunk<[1, 2, 3, 4, 5], -2>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
 	});
 });
