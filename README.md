@@ -21,13 +21,13 @@ Once installed, you can import the types from your typescript files
 import { Merge } from "@halvaradop/ts-utility-types";
 
 interface Config {
-	storePaths: string[];
-	hooks: unknown[];
+  storePaths: string[];
+  hooks: unknown[];
 }
 
 interface AppStore {
-	path: string;
-	hooks: ArgsFunction[];
+  path: string;
+  hooks: ArgsFunction[];
 }
 // Expect: { storePaths: string[], path: string, hooks: ArgsFunction[] }
 export type Store = Merge<Config, AppStore>;
