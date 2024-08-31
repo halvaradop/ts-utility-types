@@ -40,6 +40,9 @@ export type {
 	AllEquals,
 	ReplaceKeys,
 	MapTypes,
+	Chunk,
+	DeepOmit,
+	Trunc,
 } from "./utility-types.js";
 
 export type {
@@ -85,4 +88,7 @@ export type {
 	IndexOfString,
 	FirstUniqueCharIndex,
 	Replace,
+	CheckRepeatedChars,
+	FindAll,
+	ParseUrlParams,
 } from "./string-mappers.js";
