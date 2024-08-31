@@ -294,6 +294,13 @@ export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Ob
 	}
 >;
 
+type FilterImplementation<Array extends unknown[], Predicate, Build extends unknown[] = []> = Array extends [
+	infer Item,
+	...infer Spread,
+]
+	? FilterImplementation<Spread, Predicate, Item extends Predicate ? [...Build, Item] : [...Build]>
+	: Build;
+
 /**
  * Filter the items of a tuple of elements based in the predicate provided in the
  * generic type.
@@ -302,9 +309,7 @@ export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Ob
  * type Filter1 = Filter<[0, 1, 2], 2> // [2]
  * type Filter2 = Filter<[0, 1, 2], 0 | 1> // [0, 1]
  */
-export type Filter<Array extends unknown[], Predicate, Build extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
-	? Filter<Spread, Predicate, Item extends Predicate ? [...Build, Item] : [...Build]>
-	: Build;
+export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Array, Predicate, []>;
 
 /**
  *
@@ -366,6 +371,13 @@ export type DeepMutable<Obj extends object> = {
 	-readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property];
 };
 
+type MergeAllImplementation<Array extends readonly object[], Merge extends object = {}> = Array extends [
+	infer Item,
+	...infer Spread,
+]
+	? MergeAllImplementation<Spread extends object[] ? Spread : never, UnionMerge<Merge, Item extends object ? Item : {}>>
+	: Merge;
+
 /**
  * Create a new object type based in the tuple of object types, if the properties
  * are duplicated will create an union type.
@@ -385,9 +397,7 @@ export type DeepMutable<Obj extends object> = {
  * type Merge = MergeAll<[Foo, Bar, FooBar]>
  * // { foo: string | boolean, bar: string | number, foobar: string }
  */
-export type MergeAll<Array extends readonly object[], Merge extends object = {}> = Array extends [infer Item, ...infer Spread]
-	? MergeAll<Spread extends object[] ? Spread : never, UnionMerge<Merge, Item extends object ? Item : {}>>
-	: Merge;
+export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<Array, {}>;
 
 /**
  * Create an union type based in the literal values of the tuple provided.
@@ -401,6 +411,13 @@ export type MergeAll<Array extends readonly object[], Merge extends object = {}>
  */
 export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnion<Spread> : T;
 
+type FilterOutImplementation<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [
+	infer Item,
+	...infer Spread,
+]
+	? FilterOutImplementation<Spread, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
+	: Build;
+
 /**
  * Cleans the elements of a tuple based in the predicated, it returns the values that
  * does not match with the predicated
@@ -409,12 +426,7 @@ export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnio
  * type CleanNumbers = FilterOut<[1, 2, 3, 4, 5], [4, 5]> // [1, 2, 3]
  * type CleanStrings = FilterOut<["foo", "bar", "foobar"], "foo"> // ["bar", "foobar"]
  */
-export type FilterOut<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [
-	infer Item,
-	...infer Spread,
-]
-	? FilterOut<Spread, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
-	: Build;
+export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutImplementation<Array, Predicate, []>;
 
 /**
  * Create a new object type appending a new property with its value
@@ -441,6 +453,15 @@ export type AddPropertyToObject<Obj extends object, NewProp extends string, Type
  */
 export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...infer Spread] ? [...Reverse<Spread>, Item] : Array;
 
+type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [
+	infer Item,
+	...infer Spread,
+]
+	? Equals<Item, Match> extends true
+		? Index["length"]
+		: IndexOfImplementation<Spread, Match, [...Index, Item]>
+	: -1;
+
 /**
  * Returns the first index where the element `Match` appears in the tuple type `Array`.
  * If the element `Match` does not appear, it returns `-1`.
@@ -451,11 +472,23 @@ export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...inf
  * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any> // 4
  * type IndexOf4 = IndexOf<[string, "a"], "a"> // 1
  */
-export type IndexOf<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
-	? Equals<Item, Match> extends true
-		? Index["length"]
-		: IndexOf<Spread, Match, [...Index, Item]>
-	: -1;
+export type IndexOf<Array extends unknown[], Match> = IndexOfImplementation<Array, Match, []>;
+
+type LastIndexOfImplementation<
+	Array extends unknown[],
+	Match,
+	Index extends unknown[] = [],
+	IndexOf extends unknown[] = [],
+> = Array extends [infer Item, ...infer Spread]
+	? LastIndexOfImplementation<
+			Spread,
+			Match,
+			[...Index, Item],
+			Equals<Item, Match> extends true ? [...IndexOf, Index["length"]] : IndexOf
+		>
+	: IndexOf extends [...any, infer LastIndex]
+		? LastIndex
+		: -1;
 
 /**
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
@@ -467,16 +500,7 @@ export type IndexOf<Array extends unknown[], Match, Index extends unknown[] = []
  * type LastIndexOf3 = LastIndexOf<[string, 2, number, 'a', number, 1], number> // 4
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, 'a', any, 1], any> // 5
  */
-export type LastIndexOf<
-	Array extends unknown[],
-	Match,
-	Index extends unknown[] = [],
-	IndexOf extends unknown[] = [],
-> = Array extends [infer Item, ...infer Spread]
-	? LastIndexOf<Spread, Match, [...Index, Item], Equals<Item, Match> extends true ? [...IndexOf, Index["length"]] : IndexOf>
-	: IndexOf extends [...any, infer LastIndex]
-		? LastIndex
-		: -1;
+export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementation<Array, Match, [], []>;
 
 /**
  * Parses a percentage string into a tuple of [Sign, Number, Unit].
@@ -528,6 +552,15 @@ export type ConstructTuple<
 	Array extends unknown[] = [],
 > = RepeatConstructTuple<Length, Value, Array>;
 
+type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unknown = never> = Array extends [
+	infer Item,
+	...infer Spread,
+]
+	? Item extends Build
+		? true
+		: CheckRepeatedTupleImplementation<Spread, Build | Item>
+	: false;
+
 /**
  * Check if there are duplidated elements inside the tuple
  *
@@ -535,11 +568,7 @@ export type ConstructTuple<
  * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]> // false
  * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]> // true
  */
-export type CheckRepeatedTuple<Array extends unknown[], Build extends unknown = ""> = Array extends [infer Item, ...infer Spread]
-	? Item extends Build
-		? true
-		: CheckRepeatedTuple<Spread, Build | Item>
-	: false;
+export type CheckRepeatedTuple<Tuple extends unknown[]> = CheckRepeatedTupleImplementation<Tuple>;
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
