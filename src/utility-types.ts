@@ -663,3 +663,18 @@ export type DeepOmit<Obj extends object, Pattern extends string> = {
 			: Obj[Property]
 		: Obj[Property];
 };
+
+type ChunkImplementation<
+	Array extends unknown[],
+	Size extends number,
+	Build extends unknown[] = [],
+	Partition extends unknown[] = [],
+> = Array extends [infer Item, ...infer Spread]
+	? [...Partition, Item]["length"] extends Size
+		? ChunkImplementation<Spread, Size, [...Build, [...Partition, Item]], []>
+		: ChunkImplementation<Spread, Size, Build, [...Partition, Item]>
+	: Partition["length"] extends 0
+		? Build
+		: [...Build, Partition];
+
+export type Chunk<Array extends unknown[], Size extends number> = ChunkImplementation<Array, Size, [], []>;
