@@ -4,24 +4,24 @@ import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types"
 /**
  * Removes leading whitespace characters from a string type
  * @example
- * type Str = "  hello world  ";
- * type TrimmedLeft = TrimLeft<Str>; // TrimmedLeft = "hello world  "
+ * // Expected: "hello world  "
+ * type TrimmedLeft = TrimLeft<"  hello world  ">;
  */
 export type TrimLeft<Str extends string> = Str extends `${WhiteSpaces}${infer Characters}` ? TrimLeft<Characters> : Str;
 
 /**
  * Removes trailing whitespace characters from a string type
  * @example
- * type Str = "hello world  ";
- * type TrimmedRight = TrimRight<Str>; // TrimmedRight = "hello world"
+ * // Expected: "hello world"
+ * type TrimmedRight = TrimRight<"hello world  ">;
  */
 export type TrimRight<Str extends string> = Str extends `${infer Char}${WhiteSpaces}` ? TrimRight<Char> : Str;
 
 /**
  * Removes leading and trailing whitespace characters from a string type
  * @example
- * type Str = "  hello world  ";
- * type Trimmed = Trim<Str>; // Trimmed = "hello world"
+ * // Expected: "hello world"
+ * type Trimmed = Trim<"  hello world  ">;
  */
 export type Trim<Str extends string> = Str extends `${WhiteSpaces}${infer Characters}`
 	? Trim<Characters>
@@ -72,8 +72,11 @@ type JoinImplementation<Array extends unknown[], Separator extends number | stri
  * separated by the `Separator` character. The separator can be either a string or a number.
  *
  * @example
- * type Join1 = Join<["a", "p", "p", "l", "e"], "-"> // "a-p-p-l-e"
- * type Join2 = Join<["Hello", "World"], " "> // "Hello World"
+ * // Expected: "a-p-p-l-e"
+ * type Join1 = Join<["a", "p", "p", "l", "e"], "-">
+ *
+ * // Expected: "Hello World"
+ * type Join2 = Join<["Hello", "World"], " ">
  */
 export type Join<Array extends unknown[], Separator extends number | string> = JoinImplementation<Array, Separator>;
 
@@ -81,9 +84,14 @@ export type Join<Array extends unknown[], Separator extends number | string> = J
  * Checks if a string type matchs start with a strig `U`
  *
  * @example
- * type Test1 = StartsWith<'abc', 'ac'> // false
- * type Test2 = StartsWith<'abc', 'ab'> // true
- * type Test3 = StartsWith<'abc', 'abcd'> // false
+ * // Expected: false
+ * type Test1 = StartsWith<"abc", "ac">
+ *
+ * // Expected: true
+ * type Test2 = StartsWith<"abc", "ab">
+ *
+ * // Expected: false
+ * type Test3 = StartsWith<"abc", "abcd">
  */
 export type StartsWith<Str extends string, Match extends string> = Str extends `${Match}${string}` ? true : false;
 
@@ -99,8 +107,10 @@ type DropCharImplementation<
  * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
  *
  * @example
- * type Test1 = DropChar<'butter fly!', ''> // butterfly!
- * type Test2 = DropChar<' b u t t e r f l y ! ', ' '> // 'butterfly!'
+ * // Expected: butterfly!
+ * type Test1 = DropChar<"butter fly!", "">
+ * // Expected: "butterfly!"
+ * type Test2 = DropChar<" b u t t e r f l y ! ", " ">
  */
 export type DropChar<Str extends string, Match extends string> = DropCharImplementation<Str, Match>;
 
@@ -108,8 +118,11 @@ export type DropChar<Str extends string, Match extends string> = DropCharImpleme
  * Checks if a string type matchs start with a strig `Match`
  *
  * @example
- * type Test1 = EndsWith<'abc', 'bc'> // true
- * type Test2 = EndsWith<'abc', 'ac'> // false
+ * // Expected: true
+ * type Test1 = EndsWith<"abc", "bc">
+ *
+ * // Expected: false
+ * type Test2 = EndsWith<"abc", "ac">
  */
 export type EndsWith<Str extends string, Match extends string> = Str extends `${string}${Match}` ? true : false;
 
@@ -121,8 +134,11 @@ type LengthOfStringImplementation<Str extends string, Length extends unknown[] =
  * Returns the length of a string type
  *
  * @example
- * type Length2 = LengthOfString<"foo"> // 3
- * type Length6 = LengthOfString<"foobar"> // 6
+ * // Expected: 3
+ * type Length2 = LengthOfString<"foo">
+ *
+ * // Expected: 6
+ * type Length6 = LengthOfString<"foobar">
  */
 export type LengthOfString<Str extends string> = LengthOfStringImplementation<Str>;
 
@@ -141,8 +157,11 @@ type IndexOfStringImplementation<
  * Otherwise, it returns -1.
  *
  * @example
- * type IndexOfA = IndexOfString<"comparator is a function", "i"> // 12
- * type IndexOfOutBound = IndexOfString<"comparator is a function", "z"> // -1
+ * // Expected: 12
+ * type IndexOfA = IndexOfString<"comparator is a function", "i">
+ *
+ * // Expected: -1
+ * type IndexOfOutBound = IndexOfString<"comparator is a function", "z">
  */
 export type IndexOfString<Str extends string, Match extends string> = IndexOfStringImplementation<Str, Match>;
 
@@ -163,8 +182,11 @@ type FirstUniqueCharIndexImplementation<
  * If all of the characters are repeated, it returns -1.
  *
  * @example
- * type IndexOfC = FirstUniqueCharIndex<"aabcb"> // 3
- * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc"> // -1
+ * // Expected: 3
+ * type IndexOfC = FirstUniqueCharIndex<"aabcb">
+ *
+ * // Expected: -1
+ * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc">
  */
 export type FirstUniqueCharIndex<Str extends string> = FirstUniqueCharIndexImplementation<Str>;
 
@@ -172,8 +194,11 @@ export type FirstUniqueCharIndex<Str extends string> = FirstUniqueCharIndexImple
  * Replaces the first match of the substring `From` in the string `S` with the new value `To`
  *
  * @example
- * type Replace1 = Replace<'foobar', 'bar', 'foo'> // 'foofoo'
- * type Replace2 = Replace<'foobarbar', 'bar', 'foo'> // 'foofoobar'
+ * // Expected: "foofoo"
+ * type Replace1 = Replace<"foobar", "bar", "foo">
+ *
+ * // Expected: "foofoobar"
+ * type Replace2 = Replace<"foobarbar", "bar", "foo">
  */
 export type Replace<S extends string, From extends string, To extends string> = From extends ""
 	? S
@@ -194,11 +219,11 @@ type CheckRepeatedCharsImplementation<
  * Check if there are repeated characters in a string type
  *
  * @example
- * // Expected: No repeated characters
- * type Check11 = CheckRepeatedChars<"hello"> // false
+ * // Expected: false
+ * type Check11 = CheckRepeatedChars<"hello">
  *
- * // Expected: Repeated characters
- * type Check1 = CheckRepeatedChars<"hello world"> // true
+ * // Expected: true
+ * type Check1 = CheckRepeatedChars<"hello world">
  */
 export type CheckRepeatedChars<Str extends string> = CheckRepeatedCharsImplementation<Str>;
 
@@ -217,8 +242,11 @@ type ParseUrlParamsImplementation<
  * eturns a union type of the dynamic route parameters in a URL pattern
  *
  * @example
- * type Test1 = ParseUrlParams<"users/:id"> // "id"
- * type Test2 = ParseUrlParams<"users/:id/posts/:postId"> // "id" | "postId"
+ * // Expected: "id"
+ * type Test1 = ParseUrlParams<"users/:id">
+ *
+ * // Expected: "id" | "postId"
+ * type Test2 = ParseUrlParams<"users/:id/posts/:postId">
  */
 export type ParseUrlParams<URLParams extends string> = ParseUrlParamsImplementation<URLParams>;
 
@@ -239,7 +267,10 @@ type FindAllImplementation<
  * Returns indexes the substring that matches `Match` in the string `Str`
  *
  * @example
- * type Test1 = FindAll<"hello world", "o"> // [4, 7]
- * type Test2 = FindAll<"hello world", "l"> // [2, 3, 9]
+ * // Expected: [4, 7]
+ * type Test1 = FindAll<"hello world", "o">
+ *
+ * // Expected: [2, 3, 9]
+ * type Test2 = FindAll<"hello world", "l">
  */
 export type FindAll<Str extends string, Match extends string> = FindAllImplementation<Str, Match>;
