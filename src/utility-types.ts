@@ -22,8 +22,10 @@ export type Prettify<Obj extends object> = {
  *     street: string,
  *     avenue: string
  *   }
- * }
- * type ReadonlyUser = DeepReadonly<User> // { readonly name: string,  address: { readonly street: string, readonly avenue } }
+ * };
+ * 
+ * // Expected: { readonly name: string, readonly address: { readonly street: string, readonly avenue: string } }
+ * type ReadonlyUser = DeepReadonly<User>;
  */
 export type DeepReadonly<Obj extends object> = {
 	readonly [Property in keyof Obj]: Obj[Property] extends Function
@@ -38,8 +40,8 @@ export type DeepReadonly<Obj extends object> = {
  * This is useful for representing a set of allowed values based on the array elements
  *
  * @example
- * type StringUnion = ["1", "2", "3"]
- * type Union = TypleToUnion<StringUnion> // "1" | "2" | "3"
+ * // Expected: "1" | "2" | "3"
+ * type Union = TypleToUnion<["1", "2", "3"]>;
  */
 export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
 	? Item | TupleToUnion<Spread>
@@ -50,7 +52,8 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infe
  *
  * @example
  * const numbers: number[] = [1, 2, 3, 4, 5];
- * type SizeOfNumbers = Size<typeof numbers>; // SizeOfNumbers = 5
+ * // Expected: 5
+ * type SizeOfNumbers = Size<typeof numbers>; 
  */
 export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0;
 
@@ -58,7 +61,8 @@ export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["len
  * Gets the type of the last element in an array, or `never` if the array is empty.
  *
  * @example
- * type LastItem = Last<1, 2, 3, 4> // 4
+ * // Expected: 4
+ * type LastItem = Last<1, 2, 3, 4>;
  */
 export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ? Last : never;
 
@@ -67,8 +71,11 @@ export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ?
  * except the last. If the array is empty, returns an empty array type
  *
  * @example
- * type PopStr = Pop<["a", "b", "c"]> // ["a", "b"]
- * type PopNums = Pop<[1, 2, 3]> // [1, 2]
+ * // Expected: ["a", "b"]
+ * type PopStr = Pop<["a", "b", "c"]>;
+ * 
+ * // Expected: [1, 2]
+ * type PopNums = Pop<[1, 2, 3]>;
  */
 export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unknown] ? Spread : [];
 
@@ -92,9 +99,11 @@ export type Awaited<T extends PromiseLike<unknown>> =
  *
  * @example
  * function add(x: number, y: number): number {
- *     return x + y;
- * }
- * type AddParams = Parameters<typeof add>; // AddParams = [number, number]
+ *   return x + y;
+ * };
+ * 
+ * // Expected: [number, number]
+ * type AddParams = Parameters<typeof add>;
  */
 export type Parameters<Function extends ArgsFunction> = Function extends (...args: infer Params) => void ? Params : never;
 
@@ -106,8 +115,10 @@ export type Parameters<Function extends ArgsFunction> = Function extends (...arg
  *   name: string
  *   lastname: string,
  *   age: number
- * }
- * type PickUser = Pick<User, "age"> // { age: number }
+ * };
+ * 
+ * // Expected: { age: number }
+ * type PickUser = Pick<User, "age">;
  */
 export type Pick<Obj extends object, Keys extends keyof Obj> = {
 	[Property in Keys]: Obj[Property];
@@ -117,9 +128,14 @@ export type Pick<Obj extends object, Keys extends keyof Obj> = {
  * Check if a value exists within a tuple and is equal to a specific value
  *
  * @example
- * type IncludesNumber = Includes<[1, 2, 3], 3> // true
- * type IncludesString = Includes<["foo", "bar", "foobar"], "bar"> // true
- * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar"> // false
+ * // Expected: true
+ * type IncludesNumber = Includes<[1, 2, 3], 3>;
+ * 
+ * // Expected: true
+ * type IncludesString = Includes<["foo", "bar", "foobar"], "bar">;
+ * 
+ * // Expected: false
+ * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar">;
  */
 export type Includes<Array extends unknown[], Match> = Array extends [infer Compare, ...infer Spread]
 	? Equals<Compare, Match> extends true
@@ -131,8 +147,8 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
  * Creates a new type that omits properties from an object type based on another type
  *
  * @example
- * type Person = { name: string; age: number; email: string };
- * type NoEmailPerson = Omit<Person, "email">;  // NoEmailPerson = { name: string; age: number }
+ * // Expected: { name: string; age: number }
+ * type NoEmailPerson = Omit<{ name: string; age: number; email: string }, "email">;
  */
 export type Omit<Obj extends object, Keys extends keyof Obj> = {
 	[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
@@ -144,13 +160,14 @@ export type Omit<Obj extends object, Keys extends keyof Obj> = {
  * @example
  * interface Foo {
  *   foo: string,
- * }
+ * };
  *
  * interface Bar {
  *   bar: number
- * }
+ * };
  *
- * type PropsFooBar = Properties<Foo, Bar> // "foo" | "bar"
+ * // Expected: "foo" | "bar"
+ * type PropsFooBar = Properties<Foo, Bar>;
  */
 export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | keyof Obj2;
 
@@ -162,14 +179,15 @@ export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | 
  * interface Config {
  *   storePaths: string[],
  *   hooks: unknown[]
- * }
+ * };
  *
  * interface AppStore {
  *   path: string,
  *   hooks: ArgsFunction[]
- * }
+ * };
  *
- * type MergeConfig = Merge<Config, AppStore> // { storePaths: string[], path: string, hooks: ArgsFunction[] }
+ * // Expected: { storePaths: string[], path: string, hooks: ArgsFunction[] }
+ * type MergeConfig = Merge<Config, AppStore>;
  */
 export type Merge<Obj1 extends object, Obj2 extends object> = {
 	[Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>;
@@ -179,18 +197,19 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
  * Create a new object based in the difference keys between the objects.
  *
  * @example
- * type Foo = {
- * 	name: string
- * 	age: string
- * }
+ * interface Foo {
+ *   name: string
+ *   age: string
+ * };
  *
- * type Bar = {
- * 	name: string
- * 	age: string
- * 	gender: number
- * }
- *
- * type DiffFoo = Intersection<Foo, Bar> // { gender: number }
+ * interface Bar {
+ *   name: string
+ *   age: string
+ *   gender: number
+ * };
+ * 
+ * // Expected: { gender: number }
+ * type DiffFoo = Intersection<Foo, Bar>;
  */
 export type Intersection<Obj1 extends object, Obj2 extends object> = {
 	[Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 & keyof Obj2 ? never : Property]: RetrieveKeyValue<
@@ -205,11 +224,13 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
  *
  * @example
  * interface User {
- * 	name: string,
- * 	lastname: string,
- * 	age: number
- * }
- * type UserStr = PickByType<User, string> // { name: string, lastname: string }
+ *   name: string,
+ *   lastname: string,
+ *   age: number
+ * };
+ * 
+ * // Expected: { name: string, lastname: string }
+ * type UserStr = PickByType<User, string>;
  */
 export type PickByType<Obj extends object, Type> = {
 	[Property in keyof Obj as Obj[Property] extends Type ? Property : never]: Obj[Property];
@@ -220,11 +241,13 @@ export type PickByType<Obj extends object, Type> = {
  *
  * @example
  * interface User {
- * 	name: string,
- * 	lastname: string,
- *	age: number
- * }
- * type UserPartialName = PartialByKeys<User, "name"> // { name?: string, lastname: string, age: number }
+ *   name: string,
+ *   lastname: string,
+ *   age: number
+ * };
+ * 
+ * // Expected: { name?: string, lastname: string, age: number }
+ * type UserPartialName = PartialByKeys<User, "name">;
  */
 export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
 	{
@@ -237,11 +260,13 @@ export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj
  *
  * @example
  * interface User {
- * 	name: string,
- * 	lastname: string,
- * 	age: number
- * }
- * type UserExcludeStrings = OmitByType<User, string> // { age: number }
+ *   name: string,
+ *   lastname: string,
+ *   age: number
+ * };
+ * 
+ * // Expected: { age: number }
+ * type UserExcludeStrings = OmitByType<User, string>;
  */
 export type OmitByType<Obj extends object, Type> = {
 	[Property in keyof Obj as Obj[Property] extends Type ? never : Property]: Obj[Property];
@@ -283,8 +308,10 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
  *   name?: string,
  *   age?: number,
  *   address?: string
- * }
- * type UserRequiredName = RequiredByKeys<User, "name"> // { name: string, age?: number, address?: string }
+ * };
+ * 
+ * // Expected: { name: string, age?: number, address?: string }
+ * type UserRequiredName = RequiredByKeys<User, "name">;
  */
 export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
 	{
@@ -306,8 +333,11 @@ type FilterImplementation<Array extends unknown[], Predicate, Build extends unkn
  * generic type.
  *
  * @example
- * type Filter1 = Filter<[0, 1, 2], 2> // [2]
- * type Filter2 = Filter<[0, 1, 2], 0 | 1> // [0, 1]
+ * // Expected: [2]
+ * type Filter1 = Filter<[0, 1, 2], 2>
+ * 
+ * // Expected: [0, 1]
+ * type Filter2 = Filter<[0, 1, 2], 0 | 1>
  */
 export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Array, Predicate, []>;
 
@@ -318,12 +348,14 @@ export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Ar
  * @example
  * interface Foo {
  *   bar: string
- * }
+ * };
  *
  * interface Bar {
  *   bar: number
- * }
- * type MergeFooBar = UnionMerge<Foo, Bar> // { bar: string | number }
+ * };
+ * 
+ * // Expected: { bar: string | number }
+ * type MergeFooBar = UnionMerge<Foo, Bar>;
  */
 export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
 	[Prop in Properties<Obj1, Obj2>]: Prop extends keyof Obj1
@@ -345,9 +377,10 @@ export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
  *   readonly name: string;
  *   readonly lastname: string;
  *   readonly age: number;
- * }
+ * };
  *
- * type NonReadonlyUser = Mutable<User>; // { name: string, lastname: string, age: number }
+ * // Expected: { name: string, lastname: string, age: number }
+ * type NonReadonlyUser = Mutable<User>;
  */
 export type Mutable<Obj extends object> = {
 	-readonly [Property in keyof Obj]: Obj[Property];
@@ -364,8 +397,10 @@ export type Mutable<Obj extends object> = {
  *       readonly foobar: number
  *     }
  *   }
- * }
- * type NonReadonlyFoo = DeepMutable<Foo> // { foo: { bar: { foobar: number } } }
+ * };
+ * 
+ * // Expected: { foo: { bar: { foobar: number } } }
+ * type NonReadonlyFoo = DeepMutable<Foo>;
  */
 export type DeepMutable<Obj extends object> = {
 	-readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property];
@@ -385,17 +420,20 @@ type MergeAllImplementation<Array extends readonly object[], Merge extends objec
  * @example
  * interface Foo {
  *   foo: string
- * }
+ * };
+ * 
  * interface Bar {
  *   bar: string
- * }
+ * };
+ * 
  * interface FooBar {
  *   bar: number,
  *   foo: boolean,
  *   foobar: string
- * }
- * type Merge = MergeAll<[Foo, Bar, FooBar]>
- * // { foo: string | boolean, bar: string | number, foobar: string }
+ * };
+ * 
+ * // Expected: { foo: string | boolean, bar: string | number, foobar: string }
+ * type Merge = MergeAll<[Foo, Bar, FooBar]>;
  */
 export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<Array, {}>;
 
@@ -405,9 +443,14 @@ export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<A
  * receive whatever type
  *
  * @example
- * type TupleNumber = ToUnion<1> // 1
- * type TupleString = ToUnion<"foo"> // foo
- * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
+ * // Expected: 1
+ * type TupleNumber = ToUnion<1>;
+ * 
+ * // Expected: "foo"
+ * type TupleString = ToUnion<"foo">;
+ * 
+ * // Expected: 1 | ["foo" | "bar"]
+ * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>;
  */
 export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnion<Spread> : T;
 
@@ -423,8 +466,11 @@ type FilterOutImplementation<Array extends readonly unknown[], Predicate, Build 
  * does not match with the predicated
  *
  * @example
- * type CleanNumbers = FilterOut<[1, 2, 3, 4, 5], [4, 5]> // [1, 2, 3]
- * type CleanStrings = FilterOut<["foo", "bar", "foobar"], "foo"> // ["bar", "foobar"]
+ * // Expected: [1, 2, 3]
+ * type CleanNumbers = FilterOut<[1, 2, 3, 4, 5], [4, 5]>;
+ * 
+ * // Expected: ["bar", "foobar"]
+ * type CleanStrings = FilterOut<["foo", "bar", "foobar"], "foo">;
  */
 export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutImplementation<Array, Predicate, []>;
 
@@ -434,8 +480,10 @@ export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutIm
  * @example
  * interface User {
  *   name: string
- * }
- * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>
+ * };
+ * 
+ * // Expected: { name: string, lastname: string }
+ * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>;
  */
 export type AddPropertyToObject<Obj extends object, NewProp extends string, TypeValue> = {
 	[Property in keyof Obj | NewProp]: Property extends keyof Obj ? Obj[Property] : TypeValue;
@@ -446,10 +494,14 @@ export type AddPropertyToObject<Obj extends object, NewProp extends string, Type
  * its order
  *
  * @example
- * type ReverseNumbers = Reverse<[1, 2, 3, 4]> // [1, 2, 3, 4]
- * type ReverseStrings = Reverse<["a", "b", "c"]> // ["a", "b", "c"]
- * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>
- * // [() => void, { foo: number }, "bar", 2, "foo", 1]
+ * // Expected: [1, 2, 3, 4]
+ * type ReverseNumbers = Reverse<[1, 2, 3, 4]>;
+ * 
+ * // Expected: ["a", "b", "c"]
+ * type ReverseStrings = Reverse<["a", "b", "c"]>;
+ * 
+ * // Expected: [() => void, { foo: number }, "bar", 2, "foo", 1]
+ * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>;
  */
 export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...infer Spread] ? [...Reverse<Spread>, Item] : Array;
 
@@ -467,10 +519,17 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
  * If the element `Match` does not appear, it returns `-1`.
  *
  * @example
- * type IndexOf1 = IndexOf<[0, 0, 0], 2> // -1
- * type IndexOf2 = IndexOf<[string, 1, number, "a"], number> // 2
- * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any> // 4
- * type IndexOf4 = IndexOf<[string, "a"], "a"> // 1
+ * // Expected: -1
+ * type IndexOf1 = IndexOf<[0, 0, 0], 2>;
+ * 
+ * // Expected: 2
+ * type IndexOf2 = IndexOf<[string, 1, number, "a"], number>;
+ * 
+ * // Expected: 4
+ * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any>;
+ * 
+ * // Expected: 1
+ * type IndexOf4 = IndexOf<[string, "a"], "a">;
  */
 export type IndexOf<Array extends unknown[], Match> = IndexOfImplementation<Array, Match, []>;
 
@@ -495,10 +554,17 @@ type LastIndexOfImplementation<
  * If the element `Match` does not appear, it returns `-1`.
  *
  * @example
- * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> // 3
- * type LastIndexOf2 = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3> // 7
- * type LastIndexOf3 = LastIndexOf<[string, 2, number, 'a', number, 1], number> // 4
- * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, 'a', any, 1], any> // 5
+ * // Expected: 3
+ * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> ;
+ * 
+ * // Expected: 7
+ * type LastIndexOf2 = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>;
+ * 
+ * // Expected: 4
+ * type LastIndexOf3 = LastIndexOf<[string, 2, number, "a", number, 1], number>;
+ * 
+ * // Expected: 5
+ * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
 export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementation<Array, Match, [], []>;
 
@@ -509,8 +575,11 @@ export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementat
  * - `Unit` is the percentage symbol "%" or an empty string if no unit is present.
  *
  * @example
- * type Test1 = PercentageParser<"-12"> // ["-", "12", ""]
- * type Test2 = PercentageParser<"+89%"> // ["+", "89", "%"]
+ * // Expected: ["-", "12", ""]
+ * type Test1 = PercentageParser<"-12">;
+ * 
+ * // Expected: ["+", "89", "%"]
+ * type Test2 = PercentageParser<"+89%">; 
  */
 export type PercentageParser<
 	Percentage extends string,
@@ -543,8 +612,11 @@ type RepeatConstructTuple<
  * reate a tuple with a defined size, where each element is of a specified type
  *
  * @example
- * type TupleSize2 = ConstructTuple<2> // [unknown, unknown]
- * type TupleSize3 = ConstructTuple<2, ""> // ["", ""]
+ * // Expected: [unknown, unknown]
+ * type TupleSize2 = ConstructTuple<2>;
+ * 
+ * // Expected: ["", ""]
+ * type TupleSize3 = ConstructTuple<2, "">;
  */
 export type ConstructTuple<
 	Length extends number,
@@ -565,8 +637,11 @@ type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unk
  * Check if there are duplidated elements inside the tuple
  *
  * @example
- * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]> // false
- * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]> // true
+ * // Expected: false
+ * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]>;
+ * 
+ * // Expected: true
+ * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]>;
  */
 export type CheckRepeatedTuple<Tuple extends unknown[]> = CheckRepeatedTupleImplementation<Tuple>;
 
@@ -583,9 +658,10 @@ export type Absolute<Expression extends number | string | bigint> = DropChar<`${
  *   foo: string,
  *   bar: number,
  *   foobar?: boolean
- * }
+ * };
  *
- * type FooEntries = ObjectEntries<Foo> // ["foo", string] | ["bar", number] | ["foobar", boolean]
+ * // Expected: ["foo", string] | ["bar", number] | ["foobar", boolean]
+ * type FooEntries = ObjectEntries<Foo>;
  */
 export type ObjectEntries<Obj extends object, RequiredObj extends object = Required<Obj>> = {
 	[Property in keyof RequiredObj]: [Property, RequiredObj[Property] extends undefined ? undefined : RequiredObj[Property]];
@@ -595,8 +671,11 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
  *
  * @example
- * type Test1 = AllEquals<[number, number, number], number> // true
- * type Test2 = AllEquals<[[1], [1], [1]], [1]> // true
+ * // Expected: true
+ * type Test1 = AllEquals<[number, number, number], number>;
+ * 
+ * // Expected: true
+ * type Test2 = AllEquals<[[1], [1], [1]], [1]>;
  */
 export type AllEquals<Array extends unknown[], Comparator> = Array extends [infer Item, ...infer Spread]
 	? Equals<Item, Comparator> extends true
@@ -613,9 +692,10 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
  *     foo: string,
  *     bar: number,
  *     foobar: boolean
- * }
+ * };
+ * 
  * //Expected: { foo: number, bar: number, foobar: number }
- * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>
+ * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>;
  */
 export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends object, Default = unknown> = {
 	[Property in keyof Obj]: Property extends Keys
@@ -631,10 +711,10 @@ export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends
  *
  * @example
  * // Expected: { foo: string, bar: boolean }
- * type ReplaceTypesI = MapTypes<{ foo: string, bar: number }, { from: number, to: boolean }>
+ * type ReplaceTypesI = MapTypes<{ foo: string, bar: number }, { from: number, to: boolean }>;
  *
  * // Expected: { foo: number, bar: number  }
- * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>
+ * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>;
  */
 export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unknown }> = {
 	[Property in keyof Obj]: Obj[Property] extends Mapper["from"]
@@ -650,8 +730,11 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  * Truncates a number to its integer part.
  *
  * @example
- * type Truncated = Trunc<3.14>; // 3
- * type TruncatedNegative = Trunc<-2.99>; // -2
+ * // Expected: 3
+ * type Truncated = Trunc<3.14>; 
+ * 
+ * // Expected: -2
+ * type TruncatedNegative = Trunc<-2.99>;
  */
 export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.${number}`
 	? "0"
@@ -671,13 +754,13 @@ export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.$
  *     street: string,
  *     avenue: string
  *   }
- * }
+ * };
  *
  * // Expected: { name: string, address: { street: string } }
- * type OmitAvenueUser = DeepOmit<User, "addresss.avenue">
+ * type OmitAvenueUser = DeepOmit<User, "addresss.avenue">;
  *
  * // Expected: { address: { street: string, avenue: string } }
- * type OmitNameUser = DeepOmit<User, "name">
+ * type OmitNameUser = DeepOmit<User, "name">;
  */
 export type DeepOmit<Obj extends object, Pattern extends string> = {
 	[Property in keyof Obj as Pattern extends `${string}.${string}`
@@ -719,10 +802,10 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
  *
  * @example
  * // Expected: [[1, "a"], [2, "b"], [3, "c"]]
- * type Zip1 = Zip<[1, 2, 3], ["a", "b", "c"]>
+ * type Zip1 = Zip<[1, 2, 3], ["a", "b", "c"]>;
  *
  * // Expected: [[1, "a"], [2, "b"]]
- * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>
+ * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
 export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>;
 
@@ -735,10 +818,10 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
  *   name: "Foo",
  *   lastname: "Bar",
  *   age: 30
- * }
+ * };
  *
  * // Expected: { name: string, lastname: string, age: number }
- * type UserPrimitive = ToPrimitive<User>
+ * type UserPrimitive = ToPrimitive<User>;
  */
 export type ToPrimitive<Obj extends object> = {
 	[Property in keyof Obj]: Obj[Property] extends object
