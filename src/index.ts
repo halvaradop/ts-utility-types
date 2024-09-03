@@ -43,7 +43,8 @@ export type {
 	Chunk,
 	DeepOmit,
 	Trunc,
-	Zip
+	Zip,
+	ToPrimitive,
 } from "./utility-types.js";
 
 export type {
@@ -57,6 +58,7 @@ export type {
 	Falsy,
 	Even,
 	Odd,
+	ReturnTypeOf,
 } from "./types.js";
 
 export {

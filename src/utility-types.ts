@@ -729,21 +729,21 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
 /**
  * Transforms the object properties to their primitive types. If the properties are objects,
  * it recursively transforms their properties to their primitive types, and so on.
- * 
+ *
  * @example
  * interface User {
  *   name: "Foo",
  *   lastname: "Bar",
  *   age: 30
  * }
- * 
+ *
  * // Expected: { name: string, lastname: string, age: number }
  * type UserPrimitive = ToPrimitive<User>
  */
 export type ToPrimitive<Obj extends object> = {
-	[Property in keyof Obj]: Obj[Property] extends object 
+	[Property in keyof Obj]: Obj[Property] extends object
 		? Obj[Property] extends Function
 			? Function
 			: ToPrimitive<Obj[Property]>
-		: ReturnTypeOf<Obj[Property]>
-}
+		: ReturnTypeOf<Obj[Property]>;
+};

@@ -120,15 +120,15 @@ export type Even = 0 | 2 | 4 | 6 | 8;
 
 /**
  * Determines the primitive type corresponding to the provided value.
- * 
+ *
  * @example
  * // Expected: number
- * type TypeOfValue = TypeOf<123> 
- * 
+ * type TypeOfValue = TypeOf<123>
+ *
  * // Expected: string
  * type TypeOfValue = TypeOf<"hello">
  */
-export type ReturnTypeOf<T> = T extends string	
+export type ReturnTypeOf<T> = T extends string
 	? string
 	: T extends number
 		? number
