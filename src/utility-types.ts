@@ -707,3 +707,21 @@ type ChunkImplementation<
 		: [...Build, Partition];
 
 export type Chunk<Array extends unknown[], Size extends number> = ChunkImplementation<Array, Size, [], []>;
+
+type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
+	? U extends [infer ItemU, ...infer SpreadU]
+		? ZipImplementation<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
+		: Build
+	: Build;
+
+/**
+ * Join the elements of two arrays in a tuple of arrays
+ *
+ * @example
+ * // Expected: [[1, "a"], [2, "b"], [3, "c"]]
+ * type Zip1 = Zip<[1, 2, 3], ["a", "b", "c"]>
+ *
+ * // Expected: [[1, "a"], [2, "b"]]
+ * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>
+ */
+export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>;
