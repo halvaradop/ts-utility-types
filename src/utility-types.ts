@@ -23,7 +23,7 @@ export type Prettify<Obj extends object> = {
  *     avenue: string
  *   }
  * };
- * 
+ *
  * // Expected: { readonly name: string, readonly address: { readonly street: string, readonly avenue: string } }
  * type ReadonlyUser = DeepReadonly<User>;
  */
@@ -53,7 +53,7 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infe
  * @example
  * const numbers: number[] = [1, 2, 3, 4, 5];
  * // Expected: 5
- * type SizeOfNumbers = Size<typeof numbers>; 
+ * type SizeOfNumbers = Size<typeof numbers>;
  */
 export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0;
 
@@ -73,7 +73,7 @@ export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ?
  * @example
  * // Expected: ["a", "b"]
  * type PopStr = Pop<["a", "b", "c"]>;
- * 
+ *
  * // Expected: [1, 2]
  * type PopNums = Pop<[1, 2, 3]>;
  */
@@ -101,7 +101,7 @@ export type Awaited<T extends PromiseLike<unknown>> =
  * function add(x: number, y: number): number {
  *   return x + y;
  * };
- * 
+ *
  * // Expected: [number, number]
  * type AddParams = Parameters<typeof add>;
  */
@@ -116,7 +116,7 @@ export type Parameters<Function extends ArgsFunction> = Function extends (...arg
  *   lastname: string,
  *   age: number
  * };
- * 
+ *
  * // Expected: { age: number }
  * type PickUser = Pick<User, "age">;
  */
@@ -130,10 +130,10 @@ export type Pick<Obj extends object, Keys extends keyof Obj> = {
  * @example
  * // Expected: true
  * type IncludesNumber = Includes<[1, 2, 3], 3>;
- * 
+ *
  * // Expected: true
  * type IncludesString = Includes<["foo", "bar", "foobar"], "bar">;
- * 
+ *
  * // Expected: false
  * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar">;
  */
@@ -207,7 +207,7 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
  *   age: string
  *   gender: number
  * };
- * 
+ *
  * // Expected: { gender: number }
  * type DiffFoo = Intersection<Foo, Bar>;
  */
@@ -228,7 +228,7 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
  *   lastname: string,
  *   age: number
  * };
- * 
+ *
  * // Expected: { name: string, lastname: string }
  * type UserStr = PickByType<User, string>;
  */
@@ -245,7 +245,7 @@ export type PickByType<Obj extends object, Type> = {
  *   lastname: string,
  *   age: number
  * };
- * 
+ *
  * // Expected: { name?: string, lastname: string, age: number }
  * type UserPartialName = PartialByKeys<User, "name">;
  */
@@ -264,7 +264,7 @@ export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj
  *   lastname: string,
  *   age: number
  * };
- * 
+ *
  * // Expected: { age: number }
  * type UserExcludeStrings = OmitByType<User, string>;
  */
@@ -309,7 +309,7 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
  *   age?: number,
  *   address?: string
  * };
- * 
+ *
  * // Expected: { name: string, age?: number, address?: string }
  * type UserRequiredName = RequiredByKeys<User, "name">;
  */
@@ -335,7 +335,7 @@ type FilterImplementation<Array extends unknown[], Predicate, Build extends unkn
  * @example
  * // Expected: [2]
  * type Filter1 = Filter<[0, 1, 2], 2>
- * 
+ *
  * // Expected: [0, 1]
  * type Filter2 = Filter<[0, 1, 2], 0 | 1>
  */
@@ -353,7 +353,7 @@ export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Ar
  * interface Bar {
  *   bar: number
  * };
- * 
+ *
  * // Expected: { bar: string | number }
  * type MergeFooBar = UnionMerge<Foo, Bar>;
  */
@@ -398,7 +398,7 @@ export type Mutable<Obj extends object> = {
  *     }
  *   }
  * };
- * 
+ *
  * // Expected: { foo: { bar: { foobar: number } } }
  * type NonReadonlyFoo = DeepMutable<Foo>;
  */
@@ -421,17 +421,17 @@ type MergeAllImplementation<Array extends readonly object[], Merge extends objec
  * interface Foo {
  *   foo: string
  * };
- * 
+ *
  * interface Bar {
  *   bar: string
  * };
- * 
+ *
  * interface FooBar {
  *   bar: number,
  *   foo: boolean,
  *   foobar: string
  * };
- * 
+ *
  * // Expected: { foo: string | boolean, bar: string | number, foobar: string }
  * type Merge = MergeAll<[Foo, Bar, FooBar]>;
  */
@@ -445,10 +445,10 @@ export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<A
  * @example
  * // Expected: 1
  * type TupleNumber = ToUnion<1>;
- * 
+ *
  * // Expected: "foo"
  * type TupleString = ToUnion<"foo">;
- * 
+ *
  * // Expected: 1 | ["foo" | "bar"]
  * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>;
  */
@@ -468,7 +468,7 @@ type FilterOutImplementation<Array extends readonly unknown[], Predicate, Build 
  * @example
  * // Expected: [1, 2, 3]
  * type CleanNumbers = FilterOut<[1, 2, 3, 4, 5], [4, 5]>;
- * 
+ *
  * // Expected: ["bar", "foobar"]
  * type CleanStrings = FilterOut<["foo", "bar", "foobar"], "foo">;
  */
@@ -481,7 +481,7 @@ export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutIm
  * interface User {
  *   name: string
  * };
- * 
+ *
  * // Expected: { name: string, lastname: string }
  * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>;
  */
@@ -496,10 +496,10 @@ export type AddPropertyToObject<Obj extends object, NewProp extends string, Type
  * @example
  * // Expected: [1, 2, 3, 4]
  * type ReverseNumbers = Reverse<[1, 2, 3, 4]>;
- * 
+ *
  * // Expected: ["a", "b", "c"]
  * type ReverseStrings = Reverse<["a", "b", "c"]>;
- * 
+ *
  * // Expected: [() => void, { foo: number }, "bar", 2, "foo", 1]
  * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>;
  */
@@ -521,13 +521,13 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
  * @example
  * // Expected: -1
  * type IndexOf1 = IndexOf<[0, 0, 0], 2>;
- * 
+ *
  * // Expected: 2
  * type IndexOf2 = IndexOf<[string, 1, number, "a"], number>;
- * 
+ *
  * // Expected: 4
  * type IndexOf3 = IndexOf<[string, 1, number, "a", any], any>;
- * 
+ *
  * // Expected: 1
  * type IndexOf4 = IndexOf<[string, "a"], "a">;
  */
@@ -556,13 +556,13 @@ type LastIndexOfImplementation<
  * @example
  * // Expected: 3
  * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> ;
- * 
+ *
  * // Expected: 7
  * type LastIndexOf2 = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>;
- * 
+ *
  * // Expected: 4
  * type LastIndexOf3 = LastIndexOf<[string, 2, number, "a", number, 1], number>;
- * 
+ *
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
@@ -577,9 +577,9 @@ export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementat
  * @example
  * // Expected: ["-", "12", ""]
  * type Test1 = PercentageParser<"-12">;
- * 
+ *
  * // Expected: ["+", "89", "%"]
- * type Test2 = PercentageParser<"+89%">; 
+ * type Test2 = PercentageParser<"+89%">;
  */
 export type PercentageParser<
 	Percentage extends string,
@@ -614,7 +614,7 @@ type RepeatConstructTuple<
  * @example
  * // Expected: [unknown, unknown]
  * type TupleSize2 = ConstructTuple<2>;
- * 
+ *
  * // Expected: ["", ""]
  * type TupleSize3 = ConstructTuple<2, "">;
  */
@@ -639,7 +639,7 @@ type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unk
  * @example
  * // Expected: false
  * type TupleNumber1 = CheckRepeatedTuple<[1, 2, 3]>;
- * 
+ *
  * // Expected: true
  * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]>;
  */
@@ -673,7 +673,7 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * @example
  * // Expected: true
  * type Test1 = AllEquals<[number, number, number], number>;
- * 
+ *
  * // Expected: true
  * type Test2 = AllEquals<[[1], [1], [1]], [1]>;
  */
@@ -693,7 +693,7 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
  *     bar: number,
  *     foobar: boolean
  * };
- * 
+ *
  * //Expected: { foo: number, bar: number, foobar: number }
  * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>;
  */
@@ -731,8 +731,8 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  *
  * @example
  * // Expected: 3
- * type Truncated = Trunc<3.14>; 
- * 
+ * type Truncated = Trunc<3.14>;
+ *
  * // Expected: -2
  * type TruncatedNegative = Trunc<-2.99>;
  */
