@@ -43,6 +43,7 @@ export type {
 	Chunk,
 	DeepOmit,
 	Trunc,
+	Zip
 } from "./utility-types.js";
 
 export type {

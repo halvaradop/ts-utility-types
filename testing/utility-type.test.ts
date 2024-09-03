@@ -41,6 +41,7 @@ import type {
 	Trunc,
 	DeepOmit,
 	Chunk,
+	Zip,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -539,5 +540,16 @@ describe("Chunk", () => {
 		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 5>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
 		expectTypeOf<Chunk<[1, 2, 3, 4, 5], 6>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
 		expectTypeOf<Chunk<[1, 2, 3, 4, 5], -2>>().toEqualTypeOf<[[1, 2, 3, 4, 5]]>();
+	});
+});
+
+describe("Zip", () => {
+	test("Zip two arrays into a tuple", () => {
+		expectTypeOf<Zip<[], []>>().toEqualTypeOf<[]>();
+		expectTypeOf<Zip<[1, 2, 3], ["foo"]>>().toEqualTypeOf<[[1, "foo"]]>();
+		expectTypeOf<Zip<[1, "bar", 3], ["foo", 2]>>().toEqualTypeOf<[[1, "foo"], ["bar", 2]]>();
+		expectTypeOf<Zip<[{ foo: string }, { bar: string }], ["foo", "bar"]>>().toEqualTypeOf<
+			[[{ foo: string }, "foo"], [{ bar: string }, "bar"]]
+		>();
 	});
 });
