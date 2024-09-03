@@ -1,6 +1,6 @@
 import type { DropChar } from "./string-mappers";
 import type { Equals } from "./test";
-import type { ArgsFunction } from "./types";
+import type { ArgsFunction, ReturnTypeOf } from "./types";
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -725,3 +725,25 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>
  */
 export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>;
+
+/**
+ * Transforms the object properties to their primitive types. If the properties are objects,
+ * it recursively transforms their properties to their primitive types, and so on.
+ * 
+ * @example
+ * interface User {
+ *   name: "Foo",
+ *   lastname: "Bar",
+ *   age: 30
+ * }
+ * 
+ * // Expected: { name: string, lastname: string, age: number }
+ * type UserPrimitive = ToPrimitive<User>
+ */
+export type ToPrimitive<Obj extends object> = {
+	[Property in keyof Obj]: Obj[Property] extends object 
+		? Obj[Property] extends Function
+			? Function
+			: ToPrimitive<Obj[Property]>
+		: ReturnTypeOf<Obj[Property]>
+}
