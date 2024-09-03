@@ -42,6 +42,7 @@ import type {
 	DeepOmit,
 	Chunk,
 	Zip,
+	ToPrimitive,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -551,5 +552,17 @@ describe("Zip", () => {
 		expectTypeOf<Zip<[{ foo: string }, { bar: string }], ["foo", "bar"]>>().toEqualTypeOf<
 			[[{ foo: string }, "foo"], [{ bar: string }, "bar"]]
 		>();
+	});
+});
+
+describe("ToPrimitive", () => {
+	test("Converts a string to a primitive type", () => {
+		expectTypeOf<ToPrimitive<{ foo: string; bar: string }>>().toEqualTypeOf<{ foo: string; bar: string }>();
+		expectTypeOf<ToPrimitive<{ foo: "foobar"; bar: string }>>().toEqualTypeOf<{ foo: string; bar: string }>();
+		expectTypeOf<ToPrimitive<{ foo: "foobar"; bar: 12 }>>().toEqualTypeOf<{ foo: string; bar: number }>();
+		expectTypeOf<ToPrimitive<{ foo: { foobar: "fo"; bar: false }; bar: 12 }>>().toEqualTypeOf<{
+			foo: { foobar: string; bar: boolean };
+			bar: number;
+		}>();
 	});
 });
