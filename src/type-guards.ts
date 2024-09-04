@@ -28,10 +28,10 @@ export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : 
  * Check if the number provided is even or not
  *
  * @example
- * // true
+ * // Expected: true
  * type CheckEven = IsEven<2024>;
  *
- * // false
+ * // Expected: false
  * type CheckOdd = IsEven<2023>;
  */
 export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false : true;
