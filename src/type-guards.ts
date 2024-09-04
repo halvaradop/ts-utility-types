@@ -1,4 +1,4 @@
-import type { Odd } from "./types";
+import type { Even, Odd } from "./types";
 
 /**
  * Check if the parameter is a never value
@@ -17,9 +17,21 @@ export type IsNever<T> = [T] extends [never] ? true : false;
  *
  * @example
  * // Expected: true
- * type CheckOdd = IsOdd<2023>
+ * type CheckOdd = IsOdd<2023>;
  *
  * // Expected: false
- * type CheckEven = IsOdd<2024>
+ * type CheckEven = IsOdd<2024>;
  */
 export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : false;
+
+/**
+ * Check if the number provided is even or not
+ *
+ * @example
+ * // true
+ * type CheckEven = IsEven<2024>;
+ *
+ * // false
+ * type CheckOdd = IsEven<2023>;
+ */
+export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false : true;
