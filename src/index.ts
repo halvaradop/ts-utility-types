@@ -45,6 +45,7 @@ export type {
 	Trunc,
 	Zip,
 	ToPrimitive,
+	NumberRange,
 } from "./utility-types.js";
 
 export type {
