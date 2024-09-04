@@ -830,3 +830,43 @@ export type ToPrimitive<Obj extends object> = {
 			: ToPrimitive<Obj[Property]>
 		: ReturnTypeOf<Obj[Property]>;
 };
+
+/**
+ * Creates a series of numbers between the range of `Low` and `High`. This utility type
+ * is internally used by `NumberRange`.
+ *
+ * @link `NumberRange`
+ */
+type NumberRangeImplementation<
+	Low extends number,
+	High extends number,
+	Range extends unknown = never,
+	Index extends unknown[] = [],
+	LowRange extends boolean = false,
+> = Index["length"] extends Low
+	? NumberRangeImplementation<Low, High, Range | Index["length"], [...Index, 1], true>
+	: Index["length"] extends High
+		? Range | Index["length"]
+		: LowRange extends true
+			? NumberRangeImplementation<Low, High, Range | Index["length"], [...Index, 1], LowRange>
+			: NumberRangeImplementation<Low, High, Range, [...Index, 1], LowRange>;
+
+/**
+ * Creates a range of numbers that starts from `Low` and ends in `High`. The range is inclusive
+ * and the values should be positive numbers. If the `Low` or `High` values are negative numbers
+ * it returns `never`.
+ *
+ * @example
+ * // Expected: 1 | 2 | 3 | 4 | 5
+ * type Range1 = NumberRange<1, 5>;
+ *
+ * // Expected: never
+ * type Range2 = NumberRange<-1, 5>;
+ */
+export type NumberRange<Low extends number, High extends number> = `${Low}` extends `-${number}`
+	? never
+	: `${High}` extends `-${number}`
+		? never
+		: Low extends High
+			? Low
+			: NumberRangeImplementation<Low, High>;

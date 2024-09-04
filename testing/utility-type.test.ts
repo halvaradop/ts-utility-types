@@ -43,6 +43,7 @@ import type {
 	Chunk,
 	Zip,
 	ToPrimitive,
+	NumberRange,
 } from "../src/utility-types";
 
 describe("Readonly", () => {
@@ -564,5 +565,16 @@ describe("ToPrimitive", () => {
 			foo: { foobar: string; bar: boolean };
 			bar: number;
 		}>();
+	});
+});
+
+describe("NumberRange", () => {
+	test("Create a union type with a range of numbers", () => {
+		expectTypeOf<NumberRange<1, 5>>().toEqualTypeOf<1 | 2 | 3 | 4 | 5>();
+		expectTypeOf<NumberRange<9, 14>>().toEqualTypeOf<9 | 10 | 11 | 12 | 13 | 14>();
+		expectTypeOf<NumberRange<-5, 5>>().toEqualTypeOf<never>();
+		expectTypeOf<NumberRange<0, 0>>().toEqualTypeOf<0>();
+		expectTypeOf<NumberRange<-5, -5>>().toEqualTypeOf<never>();
+		expectTypeOf<NumberRange<-5, 0>>().toEqualTypeOf<never>();
 	});
 });
