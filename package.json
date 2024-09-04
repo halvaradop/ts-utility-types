@@ -31,10 +31,10 @@
   },
   "homepage": "https://github.com/halvaradop/ts-utility-types#readme",
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.5.3",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.3"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   },
   "files": [
     "dist"
@@ -47,7 +47,10 @@
     "useTabs": true,
     "overrides": [
       {
-        "files": [".github/**/*.yaml", "README.md"],
+        "files": [
+          ".github/**/*.yaml",
+          "README.md"
+        ],
         "options": {
           "tabWidth": 2,
           "useTabs": false,
