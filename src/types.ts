@@ -5,8 +5,8 @@
  *
  * @example
  * function getPointsAsync(callback: ArgsFunction) {
- *  // do anything here
- *  callback((x: number, y: number, z: number) => {})
+ *   // do anything here
+ *   callback((x: number, y: number, z: number) => {})
  * }
  */
 export type ArgsFunction = (...args: any) => void;
@@ -21,7 +21,6 @@ export type Nullish = null | undefined;
 /**
  * Represents a primitive data type that can also be null or undefined.
  * This type is useful for situations where nullish values are allowed.
- *
  */
 export type PrimitiveNullish = number | string | boolean | bigint | symbol | Nullish;
 

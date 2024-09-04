@@ -109,6 +109,7 @@ type DropCharImplementation<
  * @example
  * // Expected: butterfly!
  * type Test1 = DropChar<"butter fly!", "">
+ *
  * // Expected: "butterfly!"
  * type Test2 = DropChar<" b u t t e r f l y ! ", " ">
  */
