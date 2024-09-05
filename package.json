@@ -4,10 +4,10 @@
   "description": "Utility types tools to enhances the productivity using typescript",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc -w",
+    "dev": "tsup --watch",
     "test:watch": "vitest",
     "test": "vitest --run",
-    "build": "tsc",
+    "build": "tsup",
     "publish": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/node": "^22.5.3",
     "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5"
   },
