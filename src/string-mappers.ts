@@ -1,5 +1,5 @@
-import type { Equals } from "./test";
-import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types";
+import type { Equals } from "./test.js";
+import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types.js";
 
 /**
  * Removes leading whitespace characters from a string type
