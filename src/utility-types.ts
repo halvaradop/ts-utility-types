@@ -1,6 +1,6 @@
-import type { DropChar } from "./string-mappers";
-import type { Equals } from "./test";
-import type { ArgsFunction, ReturnTypeOf } from "./types";
+import type { DropChar } from "./string-mappers.js";
+import type { Equals } from "./test.js";
+import type { ArgsFunction, ReturnTypeOf } from "./types.js";
 
 /**
  * Utility type that transforms an object to have each property on a new line

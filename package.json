@@ -2,12 +2,14 @@
   "name": "@halvaradop/ts-utility-types",
   "version": "0.8.0",
   "description": "Utility types tools to enhances the productivity using typescript",
-  "main": "dist/index.js",
+  "type": "module",
+  "main": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
     "test:watch": "vitest",
     "test": "vitest --run",
-    "build": "tsup",
+    "build:js": "tsup src/validate-types.ts --format cjs,esm --dts --minify --outDir dist/utils",
+    "build": "tsup && npm run build:js",
     "publish": "tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
@@ -37,8 +39,22 @@
     "typescript": "^5.5.4",
     "vitest": "^2.0.5"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.d.ts",
+      "require": "./dist/index.d.ts"
+    },
+    "./utils": {
+      "types": "./dist/utils/validate-types.d.ts",
+      "import": "./dist/utils/validate-types.js",
+      "require": "./dist/utils/validate-types.cjs"
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "README.md"
   ],
   "prettier": {
     "semi": true,
