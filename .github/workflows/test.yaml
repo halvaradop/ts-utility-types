@@ -4,8 +4,6 @@ on:
   pull_request:
     branches: master
     types: [opened, reopened, synchronize]
-  push:
-    branches: master
 
 jobs:
   build:
