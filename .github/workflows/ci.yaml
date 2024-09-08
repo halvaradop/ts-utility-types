@@ -1,12 +1,9 @@
-name: deploy-to-development-env
+name: ci
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - master
-    paths:
-      - "src/**"
-      - "testing/**"
     types: closed
 
 jobs:
@@ -31,7 +28,7 @@ jobs:
       - run: npm install
       - run: npm run test
 
-  deploy:
+  ci-to-development:
     if: github.event.pull_request.merged == true
     needs: [build, test]
     runs-on: ubuntu-20.04
@@ -41,3 +38,14 @@ jobs:
 
       - name: Deploy to development environment
         run: echo "Deploying to development environment"
+
+  ci-to-production:
+    if: github.base_ref == 'master' && startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
+    needs: [build, test]
+    runs-on: ubuntu-20.04
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to production environment
+        run: echo "Deploying to production environment"
