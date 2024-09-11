@@ -136,3 +136,13 @@ describe("Zip", () => {
 		>();
 	});
 });
+
+describe("FlattenArrayType", () => {
+	test("Flatten an array type", () => {
+		expectTypeOf<utilities.FlattenArrayType<number[]>>().toEqualTypeOf<number>();
+		expectTypeOf<utilities.FlattenArrayType<number[][]>>().toEqualTypeOf<number>();
+		expectTypeOf<utilities.FlattenArrayType<number[][][]>>().toEqualTypeOf<number>();
+		expectTypeOf<utilities.FlattenArrayType<string[][][][]>>().toEqualTypeOf<string>();
+		expectTypeOf<utilities.FlattenArrayType<unknown[][][][]>>().toEqualTypeOf<unknown>();
+	});
+});
