@@ -259,3 +259,15 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
 export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>;
+
+/**
+ * Returns the flatten type of an array.
+ *
+ * @example
+ * // Expected: number
+ * type Flatten1 = FlattenArrayType<number[][]>;
+ *
+ * // Expected: string
+ * type Flatten2 = FlattenArrayType<string[][][]>;
+ */
+export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArrayType<Type> : Array;
