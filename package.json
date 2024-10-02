@@ -3,14 +3,12 @@
   "version": "0.10.0",
   "description": "Utility types tools to enhances the productivity using typescript",
   "type": "module",
-  "main": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
     "test:watch": "vitest",
     "test": "vitest --run",
-    "build:js": "tsup src/validate-types.ts --format cjs,esm --dts --minify --outDir dist/utils",
-    "build": "tsup && npm run build:js",
-    "publish": "tsc",
+    "build": "tsup",
+    "publish": "npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -65,7 +63,9 @@
     "overrides": [
       {
         "files": [
-          ".github/**/*.yaml",
+          "*.yaml",
+          "*.yml",
+          "*.json",
           "README.md"
         ],
         "options": {
