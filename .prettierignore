@@ -1,8 +1,6 @@
-# Build
+# build
 node_modules
 dist
 
-# Configurations
-package.json
+# files
 package-lock.json
-tsconfig.json
