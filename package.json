@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsup --watch",
-    "test:watch": "vitest",
     "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest --coverage",
     "build": "tsup",
     "publish": "npm run build",
     "format": "prettier --write .",
@@ -32,6 +33,7 @@
   "homepage": "https://github.com/halvaradop/ts-utility-types#readme",
   "devDependencies": {
     "@types/node": "^22.5.3",
+    "@vitest/coverage-v8": "^2.1.1",
     "prettier": "^3.3.3",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
