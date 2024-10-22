@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - master
-    types: closed
+    types: [opened, synchronize, closed]
 
 jobs:
   build:
@@ -25,11 +25,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
       - run: npm install
       - run: npm run test
 
-  ci-to-development:
-    if: github.event.pull_request.merged == true
+  deploy-to-development:
+    if: github.event.pull_request.merged == true && github.base_ref == 'master'
     needs: [build, test]
     runs-on: ubuntu-20.04
     environment: development
@@ -39,8 +42,8 @@ jobs:
       - name: Deploy to development environment
         run: echo "Deploying to development environment"
 
-  ci-to-production:
-    if: github.base_ref == 'master' && startsWith(github.head_ref, 'release/') && github.event.pull_request.merged == true
+  deploy-to-production:
+    if: github.event.pull_request.merged == true && github.base_ref == 'master' && startsWith(github.head_ref, 'release/')
     needs: [build, test]
     runs-on: ubuntu-20.04
     environment: production
