@@ -8,7 +8,7 @@ import type { ArgsFunction, ReturnTypeOf } from "./types.js";
  * It doesn't change the original object type.
  */
 export type Prettify<Obj extends object> = {
-	[Property in keyof Obj]: Obj[Property];
+    [Property in keyof Obj]: Obj[Property];
 } & {};
 
 /**
@@ -27,11 +27,11 @@ export type Prettify<Obj extends object> = {
  * type ReadonlyUser = DeepReadonly<User>;
  */
 export type DeepReadonly<Obj extends object> = {
-	readonly [Property in keyof Obj]: Obj[Property] extends Function
-		? Obj[Property]
-		: Obj[Property] extends object
-			? DeepReadonly<Obj[Property]>
-			: Obj[Property];
+    readonly [Property in keyof Obj]: Obj[Property] extends Function
+        ? Obj[Property]
+        : Obj[Property] extends object
+          ? DeepReadonly<Obj[Property]>
+          : Obj[Property];
 };
 
 /**
@@ -43,11 +43,11 @@ export type Exclude<T, Match> = T extends Match ? never : T;
  * Get the type of the resolved value of a PromiseLike object.
  */
 export type Awaited<T extends PromiseLike<unknown>> =
-	T extends PromiseLike<infer ResolveType>
-		? ResolveType extends PromiseLike<unknown>
-			? Awaited<ResolveType>
-			: ResolveType
-		: never;
+    T extends PromiseLike<infer ResolveType>
+        ? ResolveType extends PromiseLike<unknown>
+            ? Awaited<ResolveType>
+            : ResolveType
+        : never;
 
 /**
  * Get the type of the function's arguments
@@ -76,7 +76,7 @@ export type Parameters<Function extends ArgsFunction> = Function extends (...arg
  * type PickUser = Pick<User, "age">;
  */
 export type Pick<Obj extends object, Keys extends keyof Obj> = {
-	[Property in Keys]: Obj[Property];
+    [Property in Keys]: Obj[Property];
 };
 
 /**
@@ -93,10 +93,10 @@ export type Pick<Obj extends object, Keys extends keyof Obj> = {
  * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar">;
  */
 export type Includes<Array extends unknown[], Match> = Array extends [infer Compare, ...infer Spread]
-	? Equals<Compare, Match> extends true
-		? true
-		: Includes<Spread, Match>
-	: false;
+    ? Equals<Compare, Match> extends true
+        ? true
+        : Includes<Spread, Match>
+    : false;
 
 /**
  * Creates a new type that omits properties from an object type based on another type
@@ -106,7 +106,7 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
  * type NoEmailPerson = Omit<{ name: string; age: number; email: string }, "email">;
  */
 export type Omit<Obj extends object, Keys extends keyof Obj> = {
-	[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
+    [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
 };
 
 /**
@@ -145,7 +145,7 @@ export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | 
  * type MergeConfig = Merge<Config, AppStore>;
  */
 export type Merge<Obj1 extends object, Obj2 extends object> = {
-	[Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>;
+    [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>;
 };
 
 /**
@@ -167,11 +167,11 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
  * type DiffFoo = Intersection<Foo, Bar>;
  */
 export type Intersection<Obj1 extends object, Obj2 extends object> = {
-	[Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 & keyof Obj2 ? never : Property]: RetrieveKeyValue<
-		Obj1,
-		Obj2,
-		Property
-	>;
+    [Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 & keyof Obj2 ? never : Property]: RetrieveKeyValue<
+        Obj1,
+        Obj2,
+        Property
+    >;
 };
 
 /**
@@ -188,7 +188,7 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
  * type UserStr = PickByType<User, string>;
  */
 export type PickByType<Obj extends object, Type> = {
-	[Property in keyof Obj as Obj[Property] extends Type ? Property : never]: Obj[Property];
+    [Property in keyof Obj as Obj[Property] extends Type ? Property : never]: Obj[Property];
 };
 
 /**
@@ -205,9 +205,9 @@ export type PickByType<Obj extends object, Type> = {
  * type UserPartialName = PartialByKeys<User, "name">;
  */
 export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
-	{
-		[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
-	} & { [Property in Keys]?: Obj[Property] }
+    {
+        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
+    } & { [Property in Keys]?: Obj[Property] }
 >;
 
 /**
@@ -224,7 +224,7 @@ export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj
  * type UserExcludeStrings = OmitByType<User, string>;
  */
 export type OmitByType<Obj extends object, Type> = {
-	[Property in keyof Obj as Obj[Property] extends Type ? never : Property]: Obj[Property];
+    [Property in keyof Obj as Obj[Property] extends Type ? never : Property]: Obj[Property];
 };
 
 /**
@@ -232,16 +232,16 @@ export type OmitByType<Obj extends object, Type> = {
  * while keeping the other values unchanged.
  */
 export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Prettify<
-	{
-		[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
-	} & Obj[Keys]
+    {
+        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
+    } & Obj[Keys]
 >;
 
 /**
  * Removes the properties whose keys start with an underscore (_).
  */
 export type PublicOnly<Obj extends object> = {
-	[Property in keyof Obj as Property extends `_${string}` ? never : Property]: Obj[Property];
+    [Property in keyof Obj as Property extends `_${string}` ? never : Property]: Obj[Property];
 };
 
 /**
@@ -249,10 +249,10 @@ export type PublicOnly<Obj extends object> = {
  * If the key does not exist in either object, it returns `never`.
  */
 export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
-	? Obj1[Key]
-	: Key extends keyof Obj2
-		? Obj2[Key]
-		: never;
+    ? Obj1[Key]
+    : Key extends keyof Obj2
+      ? Obj2[Key]
+      : never;
 
 /**
  * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
@@ -269,11 +269,11 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
  * type UserRequiredName = RequiredByKeys<User, "name">;
  */
 export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
-	{
-		[Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
-	} & {
-		[Property in keyof Obj as Property extends Keys ? Property : never]-?: Obj[Property];
-	}
+    {
+        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property];
+    } & {
+        [Property in keyof Obj as Property extends Keys ? Property : never]-?: Obj[Property];
+    }
 >;
 
 /**
@@ -293,13 +293,13 @@ export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Ob
  * type MergeFooBar = UnionMerge<Foo, Bar>;
  */
 export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
-	[Prop in Properties<Obj1, Obj2>]: Prop extends keyof Obj1
-		? Prop extends keyof Obj2
-			? Obj1[Prop] | Obj2[Prop]
-			: Obj1[Prop]
-		: Prop extends keyof Obj2
-			? Obj2[Prop]
-			: never;
+    [Prop in Properties<Obj1, Obj2>]: Prop extends keyof Obj1
+        ? Prop extends keyof Obj2
+            ? Obj1[Prop] | Obj2[Prop]
+            : Obj1[Prop]
+        : Prop extends keyof Obj2
+          ? Obj2[Prop]
+          : never;
 };
 
 /**
@@ -318,7 +318,7 @@ export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
  * type NonReadonlyUser = Mutable<User>;
  */
 export type Mutable<Obj extends object> = {
-	-readonly [Property in keyof Obj]: Obj[Property];
+    -readonly [Property in keyof Obj]: Obj[Property];
 };
 
 /**
@@ -338,15 +338,15 @@ export type Mutable<Obj extends object> = {
  * type NonReadonlyFoo = DeepMutable<Foo>;
  */
 export type DeepMutable<Obj extends object> = {
-	-readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property];
+    -readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property];
 };
 
 type MergeAllImplementation<Array extends readonly object[], Merge extends object = {}> = Array extends [
-	infer Item,
-	...infer Spread,
+    infer Item,
+    ...infer Spread,
 ]
-	? MergeAllImplementation<Spread extends object[] ? Spread : never, UnionMerge<Merge, Item extends object ? Item : {}>>
-	: Merge;
+    ? MergeAllImplementation<Spread extends object[] ? Spread : never, UnionMerge<Merge, Item extends object ? Item : {}>>
+    : Merge;
 
 /**
  * Create a new object type based in the tuple of object types, if the properties
@@ -401,7 +401,7 @@ export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnio
  * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>;
  */
 export type AddPropertyToObject<Obj extends object, NewProp extends string, TypeValue> = {
-	[Property in keyof Obj | NewProp]: Property extends keyof Obj ? Obj[Property] : TypeValue;
+    [Property in keyof Obj | NewProp]: Property extends keyof Obj ? Obj[Property] : TypeValue;
 };
 
 /**
@@ -418,7 +418,7 @@ export type AddPropertyToObject<Obj extends object, NewProp extends string, Type
  * type FooEntries = ObjectEntries<Foo>;
  */
 export type ObjectEntries<Obj extends object, RequiredObj extends object = Required<Obj>> = {
-	[Property in keyof RequiredObj]: [Property, RequiredObj[Property] extends undefined ? undefined : RequiredObj[Property]];
+    [Property in keyof RequiredObj]: [Property, RequiredObj[Property] extends undefined ? undefined : RequiredObj[Property]];
 }[keyof RequiredObj];
 
 /**
@@ -436,11 +436,11 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>;
  */
 export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends object, Default = unknown> = {
-	[Property in keyof Obj]: Property extends Keys
-		? Property extends keyof Replace
-			? Replace[Property]
-			: Default
-		: Obj[Property];
+    [Property in keyof Obj]: Property extends Keys
+        ? Property extends keyof Replace
+            ? Replace[Property]
+            : Default
+        : Obj[Property];
 };
 
 /**
@@ -455,13 +455,13 @@ export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends
  * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>;
  */
 export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unknown }> = {
-	[Property in keyof Obj]: Obj[Property] extends Mapper["from"]
-		? Mapper extends { from: infer From; to: infer To }
-			? Obj[Property] extends From
-				? To
-				: never
-			: Obj[Property]
-		: Obj[Property];
+    [Property in keyof Obj]: Obj[Property] extends Mapper["from"]
+        ? Mapper extends { from: infer From; to: infer To }
+            ? Obj[Property] extends From
+                ? To
+                : never
+            : Obj[Property]
+        : Obj[Property];
 };
 
 /**
@@ -483,17 +483,17 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  * type OmitNameUser = DeepOmit<User, "name">;
  */
 export type DeepOmit<Obj extends object, Pattern extends string> = {
-	[Property in keyof Obj as Pattern extends `${string}.${string}`
-		? Property
-		: Property extends Pattern
-			? never
-			: Property]: Pattern extends `${infer StartsWith}.${infer Spread}`
-		? Property extends StartsWith
-			? Obj[Property] extends object
-				? DeepOmit<Obj[Property], Spread>
-				: Obj[Property]
-			: Obj[Property]
-		: Obj[Property];
+    [Property in keyof Obj as Pattern extends `${string}.${string}`
+        ? Property
+        : Property extends Pattern
+          ? never
+          : Property]: Pattern extends `${infer StartsWith}.${infer Spread}`
+        ? Property extends StartsWith
+            ? Obj[Property] extends object
+                ? DeepOmit<Obj[Property], Spread>
+                : Obj[Property]
+            : Obj[Property]
+        : Obj[Property];
 };
 
 /**
@@ -511,9 +511,9 @@ export type DeepOmit<Obj extends object, Pattern extends string> = {
  * type UserPrimitive = ToPrimitive<User>;
  */
 export type ToPrimitive<Obj extends object> = {
-	[Property in keyof Obj]: Obj[Property] extends object
-		? Obj[Property] extends Function
-			? Function
-			: ToPrimitive<Obj[Property]>
-		: ReturnTypeOf<Obj[Property]>;
+    [Property in keyof Obj]: Obj[Property] extends object
+        ? Obj[Property] extends Function
+            ? Function
+            : ToPrimitive<Obj[Property]>
+        : ReturnTypeOf<Obj[Property]>;
 };

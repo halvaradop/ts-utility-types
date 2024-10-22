@@ -42,64 +42,64 @@ export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029";
  * Maps lowercase letters to their uppercase equivalents
  */
 export interface LetterToUppercase {
-	a: "A";
-	b: "B";
-	c: "C";
-	d: "D";
-	e: "E";
-	f: "F";
-	g: "G";
-	h: "H";
-	i: "I";
-	j: "J";
-	k: "K";
-	l: "L";
-	m: "M";
-	n: "N";
-	o: "O";
-	p: "P";
-	q: "Q";
-	r: "R";
-	s: "S";
-	t: "T";
-	u: "U";
-	v: "V";
-	w: "W";
-	x: "X";
-	y: "Y";
-	z: "Z";
+    a: "A";
+    b: "B";
+    c: "C";
+    d: "D";
+    e: "E";
+    f: "F";
+    g: "G";
+    h: "H";
+    i: "I";
+    j: "J";
+    k: "K";
+    l: "L";
+    m: "M";
+    n: "N";
+    o: "O";
+    p: "P";
+    q: "Q";
+    r: "R";
+    s: "S";
+    t: "T";
+    u: "U";
+    v: "V";
+    w: "W";
+    x: "X";
+    y: "Y";
+    z: "Z";
 }
 
 /**
  * Maps uppercase letters to their lowercase equivalents
  */
 export interface LetterToLowercase {
-	A: "a";
-	B: "b";
-	C: "c";
-	D: "d";
-	E: "e";
-	F: "f";
-	G: "g";
-	H: "h";
-	I: "i";
-	J: "j";
-	K: "k";
-	L: "l";
-	M: "m";
-	N: "n";
-	O: "o";
-	P: "p";
-	Q: "q";
-	R: "r";
-	S: "s";
-	T: "t";
-	U: "u";
-	V: "v";
-	W: "w";
-	X: "x";
-	Y: "y";
-	Z: "z";
+    A: "a";
+    B: "b";
+    C: "c";
+    D: "d";
+    E: "e";
+    F: "f";
+    G: "g";
+    H: "h";
+    I: "i";
+    J: "j";
+    K: "k";
+    L: "l";
+    M: "m";
+    N: "n";
+    O: "o";
+    P: "p";
+    Q: "q";
+    R: "r";
+    S: "s";
+    T: "t";
+    U: "u";
+    V: "v";
+    W: "w";
+    X: "x";
+    Y: "y";
+    Z: "z";
 }
 
 /**
@@ -128,13 +128,13 @@ export type Even = 0 | 2 | 4 | 6 | 8;
  * type TypeOfValue = TypeOf<"hello">
  */
 export type ReturnTypeOf<T> = T extends string
-	? string
-	: T extends number
-		? number
-		: T extends object
-			? object
-			: T extends boolean
-				? boolean
-				: T extends Function
-					? Function
-					: never;
+    ? string
+    : T extends number
+      ? number
+      : T extends object
+        ? object
+        : T extends boolean
+          ? boolean
+          : T extends Function
+            ? Function
+            : never;

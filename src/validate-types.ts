@@ -12,7 +12,7 @@ const primitives = ["number", "string", "boolean", "bigint", "symbol"];
  * @returns {boolean} `true` if the value is a primitive type, `false` otherwise
  */
 export const isPrimitive = (value: unknown): value is Primitive => {
-	return primitives.some((primitive) => typeof value === primitive);
+    return primitives.some((primitive) => typeof value === primitive);
 };
 
 /**
