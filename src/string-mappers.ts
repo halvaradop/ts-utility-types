@@ -24,48 +24,48 @@ export type TrimRight<Str extends string> = Str extends `${infer Char}${WhiteSpa
  * type Trimmed = Trim<"  hello world  ">;
  */
 export type Trim<Str extends string> = Str extends `${WhiteSpaces}${infer Characters}`
-	? Trim<Characters>
-	: Str extends `${infer Char}${WhiteSpaces}`
-		? Trim<Char>
-		: Str;
+    ? Trim<Characters>
+    : Str extends `${infer Char}${WhiteSpaces}`
+      ? Trim<Char>
+      : Str;
 
 /**
  *  Converts a string to uppercase
  */
 export type Uppercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
-	? Char extends keyof LetterToUppercase
-		? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
-		: `${Char}${Uppercase<Characters>}`
-	: Str;
+    ? Char extends keyof LetterToUppercase
+        ? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
+        : `${Char}${Uppercase<Characters>}`
+    : Str;
 
 /**
  * Converts a string to lowercase
  */
 export type Lowercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
-	? Char extends keyof LetterToLowercase
-		? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
-		: `${Char}${Lowercase<Characters>}`
-	: Str;
+    ? Char extends keyof LetterToLowercase
+        ? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
+        : `${Char}${Lowercase<Characters>}`
+    : Str;
 
 /**
  * Capitalizes the first letter of a word and converts the rest to lowercase
  */
 export type Capitalize<Str extends string, FirstWord extends boolean = true> = Str extends `${infer Char}${infer Characters}`
-	? FirstWord extends boolean
-		? FirstWord extends true
-			? `${Uppercase<Char>}${Capitalize<Characters, false>}`
-			: Char extends " "
-				? ` ${Capitalize<Characters, true>}`
-				: `${Lowercase<Char>}${Capitalize<Characters, false>}`
-		: Str
-	: Str;
+    ? FirstWord extends boolean
+        ? FirstWord extends true
+            ? `${Uppercase<Char>}${Capitalize<Characters, false>}`
+            : Char extends " "
+              ? ` ${Capitalize<Characters, true>}`
+              : `${Lowercase<Char>}${Capitalize<Characters, false>}`
+        : Str
+    : Str;
 
 type JoinImplementation<Array extends unknown[], Separator extends number | string, Str extends string = ""> = Array extends [
-	infer Char,
-	...infer Chars,
+    infer Char,
+    ...infer Chars,
 ]
-	? JoinImplementation<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
-	: Str;
+    ? JoinImplementation<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
+    : Str;
 
 /**
  * Create a string type based on the values of a tuple type `T`, joining the values
@@ -96,12 +96,12 @@ export type Join<Array extends unknown[], Separator extends number | string> = J
 export type StartsWith<Str extends string, Match extends string> = Str extends `${Match}${string}` ? true : false;
 
 type DropCharImplementation<
-	Str extends string,
-	Match extends string,
-	Build extends string = "",
+    Str extends string,
+    Match extends string,
+    Build extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
-	? DropCharImplementation<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
-	: Build;
+    ? DropCharImplementation<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
+    : Build;
 
 /**
  * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
@@ -128,8 +128,8 @@ export type DropChar<Str extends string, Match extends string> = DropCharImpleme
 export type EndsWith<Str extends string, Match extends string> = Str extends `${string}${Match}` ? true : false;
 
 type LengthOfStringImplementation<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
-	? LengthOfStringImplementation<Chars, [...Length, Char]>
-	: Length["length"];
+    ? LengthOfStringImplementation<Chars, [...Length, Char]>
+    : Length["length"];
 
 /**
  * Returns the length of a string type
@@ -144,14 +144,14 @@ type LengthOfStringImplementation<Str extends string, Length extends unknown[] =
 export type LengthOfString<Str extends string> = LengthOfStringImplementation<Str>;
 
 type IndexOfStringImplementation<
-	Str extends string,
-	Match extends string,
-	Index extends unknown[] = [],
+    Str extends string,
+    Match extends string,
+    Index extends unknown[] = [],
 > = Str extends `${infer Char}${infer Chars}`
-	? Equals<Char, Match> extends true
-		? Index["length"]
-		: IndexOfStringImplementation<Chars, Match, [...Index, 1]>
-	: -1;
+    ? Equals<Char, Match> extends true
+        ? Index["length"]
+        : IndexOfStringImplementation<Chars, Match, [...Index, 1]>
+    : -1;
 
 /**
  * Returns the first index of the character that matches `Match`.
@@ -167,16 +167,16 @@ type IndexOfStringImplementation<
 export type IndexOfString<Str extends string, Match extends string> = IndexOfStringImplementation<Str, Match>;
 
 type FirstUniqueCharIndexImplementation<
-	Str extends string,
-	Index extends unknown[] = [],
-	Build extends string = "",
+    Str extends string,
+    Index extends unknown[] = [],
+    Build extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
-	? IndexOfString<Chars, Char> extends -1
-		? Char extends Build
-			? FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
-			: Index["length"]
-		: FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
-	: -1;
+    ? IndexOfString<Chars, Char> extends -1
+        ? Char extends Build
+            ? FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
+            : Index["length"]
+        : FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
+    : -1;
 
 /**
  * Returns the first index of a character that is unique within the given string.
@@ -202,19 +202,19 @@ export type FirstUniqueCharIndex<Str extends string> = FirstUniqueCharIndexImple
  * type Replace2 = Replace<"foobarbar", "bar", "foo">
  */
 export type Replace<S extends string, From extends string, To extends string> = From extends ""
-	? S
-	: S extends `${infer Head}${From}${infer Tail}`
-		? `${Head}${To}${Tail}`
-		: S;
+    ? S
+    : S extends `${infer Head}${From}${infer Tail}`
+      ? `${Head}${To}${Tail}`
+      : S;
 
 type CheckRepeatedCharsImplementation<
-	Str extends string,
-	Characters extends string = "",
+    Str extends string,
+    Characters extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
-	? Char extends Characters
-		? true
-		: CheckRepeatedCharsImplementation<Chars, Characters | Char>
-	: false;
+    ? Char extends Characters
+        ? true
+        : CheckRepeatedCharsImplementation<Chars, Characters | Char>
+    : false;
 
 /**
  * Check if there are repeated characters in a string type
@@ -229,15 +229,15 @@ type CheckRepeatedCharsImplementation<
 export type CheckRepeatedChars<Str extends string> = CheckRepeatedCharsImplementation<Str>;
 
 type ParseUrlParamsImplementation<
-	URLParams extends string,
-	Params extends string = never,
+    URLParams extends string,
+    Params extends string = never,
 > = URLParams extends `${infer Segment}/${infer Route}`
-	? Segment extends `:${infer WithoutDots}`
-		? ParseUrlParamsImplementation<Route, Params | WithoutDots>
-		: ParseUrlParamsImplementation<Route, Params>
-	: URLParams extends `:${infer WithoutDots}`
-		? Params | WithoutDots
-		: Params;
+    ? Segment extends `:${infer WithoutDots}`
+        ? ParseUrlParamsImplementation<Route, Params | WithoutDots>
+        : ParseUrlParamsImplementation<Route, Params>
+    : URLParams extends `:${infer WithoutDots}`
+      ? Params | WithoutDots
+      : Params;
 
 /**
  * eturns a union type of the dynamic route parameters in a URL pattern
@@ -252,17 +252,17 @@ type ParseUrlParamsImplementation<
 export type ParseUrlParams<URLParams extends string> = ParseUrlParamsImplementation<URLParams>;
 
 type FindAllImplementation<
-	Str extends string,
-	Match extends string,
-	Index extends unknown[] = [],
-	Indexes extends unknown[] = [],
+    Str extends string,
+    Match extends string,
+    Index extends unknown[] = [],
+    Indexes extends unknown[] = [],
 > = Match extends ""
-	? Indexes
-	: Str extends `${any}${infer Characters}`
-		? Str extends `${Match}${string}`
-			? FindAllImplementation<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
-			: FindAllImplementation<Characters, Match, [...Index, 1], Indexes>
-		: Indexes;
+    ? Indexes
+    : Str extends `${any}${infer Characters}`
+      ? Str extends `${Match}${string}`
+          ? FindAllImplementation<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
+          : FindAllImplementation<Characters, Match, [...Index, 1], Indexes>
+      : Indexes;
 
 /**
  * Returns indexes the substring that matches `Match` in the string `Str`

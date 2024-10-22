@@ -7,22 +7,22 @@ import { defineConfig } from "tsup";
  * .cjs formats.
  */
 export const tsup = defineConfig([
-	{
-		entry: ["src", "!src/validate-types.ts"],
-		format: ["esm"],
-		outDir: "dist",
-		dts: {
-			only: true,
-		},
-		minify: true,
-		clean: true,
-	},
-	{
-		entry: ["src/validate-types.ts"],
-		format: ["esm", "cjs"],
-		outDir: "dist/utils",
-		dts: true,
-		minify: true,
-		clean: true,
-	},
+    {
+        entry: ["src", "!src/validate-types.ts"],
+        format: ["esm"],
+        outDir: "dist",
+        dts: {
+            only: true,
+        },
+        minify: true,
+        clean: true,
+    },
+    {
+        entry: ["src/validate-types.ts"],
+        format: ["esm", "cjs"],
+        outDir: "dist/utils",
+        dts: true,
+        minify: true,
+        clean: true,
+    },
 ]);
