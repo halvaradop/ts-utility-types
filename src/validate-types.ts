@@ -65,3 +65,10 @@ export const isObject = (value: unknown): value is object => !isNullish(value) &
  * @returns {boolean} true if the value passed is an rray
  */
 export const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
+
+/**
+ * Check if the value is a function
+ * @param value The value to check
+ * @returns {boolean} true if the value passed is a function
+ */
+export const isFunction = (value: unknown): value is Function => typeof value === "function";
