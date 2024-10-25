@@ -107,6 +107,7 @@ describe("Types validation", () => {
         test("should return true for arrays", () => {
             expect(isArray([])).toBeTruthy();
             expect(isArray([1, 2, 3])).toBeTruthy();
+			expect(isArray(new Array(3))).toBeTruthy();
         });
 
 		test("should return false for non-arrays", () => {
