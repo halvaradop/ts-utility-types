@@ -11,7 +11,10 @@
     "build": "tsup",
     "publish": "npm run build",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "clean": "npm run clean:dist && npm run clean:modules",
+    "clean:dist": "rm -rf dist",
+    "clean:modules": "rm -rf node_modules"
   },
   "repository": {
     "type": "git",
