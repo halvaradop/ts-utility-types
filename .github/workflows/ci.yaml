@@ -2,8 +2,6 @@ name: ci
 
 on:
   pull_request:
-    branches:
-      - master
     types: [opened, synchronize, closed]
 
 jobs:
@@ -37,8 +35,6 @@ jobs:
     runs-on: ubuntu-20.04
     environment: development
     steps:
-      - uses: actions/checkout@v4
-
       - name: Deploy to development environment
         run: echo "Deploying to development environment"
 
@@ -49,6 +45,11 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-
-      - name: Deploy to production environment
-        run: echo "Deploying to production environment"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
