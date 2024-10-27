@@ -1,13 +1,13 @@
 import { describe, test, expect } from "vitest";
 import {
-	isPrimitive,
-	isPrimitiveNullish,
-	isBoolean,
-	isNumber,
-	isString,
-	isObject,
-	isArray,
-	isFunction,
+    isPrimitive,
+    isPrimitiveNullish,
+    isBoolean,
+    isNumber,
+    isString,
+    isObject,
+    isArray,
+    isFunction,
 } from "./../src/validate-types";
 
 describe("Primitive Validation", () => {
@@ -93,43 +93,43 @@ describe("Types validation", () => {
             expect(isObject({})).toBeTruthy();
         });
 
-		test("should return false for non-objects", () => {
-			expect(isObject(1)).toBeFalsy();
-			expect(isObject(false)).toBeFalsy();
-			expect(isObject("str")).toBeFalsy();
-			expect(isObject(null)).toBeFalsy();
-			expect(isObject(undefined)).toBeFalsy();
-			expect(isObject(() => {})).toBeFalsy();
-		});
-	});
+        test("should return false for non-objects", () => {
+            expect(isObject(1)).toBeFalsy();
+            expect(isObject(false)).toBeFalsy();
+            expect(isObject("str")).toBeFalsy();
+            expect(isObject(null)).toBeFalsy();
+            expect(isObject(undefined)).toBeFalsy();
+            expect(isObject(() => {})).toBeFalsy();
+        });
+    });
 
     describe("isArray", () => {
         test("should return true for arrays", () => {
             expect(isArray([])).toBeTruthy();
             expect(isArray([1, 2, 3])).toBeTruthy();
-			expect(isArray(new Array(3))).toBeTruthy();
+            expect(isArray(new Array(3))).toBeTruthy();
         });
 
-		test("should return false for non-arrays", () => {
-			expect(isArray(1)).toBeFalsy();
-			expect(isArray(false)).toBeFalsy();
-			expect(isArray("str")).toBeFalsy();
-			expect(isArray(null)).toBeFalsy();
-			expect(isArray(undefined)).toBeFalsy();
-		});
-	});
+        test("should return false for non-arrays", () => {
+            expect(isArray(1)).toBeFalsy();
+            expect(isArray(false)).toBeFalsy();
+            expect(isArray("str")).toBeFalsy();
+            expect(isArray(null)).toBeFalsy();
+            expect(isArray(undefined)).toBeFalsy();
+        });
+    });
 
-	describe("isFunction", () => {
-		test("should return true for functions", () => {
-			expect(isFunction(() => {})).toBeTruthy();
-		});
+    describe("isFunction", () => {
+        test("should return true for functions", () => {
+            expect(isFunction(() => {})).toBeTruthy();
+        });
 
-		test("should return false for non-functions", () => {
-			expect(isFunction(1)).toBeFalsy();
-			expect(isFunction(false)).toBeFalsy();
-			expect(isFunction("str")).toBeFalsy();
-			expect(isFunction(null)).toBeFalsy();
-			expect(isFunction(undefined)).toBeFalsy();
-		});
-	});
+        test("should return false for non-functions", () => {
+            expect(isFunction(1)).toBeFalsy();
+            expect(isFunction(false)).toBeFalsy();
+            expect(isFunction("str")).toBeFalsy();
+            expect(isFunction(null)).toBeFalsy();
+            expect(isFunction(undefined)).toBeFalsy();
+        });
+    });
 });
