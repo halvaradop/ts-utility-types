@@ -6,23 +6,13 @@ import { defineConfig } from "tsup"
  * the .d.ts files. The second entry point handles files that need to be built in both .js and
  * .cjs formats.
  */
-export const tsup = defineConfig([
-    {
-        entry: ["src", "!src/validate-types.ts"],
-        format: ["esm"],
-        outDir: "dist",
-        dts: {
-            only: true,
-        },
-        minify: true,
-        clean: true,
+export const tsup = defineConfig({
+    entry: ["src", "!src/validate-types.ts"],
+    format: ["esm"],
+    outDir: "dist",
+    dts: {
+        only: true,
     },
-    {
-        entry: ["src/validate-types.ts"],
-        format: ["esm", "cjs"],
-        outDir: "dist/utils",
-        dts: true,
-        minify: true,
-        clean: true,
-    },
-])
+    minify: true,
+    clean: true,
+})
