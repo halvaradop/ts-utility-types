@@ -275,6 +275,16 @@ export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArra
 /**
  * Compare the length of two arrays, returning 1 if the first array is longer,
  * -1 if the second array is longer, and 0 if they are equal
+ *
+ * @example
+ * // Expected: 1
+ * type Compare1 = CompareArrayLength<[1, 2, 3], [1, 2]>;
+ *
+ * // Expected: -1
+ * type Compare2 = CompareArrayLength<[1, 2], [1, 2, 3]>;
+ *
+ * // Expected: 0
+ * type Compare3 = CompareArrayLength<[1, 2, 3], [1, 2, 3]>;
  */
 export type CompareArrayLength<T extends any[], U extends any[]> = T extends [any, ...infer SpreadT]
     ? U extends [any, ...infer SpreadU]
