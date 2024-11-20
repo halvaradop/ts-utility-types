@@ -8,7 +8,7 @@
     "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest --coverage",
-    "build": "tsup",
+    "build": "tsup && tsup src/validate-types.ts --dts --format esm,cjs --outDir dist/utils",
     "publish": "npm run build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -48,10 +48,31 @@
       "import": "./dist/index.d.ts",
       "require": "./dist/index.d.ts"
     },
-    "./utils": {
+    "./validate": {
       "types": "./dist/utils/validate-types.d.ts",
       "import": "./dist/utils/validate-types.js",
       "require": "./dist/utils/validate-types.cjs"
+    },
+    "./arrays": {
+      "types": "./dist/array-types.d.ts"
+    },
+    "./objects": {
+      "types": "./dist/object-types.d.ts"
+    },
+    "./string-mappers": {
+      "types": "./dist/string-mappers.d.ts"
+    },
+    "./test": {
+      "types": "./dist/test.d.ts"
+    },
+    "./type-guards": {
+      "types": "./dist/type-guards.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
+    },
+    "./utilities": {
+      "types": "./dist/utility-types.d.ts"
     }
   },
   "files": [
