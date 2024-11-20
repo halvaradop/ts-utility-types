@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsup"
 
 /**
  * Configuration for the tsup bundler. This configuration specifies two main entry points
@@ -25,4 +25,4 @@ export const tsup = defineConfig([
         minify: true,
         clean: true,
     },
-]);
+])
