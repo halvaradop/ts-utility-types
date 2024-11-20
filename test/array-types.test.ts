@@ -82,6 +82,14 @@ describe("Tuple methods", () => {
             expectTypeOf<utilities.LastIndexOf<[string, any, 1, number, "a", any, 1], any>>().toEqualTypeOf<5>()
         })
     })
+
+    describe("CompareArrayLength", () => {
+        test("Compare the length of two arrays", () => {
+            expectTypeOf<utilities.CompareArrayLength<[1, 2, 3], [1, 2, 3]>>().toEqualTypeOf<0>()
+            expectTypeOf<utilities.CompareArrayLength<[1, 2, 3], [1, 2]>>().toEqualTypeOf<1>()
+            expectTypeOf<utilities.CompareArrayLength<[1, 2], [1, 2, 3]>>().toEqualTypeOf<-1>()
+        })
+    })
 })
 
 describe("ConstructTuple", () => {
