@@ -60,9 +60,10 @@
     "README.md"
   ],
   "prettier": {
-    "semi": true,
+    "semi": false,
     "tabWidth": 4,
     "printWidth": 130,
+    "trailingComma": "es5",
     "overrides": [
       {
         "files": [

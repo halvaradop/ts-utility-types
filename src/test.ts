@@ -8,7 +8,7 @@
  * // Expected: false
  * type CheckTrue = Equals<() => {}, true>;
  */
-export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
+export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false
 
 /**
  * Ensures that the parameter is true.
@@ -20,4 +20,4 @@ export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T ext
  * // Expected: false
  * type CheckFalse = Expect<false>;
  */
-export type Expect<T extends true> = T;
+export type Expect<T extends true> = T

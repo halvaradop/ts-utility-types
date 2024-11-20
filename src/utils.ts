@@ -1,4 +1,4 @@
-import type { DropChar } from "./string-mappers.js";
+import type { DropChar } from "./string-mappers.js"
 
 /**
  * Parses a percentage string into a tuple of [Sign, Number, Unit].
@@ -28,12 +28,12 @@ export type PercentageParser<
             : Char extends "." | ","
               ? PercentageParser<Char, Sign, `${Num}${Char}`, Unit>
               : never
-    : [Sign, Num, Unit];
+    : [Sign, Num, Unit]
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
  */
-export type Absolute<Expression extends number | string | bigint> = DropChar<`${Expression}`, "-" | "n">;
+export type Absolute<Expression extends number | string | bigint> = DropChar<`${Expression}`, "-" | "n">
 
 /**
  * Truncates a number to its integer part.
@@ -51,7 +51,7 @@ export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.$
       ? Chars extends `-0${string}`
           ? "0"
           : Chars
-      : `${Math}`;
+      : `${Math}`
 
 /**
  * Creates a series of numbers between the range of `Low` and `High`. This utility type
@@ -71,7 +71,7 @@ type NumberRangeImplementation<
       ? Range | Index["length"]
       : LowRange extends true
         ? NumberRangeImplementation<Low, High, Range | Index["length"], [...Index, 1], LowRange>
-        : NumberRangeImplementation<Low, High, Range, [...Index, 1], LowRange>;
+        : NumberRangeImplementation<Low, High, Range, [...Index, 1], LowRange>
 
 /**
  * Creates a range of numbers that starts from `Low` and ends in `High`. The range is inclusive
@@ -91,4 +91,4 @@ export type NumberRange<Low extends number, High extends number> = `${Low}` exte
       ? never
       : Low extends High
         ? Low
-        : NumberRangeImplementation<Low, High>;
+        : NumberRangeImplementation<Low, High>

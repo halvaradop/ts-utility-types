@@ -1,5 +1,5 @@
-import type { ToUnion } from "./object-types.js";
-import type { Equals } from "./test.js";
+import type { ToUnion } from "./object-types.js"
+import type { Equals } from "./test.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -11,7 +11,7 @@ import type { Equals } from "./test.js";
  */
 export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
     ? Item | TupleToUnion<Spread>
-    : never;
+    : never
 
 /**
  * Gets the length (size) of an array.
@@ -21,7 +21,7 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infe
  * // Expected: 5
  * type SizeOfNumbers = Size<typeof numbers>;
  */
-export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0;
+export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0
 
 /**
  * Gets the type of the last element in an array, or `never` if the array is empty.
@@ -30,7 +30,7 @@ export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["len
  * // Expected: 4
  * type LastItem = Last<1, 2, 3, 4>;
  */
-export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ? Last : never;
+export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ? Last : never
 
 /**
  * Removes the last element from an array and returns a new array type with all elements
@@ -43,14 +43,14 @@ export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ?
  * // Expected: [1, 2]
  * type PopNums = Pop<[1, 2, 3]>;
  */
-export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unknown] ? Spread : [];
+export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unknown] ? Spread : []
 
 type FilterImplementation<Array extends unknown[], Predicate, Build extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
     ? FilterImplementation<Spread, Predicate, Item extends Predicate ? [...Build, Item] : [...Build]>
-    : Build;
+    : Build
 
 /**
  * Filter the items of a tuple of elements based in the predicate provided in the
@@ -63,14 +63,14 @@ type FilterImplementation<Array extends unknown[], Predicate, Build extends unkn
  * // Expected: [0, 1]
  * type Filter2 = Filter<[0, 1, 2], 0 | 1>
  */
-export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Array, Predicate, []>;
+export type Filter<Array extends unknown[], Predicate> = FilterImplementation<Array, Predicate, []>
 
 type FilterOutImplementation<Array extends readonly unknown[], Predicate, Build extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
     ? FilterOutImplementation<Spread, Predicate, Item extends ToUnion<Predicate> ? Build : [...Build, Item]>
-    : Build;
+    : Build
 
 /**
  * Cleans the elements of a tuple based in the predicated, it returns the values that
@@ -83,7 +83,7 @@ type FilterOutImplementation<Array extends readonly unknown[], Predicate, Build 
  * // Expected: ["bar", "foobar"]
  * type CleanStrings = FilterOut<["foo", "bar", "foobar"], "foo">;
  */
-export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutImplementation<Array, Predicate, []>;
+export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutImplementation<Array, Predicate, []>
 
 /**
  * Change the relative ordern of the elements of a tuple type, reversing
@@ -99,7 +99,7 @@ export type FilterOut<Array extends readonly unknown[], Predicate> = FilterOutIm
  * // Expected: [() => void, { foo: number }, "bar", 2, "foo", 1]
  * type ReverseArray = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>;
  */
-export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...infer Spread] ? [...Reverse<Spread>, Item] : Array;
+export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...infer Spread] ? [...Reverse<Spread>, Item] : Array
 
 type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [
     infer Item,
@@ -108,7 +108,7 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
     ? Equals<Item, Match> extends true
         ? Index["length"]
         : IndexOfImplementation<Spread, Match, [...Index, Item]>
-    : -1;
+    : -1
 
 /**
  * Returns the first index where the element `Match` appears in the tuple type `Array`.
@@ -127,7 +127,7 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
  * // Expected: 1
  * type IndexOf4 = IndexOf<[string, "a"], "a">;
  */
-export type IndexOf<Array extends unknown[], Match> = IndexOfImplementation<Array, Match, []>;
+export type IndexOf<Array extends unknown[], Match> = IndexOfImplementation<Array, Match, []>
 
 type LastIndexOfImplementation<
     Array extends unknown[],
@@ -143,7 +143,7 @@ type LastIndexOfImplementation<
       >
     : IndexOf extends [...any, infer LastIndex]
       ? LastIndex
-      : -1;
+      : -1
 
 /**
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
@@ -162,7 +162,7 @@ type LastIndexOfImplementation<
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
-export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementation<Array, Match, [], []>;
+export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementation<Array, Match, [], []>
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
@@ -172,7 +172,7 @@ type RepeatConstructTuple<
     Length extends number,
     Value extends unknown = unknown,
     Array extends unknown[] = [],
-> = Array["length"] extends Length ? Array : RepeatConstructTuple<Length, Value, [...Array, Value]>;
+> = Array["length"] extends Length ? Array : RepeatConstructTuple<Length, Value, [...Array, Value]>
 
 /**
  * reate a tuple with a defined size, where each element is of a specified type
@@ -188,7 +188,7 @@ export type ConstructTuple<
     Length extends number,
     Value extends unknown = unknown,
     Array extends unknown[] = [],
-> = RepeatConstructTuple<Length, Value, Array>;
+> = RepeatConstructTuple<Length, Value, Array>
 
 type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unknown = never> = Array extends [
     infer Item,
@@ -197,7 +197,7 @@ type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unk
     ? Item extends Build
         ? true
         : CheckRepeatedTupleImplementation<Spread, Build | Item>
-    : false;
+    : false
 
 /**
  * Check if there are duplidated elements inside the tuple
@@ -209,7 +209,7 @@ type CheckRepeatedTupleImplementation<Array extends unknown[], Build extends unk
  * // Expected: true
  * type TupleNumber2 = CheckRepeatedTuple<[1, 2, 1]>;
  */
-export type CheckRepeatedTuple<Tuple extends unknown[]> = CheckRepeatedTupleImplementation<Tuple>;
+export type CheckRepeatedTuple<Tuple extends unknown[]> = CheckRepeatedTupleImplementation<Tuple>
 
 /**
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
@@ -225,7 +225,7 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
     ? Equals<Item, Comparator> extends true
         ? AllEquals<Spread, Comparator>
         : false
-    : true;
+    : true
 
 type ChunkImplementation<
     Array extends unknown[],
@@ -238,15 +238,15 @@ type ChunkImplementation<
         : ChunkImplementation<Spread, Size, Build, [...Partition, Item]>
     : Partition["length"] extends 0
       ? Build
-      : [...Build, Partition];
+      : [...Build, Partition]
 
-export type Chunk<Array extends unknown[], Size extends number> = ChunkImplementation<Array, Size, [], []>;
+export type Chunk<Array extends unknown[], Size extends number> = ChunkImplementation<Array, Size, [], []>
 
 type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
     ? U extends [infer ItemU, ...infer SpreadU]
         ? ZipImplementation<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
         : Build
-    : Build;
+    : Build
 
 /**
  * Join the elements of two arrays in a tuple of arrays
@@ -258,7 +258,7 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
  * // Expected: [[1, "a"], [2, "b"]]
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
-export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>;
+export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>
 
 /**
  * Returns the flatten type of an array.
@@ -270,4 +270,4 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
  * // Expected: string
  * type Flatten2 = FlattenArrayType<string[][][]>;
  */
-export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArrayType<Type> : Array;
+export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArrayType<Type> : Array
