@@ -271,3 +271,30 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
  * type Flatten2 = FlattenArrayType<string[][][]>;
  */
 export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArrayType<Type> : Array
+
+type UniqueImplementation<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
+    infer Item,
+    ...infer Spread,
+]
+    ? HasImplementation<Set, Item> extends true
+        ? UniqueImplementation<Spread, Uniques, Set>
+        : UniqueImplementation<Spread, Uniques | Item, [...Set, Item]>
+    : Set
+
+type HasImplementation<Array extends unknown[], Compare extends unknown> = Array extends [infer Item, ...infer Spread]
+    ? Equals<Item, Compare> extends true
+        ? true
+        : HasImplementation<Spread, Compare>
+    : false
+
+/**
+ * Returns the uniques values of an array
+ *
+ * @example
+ * // Expected: [1, 2, 3, 4, 5]
+ * type Uniques1 = Unique<[1, 2, 3, 3, 4, 4, 5]>;
+ *
+ * // Expected: ["a", "b", "c"]
+ * type Uniques2 = Unique<["a", "b", "c", "a", "b"]>;
+ */
+export type Unique<Array extends unknown[]> = UniqueImplementation<Array>
