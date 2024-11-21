@@ -90,6 +90,16 @@ describe("Tuple methods", () => {
             expectTypeOf<utilities.CompareArrayLength<[1, 2], [1, 2, 3]>>().toEqualTypeOf<-1>()
         })
     })
+
+    describe("Unique", () => {
+        test("Get the unique elements of a tuple", () => {
+            expectTypeOf<utilities.Unique<[1, 1, 2, 2, 3, 3]>>().toEqualTypeOf<[1, 2, 3]>()
+            expectTypeOf<utilities.Unique<[1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3, 4, 5]>()
+            expectTypeOf<utilities.Unique<[string, number, 1, "a", 1, string, 2, "b", 2, number]>>().toEqualTypeOf<
+                [string, number, 1, "a", 2, "b"]
+            >()
+        })
+    })
 })
 
 describe("ConstructTuple", () => {
