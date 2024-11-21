@@ -83,6 +83,14 @@ describe("Tuple methods", () => {
         })
     })
 
+    describe("CompareArrayLength", () => {
+        test("Compare the length of two arrays", () => {
+            expectTypeOf<utilities.CompareArrayLength<[1, 2, 3], [1, 2, 3]>>().toEqualTypeOf<0>()
+            expectTypeOf<utilities.CompareArrayLength<[1, 2, 3], [1, 2]>>().toEqualTypeOf<1>()
+            expectTypeOf<utilities.CompareArrayLength<[1, 2], [1, 2, 3]>>().toEqualTypeOf<-1>()
+        })
+    })
+
     describe("Unique", () => {
         test("Get the unique elements of a tuple", () => {
             expectTypeOf<utilities.Unique<[1, 1, 2, 2, 3, 3]>>().toEqualTypeOf<[1, 2, 3]>()

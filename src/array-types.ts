@@ -272,6 +272,28 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
  */
 export type FlattenArrayType<Array> = Array extends (infer Type)[] ? FlattenArrayType<Type> : Array
 
+/**
+ * Compare the length of two arrays, returning 1 if the first array is longer,
+ * -1 if the second array is longer, and 0 if they are equal
+ *
+ * @example
+ * // Expected: 1
+ * type Compare1 = CompareArrayLength<[1, 2, 3], [1, 2]>;
+ *
+ * // Expected: -1
+ * type Compare2 = CompareArrayLength<[1, 2], [1, 2, 3]>;
+ *
+ * // Expected: 0
+ * type Compare3 = CompareArrayLength<[1, 2, 3], [1, 2, 3]>;
+ */
+export type CompareArrayLength<T extends any[], U extends any[]> = T extends [any, ...infer SpreadT]
+    ? U extends [any, ...infer SpreadU]
+        ? CompareArrayLength<SpreadT, SpreadU>
+        : 1
+    : U extends [infer Item, ...infer Spread]
+      ? -1
+      : 0
+
 type UniqueImplementation<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
