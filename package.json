@@ -7,7 +7,7 @@
     "dev": "tsup --watch",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest run --coverage",
     "build": "tsup && tsup src/validate-types.ts --dts --format esm,cjs --outDir dist/utils",
     "publish": "npm run build",
     "format": "prettier --write .",
@@ -36,11 +36,11 @@
   "homepage": "https://github.com/halvaradop/ts-utility-types#readme",
   "devDependencies": {
     "@types/node": "^22.5.3",
-    "@vitest/coverage-v8": "^2.1.1",
+    "@vitest/coverage-v8": "^2.1.6",
     "prettier": "^3.3.3",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "vitest": "^2.1.6"
   },
   "exports": {
     ".": {
