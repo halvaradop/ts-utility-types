@@ -1,5 +1,4 @@
 import { describe, test, expectTypeOf } from "vitest"
-//import type * as utilities from "../src/utility-types";
 import type * as utilities from "../src/object-types"
 
 describe("Readonly", () => {
