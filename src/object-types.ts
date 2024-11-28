@@ -517,3 +517,28 @@ export type ToPrimitive<Obj extends object> = {
             : ToPrimitive<Obj[Property]>
         : ReturnTypeOf<Obj[Property]>
 }
+
+type GetRequiredImplementation<Obj extends object, RequiredKeys extends object = Required<Obj>> = {
+    [Property in keyof RequiredKeys as Equals<
+        RequiredKeys[Property],
+        Property extends keyof Obj ? Obj[Property] : null
+    > extends true
+        ? Property
+        : never]-?: RequiredKeys[Property]
+}
+
+/**
+ * Get only the keys of an object that are required in the object type otherwise
+ * remove them from the object type.
+ *
+ * @example
+ * interface User {
+ *   name: string
+ *   age?: number
+ *   address?: string
+ * }
+ *
+ * // Expected: { name: string }
+ * type UserRequired = GetRequired<User>
+ */
+export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>

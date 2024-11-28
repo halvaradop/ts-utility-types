@@ -382,3 +382,13 @@ describe("ToPrimitive", () => {
         }>()
     })
 })
+
+describe("GetRequired", () => {
+    test("Get the required properties of an object", () => {
+        expectTypeOf<utilities.GetRequired<{ foo: string; bar?: number }>>().toEqualTypeOf<{ foo: string }>()
+        expectTypeOf<utilities.GetRequired<{ foo: string; bar: number }>>().toEqualTypeOf<{ foo: string; bar: number }>()
+        expectTypeOf<utilities.GetRequired<{ foo: null; bar: number }>>().toEqualTypeOf<{ foo: null; bar: number }>()
+        expectTypeOf<utilities.GetRequired<{ foo: undefined; bar: number }>>().toEqualTypeOf<{ foo: undefined; bar: number }>()
+        expectTypeOf<utilities.GetRequired<{ foo: undefined; bar?: number }>>().toEqualTypeOf<{ foo: undefined }>()
+    })
+})
