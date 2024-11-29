@@ -1,4 +1,3 @@
-import type { ToUnion } from "./object-types.js"
 import type { Equals } from "./test.js"
 
 /**
@@ -229,18 +228,21 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
 
 type ChunkImplementation<
     Array extends unknown[],
-    Size extends number,
+    Length extends number,
     Build extends unknown[] = [],
     Partition extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
-    ? [...Partition, Item]["length"] extends Size
-        ? ChunkImplementation<Spread, Size, [...Build, [...Partition, Item]], []>
-        : ChunkImplementation<Spread, Size, Build, [...Partition, Item]>
-    : Partition["length"] extends 0
+    ? [...Partition, Item]["length"] extends Length
+        ? ChunkImplementation<Spread, Length, [...Build, [...Partition, Item]], []>
+        : ChunkImplementation<Spread, Length, Build, [...Partition, Item]>
+    : Size<Partition> extends 0
       ? Build
       : [...Build, Partition]
 
-export type Chunk<Array extends unknown[], Size extends number> = ChunkImplementation<Array, Size, [], []>
+/**
+ * TODO: add examples
+ */
+export type Chunk<Array extends unknown[], Length extends number> = ChunkImplementation<Array, Length, [], []>
 
 type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
     ? U extends [infer ItemU, ...infer SpreadU]
@@ -290,25 +292,18 @@ export type CompareArrayLength<T extends any[], U extends any[]> = T extends [an
     ? U extends [any, ...infer SpreadU]
         ? CompareArrayLength<SpreadT, SpreadU>
         : 1
-    : U extends [infer Item, ...infer Spread]
-      ? -1
-      : 0
+    : Size<U> extends 0
+      ? 0
+      : -1
 
 type UniqueImplementation<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
-    ? HasImplementation<Set, Item> extends true
+    ? Includes<Set, Item> extends true
         ? UniqueImplementation<Spread, Uniques, Set>
         : UniqueImplementation<Spread, Uniques | Item, [...Set, Item]>
     : Set
-
-type HasImplementation<Array extends unknown[], Compare extends unknown> = Array extends [infer Item, ...infer Spread]
-    ? Equals<Item, Compare> extends true
-        ? true
-        : HasImplementation<Spread, Compare>
-    : false
-
 /**
  * Returns the uniques values of an array
  *
@@ -320,3 +315,39 @@ type HasImplementation<Array extends unknown[], Compare extends unknown> = Array
  * type Uniques2 = Unique<["a", "b", "c", "a", "b"]>;
  */
 export type Unique<Array extends unknown[]> = UniqueImplementation<Array>
+
+/**
+ * Create an union type based in the literal values of the tuple provided.
+ * This utility type is similar to `TupleToUnion` but this utility type
+ * receive whatever type
+ *
+ * @example
+ * // Expected: 1
+ * type TupleNumber = ToUnion<1>;
+ *
+ * // Expected: "foo"
+ * type TupleString = ToUnion<"foo">;
+ *
+ * // Expected: 1 | ["foo" | "bar"]
+ * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>;
+ */
+export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnion<Spread> : T
+
+/**
+ * Check if a value exists within a tuple and is equal to a specific value
+ *
+ * @example
+ * // Expected: true
+ * type IncludesNumber = Includes<[1, 2, 3], 3>;
+ *
+ * // Expected: true
+ * type IncludesString = Includes<["foo", "bar", "foobar"], "bar">;
+ *
+ * // Expected: false
+ * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar">;
+ */
+export type Includes<Array extends unknown[], Match> = Array extends [infer Compare, ...infer Spread]
+    ? Equals<Compare, Match> extends true
+        ? true
+        : Includes<Spread, Match>
+    : false

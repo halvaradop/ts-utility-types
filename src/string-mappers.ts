@@ -30,7 +30,8 @@ export type Trim<Str extends string> = Str extends `${WhiteSpaces}${infer Charac
       : Str
 
 /**
- *  Converts a string to uppercase
+ * TODO: add example
+ * Converts a string to uppercase
  */
 export type Uppercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
     ? Char extends keyof LetterToUppercase
@@ -39,6 +40,7 @@ export type Uppercase<Str extends string> = Str extends `${infer Char}${infer Ch
     : Str
 
 /**
+ * TODO: add example
  * Converts a string to lowercase
  */
 export type Lowercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
@@ -48,6 +50,7 @@ export type Lowercase<Str extends string> = Str extends `${infer Char}${infer Ch
     : Str
 
 /**
+ * TODO: add example and fix the type
  * Capitalizes the first letter of a word and converts the rest to lowercase
  */
 export type Capitalize<Str extends string, FirstWord extends boolean = true> = Str extends `${infer Char}${infer Characters}`
