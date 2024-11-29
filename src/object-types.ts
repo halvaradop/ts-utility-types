@@ -1,4 +1,5 @@
 import type { Equals } from "./test.js"
+import type { IsNever } from "./type-guards.js"
 import type { ArgsFunction, ReturnTypeOf } from "./types.js"
 
 /**
@@ -35,11 +36,35 @@ export type DeepReadonly<Obj extends object> = {
 }
 
 /**
+ * TODO: add examples
+ *
  * Exclude properties of type `Match` from type `T`
  */
 export type Exclude<T, Match> = T extends Match ? never : T
 
 /**
+ * Compare two types and return `never` if the type `T` extends the type `Match`,
+ * otherwise return the type `T`.
+ *
+ * @example
+ * // Expected: number
+ * type A = Discard<string | number, string>;
+ * // Expected: string | number
+ * type B = Discard<string | number, boolean>;
+ */
+export type Discard<Compare, Match, Value = never, Reverse extends boolean = false> = Reverse extends true
+    ? Compare extends Match
+        ? Value
+        : never
+    : Compare extends Match
+      ? never
+      : IsNever<Value> extends true
+        ? Compare
+        : Value
+
+/**
+ * TODO: add examples
+ *
  * Get the type of the resolved value of a PromiseLike object.
  */
 export type Awaited<T extends PromiseLike<unknown>> =
@@ -80,25 +105,6 @@ export type Pick<Obj extends object, Keys extends keyof Obj> = {
 }
 
 /**
- * Check if a value exists within a tuple and is equal to a specific value
- *
- * @example
- * // Expected: true
- * type IncludesNumber = Includes<[1, 2, 3], 3>;
- *
- * // Expected: true
- * type IncludesString = Includes<["foo", "bar", "foobar"], "bar">;
- *
- * // Expected: false
- * type NoIncludes = Includes<["foo", "bar", "foofoo"], "foobar">;
- */
-export type Includes<Array extends unknown[], Match> = Array extends [infer Compare, ...infer Spread]
-    ? Equals<Compare, Match> extends true
-        ? true
-        : Includes<Spread, Match>
-    : false
-
-/**
  * Creates a new type that omits properties from an object type based on another type
  *
  * @example
@@ -106,7 +112,7 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
  * type NoEmailPerson = Omit<{ name: string; age: number; email: string }, "email">;
  */
 export type Omit<Obj extends object, Keys extends keyof Obj> = {
-    [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property]
+    [Property in keyof Obj as Discard<Property, Keys>]: Obj[Property]
 }
 
 /**
@@ -124,7 +130,9 @@ export type Omit<Obj extends object, Keys extends keyof Obj> = {
  * // Expected: "foo" | "bar"
  * type PropsFooBar = Properties<Foo, Bar>;
  */
-export type Properties<Obj1 extends object, Obj2 extends object> = keyof Obj1 | keyof Obj2
+export type Properties<Obj1 extends object, Obj2 extends object, Extends extends boolean = false> = Extends extends true
+    ? keyof Obj1 & keyof Obj2
+    : keyof Obj1 | keyof Obj2
 
 /**
  * Creates a new object by merging two objects. Properties from `Obj1` override properties
@@ -148,6 +156,10 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
     [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>
 }
 
+type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys = Properties<Obj1, Obj2, true>> = {
+    [Property in Properties<Obj1, Obj2> as Discard<Property, Keys>]: RetrieveKeyValue<Obj1, Obj2, Property>
+}
+
 /**
  * Create a new object based in the difference keys between the objects.
  *
@@ -166,13 +178,7 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
  * // Expected: { gender: number }
  * type DiffFoo = Intersection<Foo, Bar>;
  */
-export type Intersection<Obj1 extends object, Obj2 extends object> = {
-    [Property in Properties<Obj1, Obj2> as Property extends keyof Obj1 & keyof Obj2 ? never : Property]: RetrieveKeyValue<
-        Obj1,
-        Obj2,
-        Property
-    >
-}
+export type Intersection<Obj1 extends object, Obj2 extends object> = IntersectionImplementation<Obj1, Obj2>
 
 /**
  * Create a new object based in the type of its keys
@@ -188,10 +194,12 @@ export type Intersection<Obj1 extends object, Obj2 extends object> = {
  * type UserStr = PickByType<User, string>;
  */
 export type PickByType<Obj extends object, Type> = {
-    [Property in keyof Obj as Obj[Property] extends Type ? Property : never]: Obj[Property]
+    [Property in keyof Obj as Discard<Obj[Property], Type, Property, true>]: Obj[Property]
 }
 
 /**
+ * TODO: add examples
+ *
  * Converts the specified keys of an object into optional ones
  *
  * @example
@@ -205,9 +213,7 @@ export type PickByType<Obj extends object, Type> = {
  * type UserPartialName = PartialByKeys<User, "name">;
  */
 export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
-    {
-        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property]
-    } & { [Property in Keys]?: Obj[Property] }
+    Partial<Pick<Obj, Keys>> & Omit<Obj, Keys>
 >
 
 /**
@@ -228,23 +234,29 @@ export type OmitByType<Obj extends object, Type> = {
 }
 
 /**
+ * TODO: add examples
+ *
  * Extracts the value of a key from an object and returns a new object with that value,
  * while keeping the other values unchanged.
  */
 export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Prettify<
     {
-        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property]
+        [Property in keyof Obj as Discard<Property, Keys>]: Obj[Property]
     } & Obj[Keys]
 >
 
 /**
+ * TODO: add examples
+ *
  * Removes the properties whose keys start with an underscore (_).
  */
 export type PublicOnly<Obj extends object> = {
-    [Property in keyof Obj as Property extends `_${string}` ? never : Property]: Obj[Property]
+    [Property in keyof Obj as Discard<Property, `_${string}`>]: Obj[Property]
 }
 
 /**
+ * TODO: add examples
+ *
  * Checks if a key exists in either of the two objects and returns its value.
  * If the key does not exist in either object, it returns `never`.
  */
@@ -269,11 +281,7 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
  * type UserRequiredName = RequiredByKeys<User, "name">;
  */
 export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
-    {
-        [Property in keyof Obj as Property extends Keys ? never : Property]: Obj[Property]
-    } & {
-        [Property in keyof Obj as Property extends Keys ? Property : never]-?: Obj[Property]
-    }
+    Required<Pick<Obj, Keys>> & Omit<Obj, Keys>
 >
 
 /**
@@ -371,23 +379,6 @@ type MergeAllImplementation<Array extends readonly object[], Merge extends objec
  * type Merge = MergeAll<[Foo, Bar, FooBar]>;
  */
 export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<Array, {}>
-
-/**
- * Create an union type based in the literal values of the tuple provided.
- * This utility type is similar to `TupleToUnion` but this utility type
- * receive whatever type
- *
- * @example
- * // Expected: 1
- * type TupleNumber = ToUnion<1>;
- *
- * // Expected: "foo"
- * type TupleString = ToUnion<"foo">;
- *
- * // Expected: 1 | ["foo" | "bar"]
- * type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>;
- */
-export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnion<Spread> : T
 
 /**
  * Create a new object type appending a new property with its value

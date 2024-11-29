@@ -164,3 +164,23 @@ describe("FlattenArrayType", () => {
         expectTypeOf<utilities.FlattenArrayType<unknown[][][][]>>().toEqualTypeOf<unknown>()
     })
 })
+
+describe("ToUnion", () => {
+    test("Create an union type", () => {
+        expectTypeOf<utilities.ToUnion<12>>().toEqualTypeOf<12>()
+        expectTypeOf<utilities.ToUnion<"foo">>().toEqualTypeOf<"foo">()
+        expectTypeOf<utilities.ToUnion<12 | 21>>().toEqualTypeOf<12 | 21>()
+        expectTypeOf<utilities.ToUnion<[12, 21, "foo"]>>().toEqualTypeOf<12 | 21 | "foo" | []>()
+    })
+})
+
+describe("Includes", () => {
+    test("Check if an element exist withins a tuple", () => {
+        expectTypeOf<utilities.Includes<[], any>>().toEqualTypeOf<false>()
+        expectTypeOf<utilities.Includes<[1, 2, "foo", "bar"], 2>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.Includes<["foo", "bar", () => void, {}], () => void>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.Includes<[string, 1, () => void, {}], string>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.Includes<[string, number, () => void, {}], number>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.Includes<[true, false, true], number>>().toEqualTypeOf<false>()
+    })
+})
