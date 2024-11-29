@@ -542,3 +542,21 @@ type GetRequiredImplementation<Obj extends object, RequiredKeys extends object =
  * type UserRequired = GetRequired<User>
  */
 export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>
+
+/**
+ * Get only the keys of an object that are optional in the object type otherwise
+ * remove them from the object type
+ *
+ * @example
+ * interface User {
+ *   name: string
+ *   age?: number
+ *   address?: string
+ * }
+ *
+ * // Expected: { age?: number, address?: string }
+ * type UserOptional = GetOptional<User>
+ */
+export type GetOptional<T extends object> = {
+    [Key in keyof T as T[Key] extends Required<T>[Key] ? never : Key]: T[Key]
+}
