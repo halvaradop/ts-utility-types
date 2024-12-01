@@ -8,6 +8,7 @@ import {
     isObject,
     isArray,
     isFunction,
+    isFalsy,
 } from "./../src/validate-types"
 
 describe("Primitive Validation", () => {
@@ -116,6 +117,8 @@ describe("Types validation", () => {
             expect(isArray("str")).toBeFalsy()
             expect(isArray(null)).toBeFalsy()
             expect(isArray(undefined)).toBeFalsy()
+            expect(isArray({ foo: "bar", bar: "foobar" })).toBeFalsy()
+            expect(isArray(() => {})).toBeFalsy()
         })
     })
 
@@ -130,6 +133,25 @@ describe("Types validation", () => {
             expect(isFunction("str")).toBeFalsy()
             expect(isFunction(null)).toBeFalsy()
             expect(isFunction(undefined)).toBeFalsy()
+        })
+    })
+
+    describe("isFalsy", () => {
+        test("should return true for falsy values", () => {
+            expect(isFalsy(null)).toBeTruthy()
+            expect(isFalsy(undefined)).toBeTruthy()
+            expect(isFalsy(false)).toBeTruthy()
+            expect(isFalsy(0)).toBeTruthy()
+            expect(isFalsy(-0)).toBeTruthy()
+            expect(isFalsy("")).toBeTruthy()
+        })
+
+        test("should return false for non-falsy values", () => {
+            expect(isFalsy(1)).toBeFalsy()
+            expect(isFalsy(true)).toBeFalsy()
+            expect(isFalsy("str")).toBeFalsy()
+            expect(isFalsy({})).toBeFalsy()
+            expect(isFalsy(() => {})).toBeFalsy()
         })
     })
 })
