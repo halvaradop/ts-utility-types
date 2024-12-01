@@ -72,3 +72,12 @@ export const isArray = (value: unknown): value is unknown[] => Array.isArray(val
  * @returns {boolean} true if the value passed is a function
  */
 export const isFunction = (value: unknown): value is Function => typeof value === "function"
+
+/**
+ * Check if the value is falsy (null, undefined, false, 0, -0, or "")
+ * @param value The value to check
+ * @returns {boolean} turns true if the value is falsy
+ */
+export const isFalsy = (value: unknown): boolean => {
+    return isNullish(value) || value === false || value === "" || value === 0
+}
