@@ -1,6 +1,6 @@
-import type { Equals } from "./test.js"
-import type { IsNever } from "./type-guards.js"
-import type { ArgsFunction, ReturnTypeOf } from "./types.js"
+import type { Equals } from "./test.d.ts"
+import type { IsNever } from "./type-guards.d.ts"
+import type { ArgsFunction, ReturnTypeOf } from "./types.d.ts"
 
 /**
  * Utility type that transforms an object to have each property on a new line
