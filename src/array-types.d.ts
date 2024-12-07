@@ -1,4 +1,4 @@
-import type { Equals } from "./types.d.ts"
+import type { Equals } from "./test.d.ts"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
