@@ -1,6 +1,7 @@
-import type { Equals } from "./test.d.ts"
+import type { Equals } from "./test.js"
 import type { IsNever } from "./type-guards.d.ts"
-import type { ArgsFunction, ReturnTypeOf } from "./types.d.ts"
+import type { ArgsFunction } from "./types.js"
+import type { ReturnTypeOf } from "./array-types.js"
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -36,13 +37,6 @@ export type DeepReadonly<Obj extends object> = {
 }
 
 /**
- * TODO: add examples
- *
- * Exclude properties of type `Match` from type `T`
- */
-export type Exclude<T, Match> = T extends Match ? never : T
-
-/**
  * Compare two types and return `never` if the type `T` extends the type `Match`,
  * otherwise return the type `T`.
  *
@@ -73,47 +67,6 @@ export type Awaited<T extends PromiseLike<unknown>> =
             ? Awaited<ResolveType>
             : ResolveType
         : never
-
-/**
- * Get the type of the function's arguments
- *
- * @example
- * function add(x: number, y: number): number {
- *   return x + y;
- * };
- *
- * // Expected: [number, number]
- * type AddParams = Parameters<typeof add>;
- */
-export type Parameters<Function extends ArgsFunction> = Function extends (...args: infer Params) => void ? Params : never
-
-/**
- * Create a new type with a subset of properties from an object
- *
- * @example
- * interface User {
- *   name: string
- *   lastname: string,
- *   age: number
- * };
- *
- * // Expected: { age: number }
- * type PickUser = Pick<User, "age">;
- */
-export type Pick<Obj extends object, Keys extends keyof Obj> = {
-    [Property in Keys]: Obj[Property]
-}
-
-/**
- * Creates a new type that omits properties from an object type based on another type
- *
- * @example
- * // Expected: { name: string; age: number }
- * type NoEmailPerson = Omit<{ name: string; age: number; email: string }, "email">;
- */
-export type Omit<Obj extends object, Keys extends keyof Obj> = {
-    [Property in keyof Obj as Discard<Property, Keys>]: Obj[Property]
-}
 
 /**
  * Creates a union of the keys of two objects
@@ -156,6 +109,9 @@ export type Merge<Obj1 extends object, Obj2 extends object> = {
     [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>
 }
 
+/**
+ * @internal
+ */
 type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys = Properties<Obj1, Obj2, true>> = {
     [Property in Properties<Obj1, Obj2> as Discard<Property, Keys>]: RetrieveKeyValue<Obj1, Obj2, Property>
 }
@@ -349,6 +305,9 @@ export type DeepMutable<Obj extends object> = {
     -readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property]
 }
 
+/**
+ * @internal
+ */
 type MergeAllImplementation<Array extends readonly object[], Merge extends object = {}> = Array extends [
     infer Item,
     ...infer Spread,
@@ -509,6 +468,9 @@ export type ToPrimitive<Obj extends object> = {
         : ReturnTypeOf<Obj[Property]>
 }
 
+/**
+ * @internal
+ */
 type GetRequiredImplementation<Obj extends object, RequiredKeys extends object = Required<Obj>> = {
     [Property in keyof RequiredKeys as Equals<
         RequiredKeys[Property],

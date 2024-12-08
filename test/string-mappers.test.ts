@@ -21,20 +21,6 @@ describe("String mappers", () => {
         expectTypeOf<utilities.Trim<"\r\n foo \r\n">>().toMatchTypeOf<"foo">()
     })
 
-    test("Uppercase", () => {
-        expectTypeOf<utilities.Uppercase<"foo">>().toMatchTypeOf<"FOO">()
-        expectTypeOf<utilities.Uppercase<"Foo">>().toMatchTypeOf<"FOO">()
-        expectTypeOf<utilities.Uppercase<"Foo bar">>().toMatchTypeOf<"FOO BAR">()
-        expectTypeOf<utilities.Uppercase<"Foo Bar">>().toMatchTypeOf<"FOO BAR">()
-    })
-
-    test("Lowercase", () => {
-        expectTypeOf<utilities.Lowercase<"foo">>().toMatchTypeOf<"foo">()
-        expectTypeOf<utilities.Lowercase<"Foo">>().toMatchTypeOf<"foo">()
-        expectTypeOf<utilities.Lowercase<"Foo bar">>().toMatchTypeOf<"foo bar">()
-        expectTypeOf<utilities.Lowercase<"Foo Bar">>().toMatchTypeOf<"foo bar">()
-    })
-
     test("Capitalize the strings", () => {
         expectTypeOf<utilities.Capitalize<"foo">>().toMatchTypeOf<"Foo">()
         expectTypeOf<utilities.Capitalize<"foo bar">>().toMatchTypeOf<"Foo Bar">()

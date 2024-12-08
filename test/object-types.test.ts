@@ -234,15 +234,6 @@ describe("Omit Properties", () => {
     })
 })
 
-describe("Parameters", () => {
-    test("Returns the parameters of a function", () => {
-        expectTypeOf<utilities.Parameters<() => void>>().toEqualTypeOf<[]>()
-        expectTypeOf<utilities.Parameters<(foo: string) => void>>().toEqualTypeOf<[string]>()
-        expectTypeOf<utilities.Parameters<(foo: string, bar: number) => void>>().toEqualTypeOf<[string, number]>()
-        expectTypeOf<utilities.Parameters<(foo: { bar: number }) => void>>().toEqualTypeOf<[{ bar: number }]>()
-    })
-})
-
 describe("ObjectEntries", () => {
     test("Returns the entries from an object", () => {
         expectTypeOf<utilities.ObjectEntries<{ foo: string }>>().toEqualTypeOf<["foo", string]>()

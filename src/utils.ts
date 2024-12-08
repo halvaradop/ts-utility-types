@@ -1,4 +1,4 @@
-import type { DropChar } from "./string-mappers.d.ts"
+import type { DropChar } from "./string-mappers.js"
 
 /**
  * Parses a percentage string into a tuple of [Sign, Number, Unit].

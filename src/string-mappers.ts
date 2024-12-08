@@ -1,5 +1,5 @@
-import type { Equals } from "./test.d.ts"
-import type { LetterToLowercase, LetterToUppercase, WhiteSpaces } from "./types.d.ts"
+import type { Equals } from "./test.js"
+import type { WhiteSpaces } from "./types.js"
 
 /**
  * Removes leading whitespace characters from a string type
@@ -30,26 +30,6 @@ export type Trim<Str extends string> = Str extends `${WhiteSpaces}${infer Charac
       : Str
 
 /**
- * TODO: add example
- * Converts a string to uppercase
- */
-export type Uppercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
-    ? Char extends keyof LetterToUppercase
-        ? `${LetterToUppercase[Char]}${Uppercase<Characters>}`
-        : `${Char}${Uppercase<Characters>}`
-    : Str
-
-/**
- * TODO: add example
- * Converts a string to lowercase
- */
-export type Lowercase<Str extends string> = Str extends `${infer Char}${infer Characters}`
-    ? Char extends keyof LetterToLowercase
-        ? `${LetterToLowercase[Char]}${Lowercase<Characters>}`
-        : `${Char}${Lowercase<Characters>}`
-    : Str
-
-/**
  * TODO: add example and fix the type
  * Capitalizes the first letter of a word and converts the rest to lowercase
  */
@@ -63,6 +43,9 @@ export type Capitalize<Str extends string, FirstWord extends boolean = true> = S
         : Str
     : Str
 
+/**
+ * @internal
+ */
 type JoinImplementation<Array extends unknown[], Separator extends number | string, Str extends string = ""> = Array extends [
     infer Char,
     ...infer Chars,
@@ -98,6 +81,9 @@ export type Join<Array extends unknown[], Separator extends number | string> = J
  */
 export type StartsWith<Str extends string, Match extends string> = Str extends `${Match}${string}` ? true : false
 
+/**
+ * @internal
+ */
 type DropCharImplementation<
     Str extends string,
     Match extends string,
@@ -130,6 +116,9 @@ export type DropChar<Str extends string, Match extends string> = DropCharImpleme
  */
 export type EndsWith<Str extends string, Match extends string> = Str extends `${string}${Match}` ? true : false
 
+/**
+ * @internal
+ */
 type LengthOfStringImplementation<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
     ? LengthOfStringImplementation<Chars, [...Length, Char]>
     : Length["length"]
@@ -146,6 +135,9 @@ type LengthOfStringImplementation<Str extends string, Length extends unknown[] =
  */
 export type LengthOfString<Str extends string> = LengthOfStringImplementation<Str>
 
+/**
+ * @internal
+ */
 type IndexOfStringImplementation<
     Str extends string,
     Match extends string,
@@ -169,6 +161,9 @@ type IndexOfStringImplementation<
  */
 export type IndexOfString<Str extends string, Match extends string> = IndexOfStringImplementation<Str, Match>
 
+/**
+ * @internal
+ */
 type FirstUniqueCharIndexImplementation<
     Str extends string,
     Index extends unknown[] = [],
@@ -210,6 +205,9 @@ export type Replace<S extends string, From extends string, To extends string> = 
       ? `${Head}${To}${Tail}`
       : S
 
+/**
+ * @internal
+ */
 type CheckRepeatedCharsImplementation<
     Str extends string,
     Characters extends string = "",
@@ -231,6 +229,9 @@ type CheckRepeatedCharsImplementation<
  */
 export type CheckRepeatedChars<Str extends string> = CheckRepeatedCharsImplementation<Str>
 
+/**
+ * @internal
+ */
 type ParseUrlParamsImplementation<
     URLParams extends string,
     Params extends string = never,
@@ -254,6 +255,9 @@ type ParseUrlParamsImplementation<
  */
 export type ParseUrlParams<URLParams extends string> = ParseUrlParamsImplementation<URLParams>
 
+/**
+ * @internal
+ */
 type FindAllImplementation<
     Str extends string,
     Match extends string,
