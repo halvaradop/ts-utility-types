@@ -40,20 +40,23 @@ describe("Tuple methods", () => {
             expectTypeOf<utilities.Filter<[0, 1, 2, 3, 4], 0 | 4>>().toEqualTypeOf<[0, 4]>()
             expectTypeOf<utilities.Filter<[0, 0, 1, 1, 1], 1>>().toEqualTypeOf<[1, 1, 1]>()
             expectTypeOf<utilities.Filter<["foo", "bar", "foobar"], "bar">>().toEqualTypeOf<["bar"]>()
+            expectTypeOf<utilities.Filter<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[4, 5]>()
         })
     })
 
     describe("FilterOut", () => {
         test("Removes the elements present in the predicate", () => {
-            expectTypeOf<utilities.FilterOut<[1, 2, 3, 4, 5], [4, 5]>>().toEqualTypeOf<[1, 2, 3]>()
-            expectTypeOf<utilities.FilterOut<["foo", "bar", "foobar"], "foo">>().toEqualTypeOf<["bar", "foobar"]>()
-            expectTypeOf<utilities.FilterOut<["foo", "bar", "foobar", 1, 2], "foo" | 2>>().toEqualTypeOf<["bar", "foobar", 1]>()
-            expectTypeOf<
-                utilities.FilterOut<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }>
-            >().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>()
-            expectTypeOf<utilities.FilterOut<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }>>().toEqualTypeOf<
-                ["foo", "bar", "foobar", 1, 2]
+            expectTypeOf<utilities.Filter<[1, 2, 3, 4, 5], [4, 5], false>>().toEqualTypeOf<[1, 2, 3]>()
+            expectTypeOf<utilities.Filter<["foo", "bar", "foobar"], "foo", false>>().toEqualTypeOf<["bar", "foobar"]>()
+            expectTypeOf<utilities.Filter<["foo", "bar", "foobar", 1, 2], "foo" | 2, false>>().toEqualTypeOf<
+                ["bar", "foobar", 1]
             >()
+            expectTypeOf<
+                utilities.Filter<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }, false>
+            >().toEqualTypeOf<[{ foo: string }, { foobar: boolean }]>()
+            expectTypeOf<
+                utilities.Filter<["foo", "bar", "foobar", 1, 2, { foo: string }], { foo: string }, false>
+            >().toEqualTypeOf<["foo", "bar", "foobar", 1, 2]>()
         })
     })
 
@@ -93,9 +96,9 @@ describe("Tuple methods", () => {
 
     describe("Unique", () => {
         test("Get the unique elements of a tuple", () => {
-            expectTypeOf<utilities.Unique<[1, 1, 2, 2, 3, 3]>>().toEqualTypeOf<[1, 2, 3]>()
-            expectTypeOf<utilities.Unique<[1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3, 4, 5]>()
-            expectTypeOf<utilities.Unique<[string, number, 1, "a", 1, string, 2, "b", 2, number]>>().toEqualTypeOf<
+            expectTypeOf<utilities.Uniques<[1, 1, 2, 2, 3, 3]>>().toEqualTypeOf<[1, 2, 3]>()
+            expectTypeOf<utilities.Uniques<[1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3, 4, 5]>()
+            expectTypeOf<utilities.Uniques<[string, number, 1, "a", 1, string, 2, "b", 2, number]>>().toEqualTypeOf<
                 [string, number, 1, "a", 2, "b"]
             >()
         })
@@ -110,13 +113,13 @@ describe("ConstructTuple", () => {
     })
 })
 
-describe("CheckRepeatedTuple", () => {
+describe("HasDuplicates", () => {
     test("Check if there are duplicated elements", () => {
-        expectTypeOf<utilities.CheckRepeatedTuple<[]>>().toEqualTypeOf<false>()
-        expectTypeOf<utilities.CheckRepeatedTuple<[1, 2, 1]>>().toEqualTypeOf<true>()
-        expectTypeOf<utilities.CheckRepeatedTuple<["foo", "bar", 1, 5]>>().toEqualTypeOf<false>()
-        expectTypeOf<utilities.CheckRepeatedTuple<[() => void, () => void]>>().toEqualTypeOf<true>()
-        expectTypeOf<utilities.CheckRepeatedTuple<[{ foo: string }, { foo: string }]>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.HasDuplicates<[]>>().toEqualTypeOf<false>()
+        expectTypeOf<utilities.HasDuplicates<[1, 2, 1]>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.HasDuplicates<["foo", "bar", 1, 5]>>().toEqualTypeOf<false>()
+        expectTypeOf<utilities.HasDuplicates<[() => void, () => void]>>().toEqualTypeOf<true>()
+        expectTypeOf<utilities.HasDuplicates<[{ foo: string }, { foo: string }]>>().toEqualTypeOf<true>()
     })
 })
 
@@ -155,13 +158,13 @@ describe("Zip", () => {
     })
 })
 
-describe("FlattenArrayType", () => {
+describe("Flatten", () => {
     test("Flatten an array type", () => {
-        expectTypeOf<utilities.FlattenArrayType<number[]>>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.FlattenArrayType<number[][]>>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.FlattenArrayType<number[][][]>>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.FlattenArrayType<string[][][][]>>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.FlattenArrayType<unknown[][][][]>>().toEqualTypeOf<unknown>()
+        expectTypeOf<utilities.Flatten<number[]>>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.Flatten<number[][]>>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.Flatten<number[][][]>>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.Flatten<string[][][][]>>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Flatten<unknown[][][][]>>().toEqualTypeOf<unknown>()
     })
 })
 

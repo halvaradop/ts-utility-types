@@ -1,4 +1,4 @@
-import type { Even, Odd } from "./types.d.ts"
+import type { Even, Odd } from "./types.js"
 
 /**
  * Check if the parameter is a never value

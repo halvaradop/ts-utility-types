@@ -39,70 +39,6 @@ export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">
 export type WhiteSpaces = " " | "\n" | "\t" | "\r" | "\f" | "\u2028" | "\u2029"
 
 /**
- * Maps lowercase letters to their uppercase equivalents
- */
-export interface LetterToUppercase {
-    a: "A"
-    b: "B"
-    c: "C"
-    d: "D"
-    e: "E"
-    f: "F"
-    g: "G"
-    h: "H"
-    i: "I"
-    j: "J"
-    k: "K"
-    l: "L"
-    m: "M"
-    n: "N"
-    o: "O"
-    p: "P"
-    q: "Q"
-    r: "R"
-    s: "S"
-    t: "T"
-    u: "U"
-    v: "V"
-    w: "W"
-    x: "X"
-    y: "Y"
-    z: "Z"
-}
-
-/**
- * Maps uppercase letters to their lowercase equivalents
- */
-export interface LetterToLowercase {
-    A: "a"
-    B: "b"
-    C: "c"
-    D: "d"
-    E: "e"
-    F: "f"
-    G: "g"
-    H: "h"
-    I: "i"
-    J: "j"
-    K: "k"
-    L: "l"
-    M: "m"
-    N: "n"
-    O: "o"
-    P: "p"
-    Q: "q"
-    R: "r"
-    S: "s"
-    T: "t"
-    U: "u"
-    V: "v"
-    W: "w"
-    X: "x"
-    Y: "y"
-    Z: "z"
-}
-
-/**
  * Represents the empty values
  */
 export type Falsy = Nullish | 0 | false | ""
@@ -116,25 +52,3 @@ export type Odd = 1 | 3 | 5 | 7 | 9
  * The even digits
  */
 export type Even = 0 | 2 | 4 | 6 | 8
-
-/**
- * Determines the primitive type corresponding to the provided value.
- *
- * @example
- * // Expected: number
- * type TypeOfValue = TypeOf<123>
- *
- * // Expected: string
- * type TypeOfValue = TypeOf<"hello">
- */
-export type ReturnTypeOf<T> = T extends string
-    ? string
-    : T extends number
-      ? number
-      : T extends object
-        ? object
-        : T extends boolean
-          ? boolean
-          : T extends Function
-            ? Function
-            : never
