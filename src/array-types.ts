@@ -1,4 +1,6 @@
 import type { Equals } from "./test.js"
+import { IsNegative } from "./type-guards.js"
+import { Absolute } from "./utils.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -380,3 +382,34 @@ export type ReturnTypeOf<T> = T extends string
           : T extends Function
             ? Function
             : never
+
+/**
+ * @internal
+ */
+type TakeImplementation<
+    N extends number,
+    Array extends unknown[],
+    Negative = IsNegative<N>,
+    Build extends unknown[] = [],
+> = `${N}` extends `${Build["length"]}` | `-${Build["length"]}`
+    ? Build
+    : Negative extends true
+      ? Array extends [...infer Spread, infer Item]
+          ? TakeImplementation<N, Spread, Negative, [Item, ...Build]>
+          : Build
+      : Array extends [infer Item, ...infer Spread]
+        ? TakeImplementation<N, Spread, Negative, [...Build, Item]>
+        : Build
+
+/**
+ * Extracts the first `N` elements from an array. If `N` is negative,
+ * it extracts the last `N` elements.
+ *
+ * @example
+ * // Expected: [1, 2]
+ * type Take1 = Take<2, [1, 2, 3, 4]>;
+ *
+ * // Expected: [3, 4]
+ * type Take2 = Take<-2, [1, 2, 3, 4]>;
+ */
+export type Take<N extends number, Array extends unknown[]> = TakeImplementation<N, Array>

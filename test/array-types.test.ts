@@ -187,3 +187,19 @@ describe("Includes", () => {
         expectTypeOf<utilities.Includes<[true, false, true], number>>().toEqualTypeOf<false>()
     })
 })
+
+describe("Take", () => {
+    test("Take the first n elements of a tuple", () => {
+        expectTypeOf<utilities.Take<0, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[]>()
+        expectTypeOf<utilities.Take<1, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[1]>()
+        expectTypeOf<utilities.Take<2, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2]>()
+        expectTypeOf<utilities.Take<3, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3]>()
+        expectTypeOf<utilities.Take<4, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3, 4]>()
+        expectTypeOf<utilities.Take<5, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[1, 2, 3, 4, 5]>()
+        expectTypeOf<utilities.Take<5, [1, 2]>>().toEqualTypeOf<[1, 2]>()
+        expectTypeOf<utilities.Take<-1, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[5]>()
+        expectTypeOf<utilities.Take<-2, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[4, 5]>()
+        expectTypeOf<utilities.Take<-3, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[3, 4, 5]>()
+        expectTypeOf<utilities.Take<-4, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[2, 3, 4, 5]>()
+    })
+})
