@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { IsNegative, IsNever, IsOdd, IsPositive } from "../src/type-guards"
+import type { IsNegative, IsNever, IsOdd, IsPositive, Not } from "../src/type-guards"
 
 describe("Utility types for type guards", () => {
     describe("IsNever", () => {
@@ -21,6 +21,13 @@ describe("Utility types for type guards", () => {
             expectTypeOf<IsOdd<number>>().toEqualTypeOf<false>()
             expectTypeOf<IsOdd<1234567891>>().toEqualTypeOf<true>()
             expectTypeOf<IsOdd<1234567892>>().toEqualTypeOf<false>()
+        })
+    })
+
+    describe("Not", () => {
+        test("Check if a boolean is false", () => {
+            expectTypeOf<Not<true>>().toEqualTypeOf<false>()
+            expectTypeOf<Not<false>>().toEqualTypeOf<true>()
         })
     })
 
