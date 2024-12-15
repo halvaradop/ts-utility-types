@@ -1,6 +1,5 @@
 import type { Equals } from "./test.js"
-import { IsNegative } from "./type-guards.js"
-import { Absolute } from "./utils.js"
+import type { IsNegative } from "./type-guards.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
