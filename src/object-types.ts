@@ -513,3 +513,30 @@ export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>
 export type GetOptional<T extends object> = {
     [Key in keyof T as T[Key] extends Required<T>[Key] ? never : Key]: T[Key]
 }
+
+/**
+ * Get the value of a key from an object without worrying about the nested properties
+ * of the object only should separate the keys with a dot.
+ *
+ * @example
+ * interface User {
+ *   foo: {
+ *     bar: {
+ *       foobar: "Hello"
+ *     },
+ *     barfoo: "World"
+ *   },
+ *   age: number
+ * }
+ *
+ * // Expected: "Hello"
+ * type FooBar = GetValue<User, "foo.bar.foobar">
+ *
+ * // Expected: "World"
+ * type FooBar = GetValue<User, "foo.barfoo">
+ */
+export type Get<T, K extends string> = K extends keyof T
+    ? T[K]
+    : K extends `${infer Char extends keyof T & string}.${infer Substr}`
+      ? Get<T[Char], Substr>
+      : never
