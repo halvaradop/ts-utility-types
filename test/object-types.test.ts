@@ -372,3 +372,16 @@ describe("GetOptional", () => {
         expectTypeOf<utilities.GetOptional<{ foo: undefined; bar?: number }>>().toEqualTypeOf<{ bar?: number }>()
     })
 })
+
+describe("Get", () => {
+    test("Get the value of a nested property", () => {
+        expectTypeOf<utilities.Get<{ foo: string }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<{ foo: string; bar: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<{ foo: { bar: number } }, "foo.bar">>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar">>().toEqualTypeOf<{ foobar: boolean }>()
+        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar.foobar">>().toEqualTypeOf<boolean>()
+        expectTypeOf<
+            utilities.Get<{ foo: { bar: { foobar: { barfoo: number } } } }, "foo.bar.foobar.barfoo">
+        >().toEqualTypeOf<number>()
+    })
+})
