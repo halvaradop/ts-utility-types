@@ -35,3 +35,15 @@ export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : 
  * type CheckOdd = IsEven<2023>;
  */
 export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false : true
+
+/**
+ * Check if the number provided is negative or not
+ *
+ * @example
+ * // Expected: true
+ * type CheckNegative = IsNegative<-2024>;
+ *
+ * // Expected: false
+ * type CheckPositive = IsNegative<2024>;
+ */
+export type IsNegative<T extends number> = `${T}` extends `-${number}` ? true : false
