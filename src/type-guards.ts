@@ -1,3 +1,4 @@
+import type { Equals, Not } from "./test.js"
 import type { Even, Odd } from "./types.js"
 
 /**
@@ -34,19 +35,7 @@ export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : 
  * // Expected: false
  * type CheckOdd = IsEven<2023>;
  */
-export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false : true
-
-/**
- * Check if the boolean provided is false
- *
- * @example
- * // Expected: false
- * type CheckFalse = Not<true>;
- *
- * // Expected: true
- * type CheckTrue = Not<true>;
- */
-export type Not<T extends boolean> = T extends true ? false : true
+export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? true : false
 
 /**
  * Check if the number provided is negative or not
@@ -71,3 +60,15 @@ export type IsNegative<T extends number> = `${T}` extends `-${number}` ? true : 
  * type CheckNegative = IsPositive<-2024>;
  */
 export type IsPositive<T extends number> = Not<IsNegative<T>>
+
+/**
+ * Check if the type provided is any
+ *
+ * @example
+ * // Expected: true
+ * type CheckAny = IsAny<any>;
+ *
+ * // Expected: false
+ * type CheckStr = IsAny<string>;
+ */
+export type IsAny<T> = Equals<T, any>
