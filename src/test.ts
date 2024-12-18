@@ -21,3 +21,15 @@ export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T ext
  * type CheckFalse = Expect<false>;
  */
 export type Expect<T extends true> = T
+
+/**
+ * Check if the boolean provided is false
+ *
+ * @example
+ * // Expected: false
+ * type CheckFalse = Not<true>;
+ *
+ * // Expected: true
+ * type CheckTrue = Not<true>;
+ */
+export type Not<T extends boolean> = T extends true ? false : true

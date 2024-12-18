@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { IsNegative, IsNever, IsOdd, IsPositive, Not } from "../src/type-guards"
+import type { IsNegative, IsNever, IsOdd, IsPositive, IsAny, IsEven } from "../src/type-guards"
 
 describe("Utility types for type guards", () => {
     describe("IsNever", () => {
@@ -24,13 +24,6 @@ describe("Utility types for type guards", () => {
         })
     })
 
-    describe("Not", () => {
-        test("Check if a boolean is false", () => {
-            expectTypeOf<Not<true>>().toEqualTypeOf<false>()
-            expectTypeOf<Not<false>>().toEqualTypeOf<true>()
-        })
-    })
-
     describe("IsNegative", () => {
         test("Check if a number is negative", () => {
             expectTypeOf<IsNegative<0>>().toEqualTypeOf<false>()
@@ -48,6 +41,33 @@ describe("Utility types for type guards", () => {
             expectTypeOf<IsPositive<2024>>().toEqualTypeOf<true>()
             expectTypeOf<IsPositive<-0>>().toEqualTypeOf<true>()
             expectTypeOf<IsPositive<number>>().toEqualTypeOf<true>()
+        })
+    })
+
+    describe("IsEven", () => {
+        test("Check if a number is even", () => {
+            expectTypeOf<IsEven<0>>().toEqualTypeOf<true>()
+            expectTypeOf<IsEven<2024>>().toEqualTypeOf<true>()
+            expectTypeOf<IsEven<2023>>().toEqualTypeOf<false>()
+            expectTypeOf<IsEven<number>>().toEqualTypeOf<false>()
+            expectTypeOf<IsEven<1234567891>>().toEqualTypeOf<false>()
+            expectTypeOf<IsEven<1234567892>>().toEqualTypeOf<true>()
+        })
+    })
+
+    describe("IsAny", () => {
+        test("Check if a type is any", () => {
+            expectTypeOf<IsAny<any>>().toEqualTypeOf<true>()
+            expectTypeOf<IsAny<unknown>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<never>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<undefined>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<null>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<string>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<number>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<boolean>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<bigint>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<symbol>>().toEqualTypeOf<false>()
+            expectTypeOf<IsAny<Function>>().toEqualTypeOf<false>()
         })
     })
 })
