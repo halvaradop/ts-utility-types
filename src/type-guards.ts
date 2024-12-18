@@ -37,6 +37,18 @@ export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : 
 export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false : true
 
 /**
+ * Check if the boolean provided is false
+ *
+ * @example
+ * // Expected: false
+ * type CheckFalse = Not<true>;
+ *
+ * // Expected: true
+ * type CheckTrue = Not<true>;
+ */
+export type Not<T extends boolean> = T extends true ? false : true
+
+/**
  * Check if the number provided is negative or not
  *
  * @example
@@ -47,3 +59,15 @@ export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? false
  * type CheckPositive = IsNegative<2024>;
  */
 export type IsNegative<T extends number> = `${T}` extends `-${number}` ? true : false
+
+/**
+ * Check if the number provided is positive or not
+ *
+ * @example
+ * // Expected: true
+ * type CheckPositive = IsPositive<2024>;
+ *
+ * // Expected: false
+ * type CheckNegative = IsPositive<-2024>;
+ */
+export type IsPositive<T extends number> = Not<IsNegative<T>>
