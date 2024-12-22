@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { IsNegative, IsNever, IsOdd, IsPositive, IsAny, IsEven } from "../src/type-guards"
+import type { IsNegative, IsNever, IsOdd, IsPositive, IsAny, IsEven, AnyOf } from "../src/type-guards"
 
 describe("Utility types for type guards", () => {
     describe("IsNever", () => {
@@ -68,6 +68,19 @@ describe("Utility types for type guards", () => {
             expectTypeOf<IsAny<bigint>>().toEqualTypeOf<false>()
             expectTypeOf<IsAny<symbol>>().toEqualTypeOf<false>()
             expectTypeOf<IsAny<Function>>().toEqualTypeOf<false>()
+        })
+    })
+
+    describe("AnyOf", () => {
+        test("Check if a type is true of the provided types", () => {
+            expectTypeOf<AnyOf<[true, false]>>().toEqualTypeOf<true>()
+            expectTypeOf<AnyOf<[true, true]>>().toEqualTypeOf<true>()
+            expectTypeOf<AnyOf<[false, false]>>().toEqualTypeOf<false>()
+            expectTypeOf<AnyOf<[false, true]>>().toEqualTypeOf<true>()
+            expectTypeOf<AnyOf<[false, false, false, false, false, false, true]>>().toEqualTypeOf<true>()
+            expectTypeOf<AnyOf<[false, false, false, false, false, false, false]>>().toEqualTypeOf<false>()
+            expectTypeOf<AnyOf<[0, "", false, [], {}, undefined, null]>>().toEqualTypeOf<false>()
+            expectTypeOf<AnyOf<[0, "", false, [], {}, undefined, null, true]>>().toEqualTypeOf<true>()
         })
     })
 })

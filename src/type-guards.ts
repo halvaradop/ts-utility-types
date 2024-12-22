@@ -72,3 +72,26 @@ export type IsPositive<T extends number> = Not<IsNegative<T>>
  * type CheckStr = IsAny<string>;
  */
 export type IsAny<T> = Equals<T, any>
+
+/**
+ * @internal
+ */
+type False = "" | false | [] | null | undefined | 0 | { [P: string]: never }
+
+/**
+ * Checks if any value in the tuple is true
+ *
+ * @example
+ * // Expected: true
+ * type Test1 = AnyOf<[0, "", false, [], {}, undefined, null, true]>
+ *
+ * // Expected: false
+ * type Test2 = AnyOf<[0, "", false, [], {}, undefined, null]>
+ */
+export type AnyOf<T extends readonly any[]> = T extends [infer Item, ...infer Spread]
+    ? Item extends False
+        ? AnyOf<Spread>
+        : true
+    : false
+
+type Nose = AnyOf<[0, "", false, [], {}, undefined, null]>
