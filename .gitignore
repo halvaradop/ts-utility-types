@@ -1,7 +1,8 @@
-# folders
+# artifacts
 node_modules/
 dist/
 logs/
+.next
 
 # variables
 .env

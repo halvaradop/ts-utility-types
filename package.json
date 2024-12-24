@@ -5,16 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "tsup --watch",
+    "dev:web": "cd app && pnpm dev",
+    "build": "pnpm build:types && pnpm build:web",
+    "build:types": "tsup && tsup src/validate-types.ts --dts --format esm,cjs --outDir dist/utils",
+    "build:web": "cd app && pnpm build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest --run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "build": "tsup && tsup src/validate-types.ts --dts --format esm,cjs --outDir dist/utils",
-    "publish": "pnpm build",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
     "clean": "pnpm clean:dist && pnpm clean:modules",
     "clean:dist": "rm -rf dist",
-    "clean:modules": "rm -rf node_modules"
+    "clean:modules": "rm -rf node_modules",
+    "publish": "pnpm build"
   },
   "repository": {
     "type": "git",
