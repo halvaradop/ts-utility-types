@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-gradient-to-tr from-purple-100 via-sky-50;
+    }
+
+    .transition-approach {
+        transition:
+            opacity 0.3s ease,
+            display 0.3s ease allow-discrete;
+    }
+
+    .approach[data-isselected="true"] > p {
+        display: block;
+        opacity: 1;
+        transition:
+            opacity 0.4s ease,
+            display 0.4s ease allow-discrete;
+    }
+
+    @starting-style {
+        .approach[data-isselected="true"] > p {
+            opacity: 0;
+        }
+    }
+}
