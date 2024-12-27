@@ -7,6 +7,12 @@ settings:
 importers:
   .:
     dependencies:
+      "@halvaradop/tailwindcss-utilities":
+        specifier: ^0.2.3
+        version: 0.2.3
+      "@halvaradop/ui-button":
+        specifier: 0.3.2-beta.0
+        version: 0.3.2-beta.0
       next:
         specifier: 15.1.2
         version: 15.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -86,6 +92,15 @@ packages:
   "@eslint/plugin-kit@0.2.4":
     resolution: { integrity: sha512-zSkKow6H5Kdm0ZUQUB2kV5JIXqoG0+uH5YADhaEHswm664N9Db8dXSi0nMJpacpMf+MyyglF1vnZohpEg5yUtg== }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+
+  "@halvaradop/tailwindcss-utilities@0.2.3":
+    resolution: { integrity: sha512-z8e3hdNLpgV7Pv46VL0zboLAhxC63xUt/8iYqiYO3TJxBlcWQZkAuyN7LZVH1x/FfqVCxo0YgMLYZ3HlRQ0IHw== }
+
+  "@halvaradop/ui-button@0.3.2-beta.0":
+    resolution: { integrity: sha512-qNLD3fNSd2sj6xNHFrtFCPZLq6E+iMA7HdntI7zqQAmwRH0t9/N+G4SH31ckghFA+OeZBoNDe90JNDe9Edxq6Q== }
+
+  "@halvaradop/ui-core@0.2.1-beta.0":
+    resolution: { integrity: sha512-FWbmE91CBWWEl1x73nSRckrEyIaXwx+lqJwCPCjRuRb9dtHEHjg/kB43ZNyGtsyqY7kZwSPRsx6oBj50kyL8Sg== }
 
   "@humanfs/core@0.19.1":
     resolution: { integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA== }
@@ -532,8 +547,15 @@ packages:
     resolution: { integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw== }
     engines: { node: ">= 8.10.0" }
 
+  class-variance-authority@0.7.0:
+    resolution: { integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A== }
+
   client-only@0.0.1:
     resolution: { integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA== }
+
+  clsx@2.0.0:
+    resolution: { integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q== }
+    engines: { node: ">=6" }
 
   color-convert@2.0.1:
     resolution: { integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ== }
@@ -1534,6 +1556,9 @@ packages:
     resolution: { integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w== }
     engines: { node: ">= 0.4" }
 
+  tailwind-merge@2.6.0:
+    resolution: { integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA== }
+
   tailwindcss@3.4.17:
     resolution: { integrity: sha512-w33E2aCvSDP0tW9RZuNXadXlkHXqFzSkQew/aIa2i/Sj8fThxwovwlXHSPXTbAHwEIhBFXAedUhP2tueAKP8Og== }
     engines: { node: ">=14.0.0" }
@@ -1697,6 +1722,17 @@ snapshots:
   "@eslint/plugin-kit@0.2.4":
     dependencies:
       levn: 0.4.1
+
+  "@halvaradop/tailwindcss-utilities@0.2.3": {}
+
+  "@halvaradop/ui-button@0.3.2-beta.0":
+    dependencies:
+      "@halvaradop/ui-core": 0.2.1-beta.0
+      class-variance-authority: 0.7.0
+
+  "@halvaradop/ui-core@0.2.1-beta.0":
+    dependencies:
+      tailwind-merge: 2.6.0
 
   "@humanfs/core@0.19.1": {}
 
@@ -2135,7 +2171,13 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
+  class-variance-authority@0.7.0:
+    dependencies:
+      clsx: 2.0.0
+
   client-only@0.0.1: {}
+
+  clsx@2.0.0: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -3341,6 +3383,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  tailwind-merge@2.6.0: {}
 
   tailwindcss@3.4.17:
     dependencies:

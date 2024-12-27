@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Noto_Sans } from "next/font/google"
 import { LayoutProps } from "@/lib/@types/props"
+import { Header } from "@/ui/header"
+import { Footer } from "@/ui/footer"
 import "@/ui/globals.css"
 
 const notoSans = Noto_Sans({
@@ -17,7 +19,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps) {
     return (
         <html lang="en">
-            <body className={`${notoSans.className} antialiased`}>{children}</body>
+            <body
+                className={`${notoSans.className} antialiased scroll-smooth scroll:w-1.5 track:my-1 thumb:rounded thumb:bg-black`}
+            >
+                <Header />
+                {children}
+                <Footer />
+            </body>
         </html>
     )
 }
