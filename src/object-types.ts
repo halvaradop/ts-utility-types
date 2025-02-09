@@ -554,7 +554,7 @@ type InternalDeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Rig
 
 /**
  * Picks the properties of an object at any depth based on the provided pattern.
- * 
+ *
  * @example
  * interface User {
  *   name: string,
@@ -563,7 +563,7 @@ type InternalDeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Rig
  *     avenue: string
  *   }
  * }
- * 
+ *
  * // Expected: { address: { street: string } }
  * type UserPick = DeepPick<User, "address.street">
  */
