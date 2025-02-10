@@ -241,7 +241,15 @@ type ChunkImplementation<
       : [...Build, Partition]
 
 /**
- * TODO: add examples
+ * Split an array into chunks of a specific length if the last chunk is smaller than the specified length
+ * it will returns the last chunk with the remaining elements
+ *
+ * @example
+ * // Expected: [[1, 2], [3, 4], [5]]
+ * type Chunk1 = Chunk<[1, 2, 3, 4, 5], 2>;
+ *
+ * // Expected: [[1, 2, 3], [4, 5]]
+ * type Chunk2 = Chunk<[1, 2, 3, 4, 5], 3>;
  */
 export type Chunk<Array extends unknown[], Length extends number> = ChunkImplementation<Array, Length, [], []>
 

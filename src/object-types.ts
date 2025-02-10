@@ -57,9 +57,14 @@ export type Discard<Compare, Match, Value = never, Reverse extends boolean = fal
         : Value
 
 /**
- * TODO: add examples
- *
  * Get the type of the resolved value of a PromiseLike object.
+ *
+ * @example
+ * // Expected: string
+ * type A = Awaited<Promise<string>>;
+ *
+ * // Expected: boolean
+ * type B = Awaited<Promise<Promise<boolean>>>;
  */
 export type Awaited<T extends PromiseLike<unknown>> =
     T extends PromiseLike<infer ResolveType>
@@ -154,8 +159,6 @@ export type PickByType<Obj extends object, Type> = {
 }
 
 /**
- * TODO: add examples
- *
  * Converts the specified keys of an object into optional ones
  *
  * @example
@@ -190,10 +193,23 @@ export type OmitByType<Obj extends object, Type> = {
 }
 
 /**
- * TODO: add examples
- *
  * Extracts the value of a key from an object and returns a new object with that value,
  * while keeping the other values unchanged.
+ *
+ * @example
+ * interface User {
+ *   name: string,
+ *   lastname: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: { name: string, lastname: string, street: string, avenue: string }
+ * type UserAddress = ExtractValue<User, "address">;
+ *
+ * TODO: Implement a version that allows extracting nested values
  */
 export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Prettify<
     {
@@ -202,19 +218,41 @@ export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Pret
 >
 
 /**
- * TODO: add examples
- *
  * Removes the properties whose keys start with an underscore (_).
+ *
+ * @example
+ * interface User {
+ *   name: string,
+ *   _lastname: string,
+ *   _age: number
+ * }
+ *
+ * // Expected: { name: string }
+ * type PublicUser = PublicOnly<User>;
  */
 export type PublicOnly<Obj extends object> = {
     [Property in keyof Obj as Discard<Property, `_${string}`>]: Obj[Property]
 }
 
 /**
- * TODO: add examples
- *
  * Checks if a key exists in either of the two objects and returns its value.
  * If the key does not exist in either object, it returns `never`.
+ *
+ * @example
+ *
+ * interface Foo {
+ *   foo: string
+ * }
+ *
+ * interface Bar {
+ *   bar: number
+ * }
+ *
+ * // Expected: string
+ * type FooValue = RetrieveKeyValue<Foo, Bar, "foo">;
+ *
+ * // Expected: number
+ * type BarValue = RetrieveKeyValue<Foo, Bar, "bar">;
  */
 export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
     ? Obj1[Key]
