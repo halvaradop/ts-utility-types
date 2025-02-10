@@ -385,3 +385,44 @@ describe("Get", () => {
         >().toEqualTypeOf<number>()
     })
 })
+
+describe("DeepPick", () => {
+    test("Pick properties from nested objects", () => {
+        type Obj = {
+            foo: string
+            bar: number
+            foobar: {
+                foofoo: number
+                barbar: boolean
+                foo: {
+                    bar: string
+                    foobar: number
+                    barfoo: {
+                        foobar: string
+                        bar: number
+                    }
+                }
+            }
+        }
+
+        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar">>().toEqualTypeOf<{
+            foofoo: number
+            barbar: boolean
+            foo: {
+                bar: string
+                foobar: number
+                barfoo: {
+                    foobar: string
+                    bar: number
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
+            foobar: string
+            bar: number
+        }>()
+    })
+})
