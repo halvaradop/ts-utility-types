@@ -1,11 +1,9 @@
 name: ci
 
 on:
-  pull_request:
-    types: [opened, synchronize, closed]
+  push:
     paths-ignore:
-      - src/*
-      - test/*
+      - app/**
 
 jobs:
   build:
@@ -22,47 +20,4 @@ jobs:
       - name: Install package dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install app dependencies
-        run: cd app && pnpm install --frozen-lockfile
-
-      - run: pnpm build
-
-  test:
-    needs: build
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
-
-      - uses: pnpm/action-setup@v4
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-
-  deploy-to-development:
-    if: github.event.pull_request.merged == true && github.base_ref == 'master'
-    needs: [build, test]
-    runs-on: ubuntu-20.04
-    environment: development
-    steps:
-      - name: Deploy to development environment
-        run: echo "Deploying to development environment"
-
-  deploy-to-production:
-    if: github.event.pull_request.merged == true && github.base_ref == 'master' && startsWith(github.head_ref, 'release/')
-    needs: [build, test]
-    runs-on: ubuntu-20.04
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
-          registry-url: https://registry.npmjs.org/
-
-      - run: pnpm install
-      - run: pnpm build
-      - run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: pnpm build:types
