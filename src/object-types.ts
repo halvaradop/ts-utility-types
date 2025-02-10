@@ -8,6 +8,8 @@ import type { ReturnTypeOf } from "./array-types.js"
  * for better readability.
  *
  * It doesn't change the original object type.
+ *
+ * @param {object} Obj - The object to prettify
  */
 export type Prettify<Obj extends object> = {
     [Property in keyof Obj]: Obj[Property]
@@ -16,6 +18,7 @@ export type Prettify<Obj extends object> = {
 /**
  * It creates a new type based on your object but marks every property as readonly
  *
+ * @param {object} Obj - The object to make readonly
  * @example
  * interface User {
  *   name: string,
@@ -37,28 +40,35 @@ export type DeepReadonly<Obj extends object> = {
 }
 
 /**
- * Compare two types and return `never` if the type `T` extends the type `Match`,
- * otherwise return the type `T`.
+ * Conditionally excludes or includes types based on whether `Type` is assignable to `Extends`.
+ * If `Reverse` is `true`, it includes types that are assignable to `Extends`, otherwise it excludes them.
+ * If `Value` is provided, it returns `Value` instead of `never` when the condition is met.
  *
+ * @param {Type} Type - The type to evaluate
+ * @param {Extends} Extends - The type to compare against
+ * @param {Value} Value - The value to return if the condition is met (defaults to `never`)
+ * @param {Reverse} Reverse - If `true`, reverses the condition (defaults to `false`)
  * @example
  * // Expected: number
  * type A = Discard<string | number, string>;
+ *
  * // Expected: string | number
  * type B = Discard<string | number, boolean>;
  */
-export type Discard<Compare, Match, Value = never, Reverse extends boolean = false> = Reverse extends true
-    ? Compare extends Match
+export type Discard<Type, Extends, Value = never, Reverse extends boolean = false> = Reverse extends true
+    ? Type extends Extends
         ? Value
         : never
-    : Compare extends Match
+    : Type extends Extends
       ? never
       : IsNever<Value> extends true
-        ? Compare
+        ? Type
         : Value
 
 /**
  * Get the type of the resolved value of a PromiseLike object.
  *
+ * @param {PromiseLike<unknown>} T - The PromiseLike object to resolve
  * @example
  * // Expected: string
  * type A = Awaited<Promise<string>>;
@@ -76,6 +86,8 @@ export type Awaited<T extends PromiseLike<unknown>> =
 /**
  * Creates a union of the keys of two objects
  *
+ * @param {object} Obj1 - The first object to get the keys from
+ * @param {object} Obj2 - The second object to get the keys from
  * @example
  * interface Foo {
  *   foo: string,
@@ -96,6 +108,8 @@ export type Properties<Obj1 extends object, Obj2 extends object, Extends extends
  * Creates a new object by merging two objects. Properties from `Obj1` override properties
  * from `Obj2` if they have the same key
  *
+ * @param {object} Obj1 - The first object to merge
+ * @param {object} Obj2 - The second object to merge
  * @example
  * interface Config {
  *   storePaths: string[],
@@ -124,6 +138,8 @@ type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys =
 /**
  * Create a new object based in the difference keys between the objects.
  *
+ * @param {object} Obj1 - The first object to compare
+ * @param {object} Obj2 - The second object to compare
  * @example
  * interface Foo {
  *   name: string
@@ -142,8 +158,10 @@ type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys =
 export type Intersection<Obj1 extends object, Obj2 extends object> = IntersectionImplementation<Obj1, Obj2>
 
 /**
- * Create a new object based in the type of its keys
+ * Create a new object based in the keys that are assignable of type `Type`
  *
+ * @param {object} Obj - The object to pick the keys from
+ * @param {Type} Type - The type to compare against
  * @example
  * interface User {
  *   name: string,
@@ -159,8 +177,11 @@ export type PickByType<Obj extends object, Type> = {
 }
 
 /**
- * Converts the specified keys of an object into optional ones
+ * Converts the specified `Keys` of an object type into optional ones, By default it makes
+ * all properties optional.
  *
+ * @param {object} Obj - The object to convert
+ * @param {string} Keys - The keys to make optional
  * @example
  * interface User {
  *   name: string,
@@ -178,6 +199,8 @@ export type PartialByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj
 /**
  * Create a new object based in the keys that are not assignable of type `Type`
  *
+ * @param {object} Obj - The object to pick the keys from
+ * @param {Type} Type - The type to compare against
  * @example
  * interface User {
  *   name: string,
@@ -196,6 +219,8 @@ export type OmitByType<Obj extends object, Type> = {
  * Extracts the value of a key from an object and returns a new object with that value,
  * while keeping the other values unchanged.
  *
+ * @param {object} Obj - The object to extract the value from
+ * @param {string} Key - The key to extract the value from
  * @example
  * interface User {
  *   name: string,
@@ -220,6 +245,7 @@ export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Pret
 /**
  * Removes the properties whose keys start with an underscore (_).
  *
+ * @param {object} Obj - The object to remove the properties from
  * @example
  * interface User {
  *   name: string,
@@ -238,8 +264,10 @@ export type PublicOnly<Obj extends object> = {
  * Checks if a key exists in either of the two objects and returns its value.
  * If the key does not exist in either object, it returns `never`.
  *
+ * @param {object} Obj1 - The first object to check
+ * @param {object} Obj2 - The second object to check
+ * @param {string} Key - The key to check
  * @example
- *
  * interface Foo {
  *   foo: string
  * }
@@ -262,8 +290,11 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
 
 /**
  * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
- * their definition. When `Keys` is not provided, it should make all properties required
+ * their definition. When `Keys` is not provided, it should make all properties required. By default
+ * it makes all properties required.
  *
+ * @param {object} Obj - The object to convert
+ * @param {string} Keys - The keys to make required
  * @example
  * interface User {
  *   name?: string,
@@ -282,6 +313,8 @@ export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Ob
  *
  * Merge the properties of two objects and it the properties are repeated the types create an union
  *
+ * @param {object} Obj1 - The first object to merge
+ * @param {object} Obj2 - The second object to merge
  * @example
  * interface Foo {
  *   bar: string
@@ -309,6 +342,7 @@ export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
  *
  * **Important:** Only affects top-level properties, not nested properties.
  *
+ * @param {object} Obj - The object to convert
  * @example
  * interface User {
  *   readonly name: string;
@@ -327,6 +361,7 @@ export type Mutable<Obj extends object> = {
  * Converts all properties to non-readonly of alls levels of the object type,
  * This is an advanced utility type of `Mutable`
  *
+ * @param {object} Obj - The object to convert
  * @example
  * interface Foo {
  *   readonly foo: {
@@ -357,6 +392,7 @@ type MergeAllImplementation<Array extends readonly object[], Merge extends objec
  * Create a new object type based in the tuple of object types, if the properties
  * are duplicated will create an union type.
  *
+ * @param {T[]} Array - The tuple of object types to merge
  * @example
  * interface Foo {
  *   foo: string
@@ -380,6 +416,9 @@ export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<A
 /**
  * Create a new object type appending a new property with its value
  *
+ * @param {object} Obj - The object to append the property
+ * @param {string} NewProp - The new property to append
+ * @param {TypeValue} TypeValue - The type of the new property
  * @example
  * interface User {
  *   name: string
@@ -395,6 +434,7 @@ export type AddPropertyToObject<Obj extends object, NewProp extends string, Type
 /**
  * Returns a union type of the entries of the provided object
  *
+ * @param {object} Obj - The object to get the entries from
  * @example
  * interface Foo {
  *   foo: string,
@@ -413,6 +453,10 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * Replaces the types of the keys in an object with new types defined in the `Replace` object.
  * If a key in `Keys` is not found in `Replace`, it defaults to the `Default` type.
  *
+ * @param {object} Obj - The object to replace the keys
+ * @param {string} Keys - The keys to replace
+ * @param {object} Replace - The new types to replace the keys
+ * @param {unknown} Default - The default type if the key is not found in `Replace`
  * @example
  * interface Foo {
  *     foo: string,
@@ -435,6 +479,8 @@ export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends
  * Transforms the types of the keys in an object that match the `from` type in the `Mapper`,
  * replacing them with the `to` type in the `Mapper`.
  *
+ * @param {object} Obj - The object to map the types
+ * @param {object} Mapper - The types to map
  * @example
  * // Expected: { foo: string, bar: boolean }
  * type ReplaceTypesI = MapTypes<{ foo: string, bar: number }, { from: number, to: boolean }>;
@@ -453,8 +499,11 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
 }
 
 /**
- * Omits properties of an object at any depth based on the provided pattern.
+ * Omits properties of an object at any depth based on the provided pattern string that
+ * is a dot-separated path to the property.
  *
+ * @param {object} Obj - The object to omit the properties from
+ * @param {string} Pattern - The pattern to omit the properties
  * @example
  * type User = {
  *   name: string,
@@ -488,6 +537,7 @@ export type DeepOmit<Obj extends object, Pattern extends string> = {
  * Transforms the object properties to their primitive types. If the properties are objects,
  * it recursively transforms their properties to their primitive types, and so on.
  *
+ * @param {object} Obj - The object to transform
  * @example
  * interface User {
  *   name: "Foo",
@@ -522,6 +572,7 @@ type GetRequiredImplementation<Obj extends object, RequiredKeys extends object =
  * Get only the keys of an object that are required in the object type otherwise
  * remove them from the object type.
  *
+ * @param {object} Obj - The object to get the required keys from
  * @example
  * interface User {
  *   name: string
@@ -538,6 +589,7 @@ export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>
  * Get only the keys of an object that are optional in the object type otherwise
  * remove them from the object type
  *
+ * @param {object} Obj - The object to get the optional keys from
  * @example
  * interface User {
  *   name: string
@@ -556,6 +608,8 @@ export type GetOptional<T extends object> = {
  * Get the value of a key from an object without worrying about the nested properties
  * of the object only should separate the keys with a dot.
  *
+ * @param {object} T - The object to get the value from
+ * @param {string} K - The key to get the value from
  * @example
  * interface User {
  *   foo: {
@@ -580,8 +634,13 @@ export type Get<T, K extends string> = K extends keyof T
       : never
 
 /**
+ * TODO: This type is the same as `Get` type, but it should be removed in the future or just
+ * update the logic to make it different from `Get` type.
+ *
  * Picks the properties of an object at any depth based on the provided pattern.
  *
+ * @param {object} Obj - The object to pick the properties from
+ * @param {string} Pattern - The pattern to pick the properties
  * @example
  * interface User {
  *   name: string,
@@ -591,8 +650,9 @@ export type Get<T, K extends string> = K extends keyof T
  *   }
  * }
  *
- * // Expected: { address: { street: string } }
+ * // Expected: string
  * type UserPick = DeepPick<User, "address.street">
+ *
  */
 export type DeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Right}`
     ? Left extends keyof Obj
