@@ -394,7 +394,7 @@ describe("DeepPick", () => {
             foobar: {
                 foofoo: number
                 barbar: boolean
-                fo: {
+                foo: {
                     bar: string
                     foobar: number
                     barfoo: {
@@ -405,22 +405,24 @@ describe("DeepPick", () => {
             }
         }
 
-        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<{ foo: string }>()
-        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<{ bar: number }>()
+        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<number>()
         expectTypeOf<utilities.DeepPick<Obj, "foobar">>().toEqualTypeOf<{
-            foobar: {
-                foofoo: number
-                barbar: boolean
-                fo: {
-                    bar: string
-                    foobar: number
-                    barfoo: {
-                        foobar: string
-                        bar: number
-                    }
+            foofoo: number
+            barbar: boolean
+            foo: {
+                bar: string
+                foobar: number
+                barfoo: {
+                    foobar: string
+                    bar: number
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<{ foobar: { barbar: boolean } }>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
+            foobar: string
+            bar: number
+        }>()
     })
 })

@@ -542,19 +542,8 @@ export type Get<T, K extends string> = K extends keyof T
       : never
 
 /**
- * @internal
- */
-type InternalDeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Right}`
-    ? Left extends keyof Obj
-        ? InternalDeepPick<Obj[Left], Right>
-        : unknown
-    : Pattern extends keyof Obj
-      ? Obj[Pattern]
-      : unknown
-
-/**
  * Picks the properties of an object at any depth based on the provided pattern.
- * 
+ *
  * @example
  * interface User {
  *   name: string,
@@ -563,10 +552,14 @@ type InternalDeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Rig
  *     avenue: string
  *   }
  * }
- * 
+ *
  * // Expected: { address: { street: string } }
  * type UserPick = DeepPick<User, "address.street">
  */
-export type DeepPick<Obj extends object, Patterns extends string> = {
-    [Pattern in Patterns]: InternalDeepPick<Obj, Pattern>
-}
+export type DeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Right}`
+    ? Left extends keyof Obj
+        ? DeepPick<Obj[Left], Right>
+        : unknown
+    : Pattern extends keyof Obj
+      ? Obj[Pattern]
+      : unknown
