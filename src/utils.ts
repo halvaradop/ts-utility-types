@@ -1,11 +1,32 @@
 import type { DropChar } from "./string-mappers.js"
 
 /**
+ * @internals
+ */
+type PercentageParserInternal<
+    Percentage extends string,
+    Sign extends string = "",
+    Num extends string = "",
+    Unit extends string = "",
+> = Percentage extends `${infer Char}${infer Chars}`
+    ? Char extends "+" | "-"
+        ? PercentageParserInternal<Chars, Char, Num, Unit>
+        : Char extends "%"
+          ? PercentageParserInternal<Chars, Sign, Num, "%">
+          : Char extends `${number}`
+            ? PercentageParserInternal<Chars, Sign, `${Num}${Char}`, Unit>
+            : Char extends "." | ","
+              ? PercentageParserInternal<Char, Sign, `${Num}${Char}`, Unit>
+              : never
+    : [Sign, Num, Unit]
+
+/**
  * Parses a percentage string into a tuple of [Sign, Number, Unit].
  * - `Sign` can be "+" or "-" or an empty string if no sign is present.
  * - `Number` is the numerical part of the percentage.
  * - `Unit` is the percentage symbol "%" or an empty string if no unit is present.
  *
+ * @param {string} Percentage - The percentage string to parse
  * @example
  * // Expected: ["-", "12", ""]
  * type Test1 = PercentageParser<"-12">;
@@ -13,31 +34,25 @@ import type { DropChar } from "./string-mappers.js"
  * // Expected: ["+", "89", "%"]
  * type Test2 = PercentageParser<"+89%">;
  */
-export type PercentageParser<
-    Percentage extends string,
-    Sign extends string = "",
-    Num extends string = "",
-    Unit extends string = "",
-> = Percentage extends `${infer Char}${infer Chars}`
-    ? Char extends "+" | "-"
-        ? PercentageParser<Chars, Char, Num, Unit>
-        : Char extends "%"
-          ? PercentageParser<Chars, Sign, Num, "%">
-          : Char extends `${number}`
-            ? PercentageParser<Chars, Sign, `${Num}${Char}`, Unit>
-            : Char extends "." | ","
-              ? PercentageParser<Char, Sign, `${Num}${Char}`, Unit>
-              : never
-    : [Sign, Num, Unit]
+export type PercentageParser<Percentage extends string> = PercentageParserInternal<Percentage, "", "", "">
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
+ *
+ * @param {number | string | bigint} Expression - The number, string or bigint to convert
+ * @example
+ * // Expected: "2024"
+ * type Positive = Absolute<2024>;
+ *
+ * // Expected: "2024"
+ * type PositiveString = Absolute<"-2024">;
  */
 export type Absolute<Expression extends number | string | bigint> = DropChar<`${Expression}`, "-" | "n">
 
 /**
  * Truncates a number to its integer part.
  *
+ * @param {string | number | bigint} Math - The number to truncate
  * @example
  * // Expected: 3
  * type Truncated = Trunc<3.14>;
@@ -78,6 +93,8 @@ type NumberRangeImplementation<
  * and the values should be positive numbers. If the `Low` or `High` values are negative numbers
  * it returns `never`.
  *
+ * @param {number} Low - The starting number of the range
+ * @param {number} High - The ending number of the range
  * @example
  * // Expected: 1 | 2 | 3 | 4 | 5
  * type Range1 = NumberRange<1, 5>;

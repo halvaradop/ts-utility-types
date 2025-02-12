@@ -5,6 +5,7 @@ import type { IsNegative } from "./type-guards.js"
  * Creates a union type from the literal values of a constant string or number array.
  * This is useful for representing a set of allowed values based on the array elements
  *
+ * @param {unknown[]} Array - The array to convert to a union type
  * @example
  * // Expected: "1" | "2" | "3"
  * type Union = TypleToUnion<["1", "2", "3"]>;
@@ -16,6 +17,7 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infe
 /**
  * Gets the length (size) of an array.
  *
+ * @param {unknown[]} Array - The array to get the length of
  * @example
  * const numbers: number[] = [1, 2, 3, 4, 5];
  * // Expected: 5
@@ -26,6 +28,7 @@ export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["len
 /**
  * Gets the type of the last element in an array, or `never` if the array is empty.
  *
+ * @param {unknown[]} Array - The array to get the last element of
  * @example
  * // Expected: 4
  * type LastItem = Last<1, 2, 3, 4>;
@@ -36,6 +39,7 @@ export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ?
  * Removes the last element from an array and returns a new array type with all elements
  * except the last. If the array is empty, returns an empty array type
  *
+ * @param {unknown[]} Array - The array to remove the last element from
  * @example
  * // Expected: ["a", "b"]
  * type PopStr = Pop<["a", "b", "c"]>;
@@ -64,6 +68,9 @@ type FilterImplementation<
  * Filter the items of a tuple of elements based in the predicate provided in the
  * generic type.
  *
+ * @param {unknown[]} Array - The array to filter
+ * @param {unknown} Predicate - The value to filter out
+ * @param {boolean} Includes - If true, the predicate is included in the result, otherwise it is excluded
  * @example
  * // Expected: [2]
  * type Filter1 = Filter<[0, 1, 2], 2>
@@ -88,6 +95,7 @@ export type Filter<Array extends unknown[], Predicate, Includes extends boolean 
  * Change the relative ordern of the elements of a tuple stype, reversing
  * its order
  *
+ * @param {unknown[]} Array - The array to reverse
  * @example
  * // Expected: [1, 2, 3, 4]
  * type ReverseNumbers = Reverse<[1, 2, 3, 4]>;
@@ -116,6 +124,8 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
  * Returns the first index where the element `Match` appears in the tuple type `Array`.
  * If the element `Match` does not appear, it returns `-1`.
  *
+ * @param {unknown[]} Array - The array to search for the element
+ * @param {unknown} Match - The element to search for
  * @example
  * // Expected: -1
  * type IndexOf1 = IndexOf<[0, 0, 0], 2>;
@@ -154,6 +164,8 @@ type LastIndexOfImplementation<
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
  * If the element `Match` does not appear, it returns `-1`.
  *
+ * @param {unknown[]} Array - The array to search for the element
+ * @param {unknown} Match - The element to search for
  * @example
  * // Expected: 3
  * type LastIndexOf1 = LastIndexOf<[1, 2, 3, 2, 1], 2> ;
@@ -183,6 +195,9 @@ type RepeatConstructTuple<
 /**
  * reate a tuple with a defined size, where each element is of a specified type
  *
+ * @param {number} Length - The length of the tuple
+ * @param {unknown} Value - The value to fill the tuple with
+ * @param {unknown[]} Array - The tuple to construct
  * @example
  * // Expected: [unknown, unknown]
  * type TupleSize2 = ConstructTuple<2>;
@@ -190,15 +205,12 @@ type RepeatConstructTuple<
  * // Expected: ["", ""]
  * type TupleSize3 = ConstructTuple<2, "">;
  */
-export type ConstructTuple<
-    Length extends number,
-    Value extends unknown = unknown,
-    Array extends unknown[] = [],
-> = RepeatConstructTuple<Length, Value, Array>
+export type ConstructTuple<Length extends number, Value extends unknown = unknown> = RepeatConstructTuple<Length, Value, []>
 
 /**
  * Check if there are duplidated elements inside the tuple
  *
+ * @param {unknown[]} Array - The array to check for duplicates
  * @example
  * // Expected: false
  * type TupleNumber1 = HasDuplicatesTuple<[1, 2, 3]>;
@@ -211,6 +223,8 @@ export type HasDuplicates<Array extends unknown[]> = Array["length"] extends Uni
 /**
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
  *
+ * @param {unknown[]} Array - The array to check if all elements are equal to `Comparator`
+ * @param {unknown} Comparator - The value to compare the elements of the array to
  * @example
  * // Expected: true
  * type Test1 = AllEquals<[number, number, number], number>;
@@ -244,6 +258,8 @@ type ChunkImplementation<
  * Split an array into chunks of a specific length if the last chunk is smaller than the specified length
  * it will returns the last chunk with the remaining elements
  *
+ * @param {unknown[]} Array - The array to split into chunks
+ * @param {number} Length - The length of each chunk
  * @example
  * // Expected: [[1, 2], [3, 4], [5]]
  * type Chunk1 = Chunk<[1, 2, 3, 4, 5], 2>;
@@ -265,6 +281,8 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
 /**
  * Join the elements of two arrays in a tuple of arrays
  *
+ * @param {unknown[]} Array1 - The first array to join
+ * @param {unknown[]} Array2 - The second array to join
  * @example
  * // Expected: [[1, "a"], [2, "b"], [3, "c"]]
  * type Zip1 = Zip<[1, 2, 3], ["a", "b", "c"]>;
@@ -277,6 +295,7 @@ export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImpleme
 /**
  * Returns the flatten type of an array.
  *
+ * @param {unknown[]} Array - The array to flatten
  * @example
  * // Expected: number
  * type Flatten1 = Flatten<number[][]>;
@@ -290,6 +309,8 @@ export type Flatten<Array> = Array extends (infer Type)[] ? Flatten<Type> : Arra
  * Compare the length of two arrays, returning 1 if the first array is longer,
  * -1 if the second array is longer, and 0 if they are equal
  *
+ * @param {unknown[]} T - The first array to compare
+ * @param {unknown[]} U - The second array to compare
  * @example
  * // Expected: 1
  * type Compare1 = CompareArrayLength<[1, 2, 3], [1, 2]>;
@@ -323,6 +344,7 @@ type UniqueImplementation<Array extends unknown[], Uniques extends unknown = nev
 /**
  * Returns the uniques values of an array
  *
+ * @param {unknown[]} Array - The array to get the unique values from
  * @example
  * // Expected: [1, 2, 3, 4, 5]
  * type Uniques1 = Unique<[1, 2, 3, 3, 4, 4, 5]>;
@@ -337,6 +359,7 @@ export type Uniques<Array extends unknown[]> = UniqueImplementation<Array>
  * This utility type is similar to `TupleToUnion` but this utility type
  * receive whatever type
  *
+ * @param {unknown} T - The tuple to convert to a union type
  * @example
  * // Expected: 1
  * type TupleNumber = ToUnion<1>;
@@ -352,6 +375,7 @@ export type ToUnion<T> = T extends [infer Item, ...infer Spread] ? Item | ToUnio
 /**
  * Check if a value exists within a tuple and is equal to a specific value
  *
+ * @param {unknown[]} Array - The array to search for the element
  * @example
  * // Expected: true
  * type IncludesNumber = Includes<[1, 2, 3], 3>;
@@ -371,6 +395,7 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
 /**
  * Determines the primitive type corresponding to the provided value.
  *
+ * @param {unknown} T - The value to get the type of
  * @example
  * // Expected: number
  * type TypeOfValue = TypeOf<123>
@@ -412,6 +437,8 @@ type TakeImplementation<
  * Extracts the first `N` elements from an array. If `N` is negative,
  * it extracts the last `N` elements.
  *
+ * @param {number} N - The number of elements to extract
+ * @param {unknown[]} Array - The array to extract elements from
  * @example
  * // Expected: [1, 2]
  * type Take1 = Take<2, [1, 2, 3, 4]>;

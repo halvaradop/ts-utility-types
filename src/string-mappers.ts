@@ -3,6 +3,8 @@ import type { WhiteSpaces } from "./types.js"
 
 /**
  * Removes leading whitespace characters from a string type
+ *
+ * @param {string} Str - The string to trim
  * @example
  * // Expected: "hello world  "
  * type TrimmedLeft = TrimLeft<"  hello world  ">;
@@ -11,6 +13,8 @@ export type TrimLeft<Str extends string> = Str extends `${WhiteSpaces}${infer Ch
 
 /**
  * Removes trailing whitespace characters from a string type
+ *
+ * @param {string} Str - The string to trim
  * @example
  * // Expected: "hello world"
  * type TrimmedRight = TrimRight<"hello world  ">;
@@ -19,6 +23,8 @@ export type TrimRight<Str extends string> = Str extends `${infer Char}${WhiteSpa
 
 /**
  * Removes leading and trailing whitespace characters from a string type
+ *
+ * @param {string} Str - The string to trim
  * @example
  * // Expected: "hello world"
  * type Trimmed = Trim<"  hello world  ">;
@@ -57,6 +63,8 @@ type JoinImplementation<Array extends unknown[], Separator extends number | stri
  * Create a string type based on the values of a tuple type `T`, joining the values
  * separated by the `Separator` character. The separator can be either a string or a number.
  *
+ * @param {Array} Array - The tuple to join
+ * @param {string | number} Separator - The separator to use
  * @example
  * // Expected: "a-p-p-l-e"
  * type Join1 = Join<["a", "p", "p", "l", "e"], "-">
@@ -69,6 +77,8 @@ export type Join<Array extends unknown[], Separator extends number | string> = J
 /**
  * Checks if a string type matchs start with a strig `U`
  *
+ * @param {string} Str - The string to check
+ * @param {string} Match - The string to match
  * @example
  * // Expected: false
  * type Test1 = StartsWith<"abc", "ac">
@@ -95,6 +105,8 @@ type DropCharImplementation<
 /**
  * Returns a new string type by removing all occurrences of the character `Match` from the string `Str`
  *
+ * @param {string} Str - The string to remove characters from
+ * @param {string} Match - The character to remove
  * @example
  * // Expected: butterfly!
  * type Test1 = DropChar<"butter fly!", "">
@@ -107,6 +119,8 @@ export type DropChar<Str extends string, Match extends string> = DropCharImpleme
 /**
  * Checks if a string type matchs start with a strig `Match`
  *
+ * @param {string} Str - The string to check
+ * @param {string} Match - The string to match
  * @example
  * // Expected: true
  * type Test1 = EndsWith<"abc", "bc">
@@ -126,6 +140,7 @@ type LengthOfStringImplementation<Str extends string, Length extends unknown[] =
 /**
  * Returns the length of a string type
  *
+ * @param {string} Str - The string to get the length of
  * @example
  * // Expected: 3
  * type Length2 = LengthOfString<"foo">
@@ -152,6 +167,7 @@ type IndexOfStringImplementation<
  * Returns the first index of the character that matches `Match`.
  * Otherwise, it returns -1.
  *
+ * @param {string} Str - The string to search
  * @example
  * // Expected: 12
  * type IndexOfA = IndexOfString<"comparator is a function", "i">
@@ -180,6 +196,7 @@ type FirstUniqueCharIndexImplementation<
  * Returns the first index of a character that is unique within the given string.
  * If all of the characters are repeated, it returns -1.
  *
+ * @param {string} Str - The string to search
  * @example
  * // Expected: 3
  * type IndexOfC = FirstUniqueCharIndex<"aabcb">
@@ -192,6 +209,9 @@ export type FirstUniqueCharIndex<Str extends string> = FirstUniqueCharIndexImple
 /**
  * Replaces the first match of the substring `From` in the string `S` with the new value `To`
  *
+ * @param {string} S - The string to replace
+ * @param {string} From - The substring to replace
+ * @param {string} To - The new value
  * @example
  * // Expected: "foofoo"
  * type Replace1 = Replace<"foobar", "bar", "foo">
@@ -220,6 +240,7 @@ type CheckRepeatedCharsImplementation<
 /**
  * Check if there are repeated characters in a string type
  *
+ * @param {string} Str - The string to check
  * @example
  * // Expected: false
  * type Check11 = CheckRepeatedChars<"hello">
@@ -246,6 +267,7 @@ type ParseUrlParamsImplementation<
 /**
  * eturns a union type of the dynamic route parameters in a URL pattern
  *
+ * @param {string} URLParams - The URL pattern
  * @example
  * // Expected: "id"
  * type Test1 = ParseUrlParams<"users/:id">
@@ -274,6 +296,8 @@ type FindAllImplementation<
 /**
  * Returns indexes the substring that matches `Match` in the string `Str`
  *
+ * @param {string} Str - The string to search
+ * @param {string} Match - The substring to search
  * @example
  * // Expected: [4, 7]
  * type Test1 = FindAll<"hello world", "o">

@@ -46,8 +46,8 @@ export type DeepReadonly<Obj extends object> = {
  *
  * @param {Type} Type - The type to evaluate
  * @param {Extends} Extends - The type to compare against
- * @param {Value} Value - The value to return if the condition is met (defaults to `never`)
- * @param {Reverse} Reverse - If `true`, reverses the condition (defaults to `false`)
+ * @param {unknown} Value - The value to return if the condition is met (defaults to `never`)
+ * @param {boolean} Reverse - If `true`, reverses the condition (defaults to `false`)
  * @example
  * // Expected: number
  * type A = Discard<string | number, string>;
@@ -88,6 +88,7 @@ export type Awaited<T extends PromiseLike<unknown>> =
  *
  * @param {object} Obj1 - The first object to get the keys from
  * @param {object} Obj2 - The second object to get the keys from
+ * @param {boolean} Extends - If `true`, it returns the intersection of the keys (defaults to `false`)
  * @example
  * interface Foo {
  *   foo: string,
