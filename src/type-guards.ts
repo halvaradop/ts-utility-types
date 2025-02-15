@@ -4,6 +4,7 @@ import type { Even, Odd } from "./types.js"
 /**
  * Check if the parameter is a never value
  *
+ * @param T - The type to check
  * @example
  * // Expected: true
  * type CheckNever = IsNever<never>;
@@ -16,6 +17,7 @@ export type IsNever<T> = [T] extends [never] ? true : false
 /**
  * Check if the number provided is odd or not
  *
+ * @param {number} T - The number to check
  * @example
  * // Expected: true
  * type CheckOdd = IsOdd<2023>;
@@ -28,6 +30,7 @@ export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : 
 /**
  * Check if the number provided is even or not
  *
+ * @param {number} T - The number to check
  * @example
  * // Expected: true
  * type CheckEven = IsEven<2024>;
@@ -40,6 +43,7 @@ export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? true 
 /**
  * Check if the number provided is negative or not
  *
+ * @param {number} T - The number to check
  * @example
  * // Expected: true
  * type CheckNegative = IsNegative<-2024>;
@@ -52,6 +56,7 @@ export type IsNegative<T extends number> = `${T}` extends `-${number}` ? true : 
 /**
  * Check if the number provided is positive or not
  *
+ * @param {number} T - The number to check
  * @example
  * // Expected: true
  * type CheckPositive = IsPositive<2024>;
@@ -64,6 +69,7 @@ export type IsPositive<T extends number> = Not<IsNegative<T>>
 /**
  * Check if the type provided is any
  *
+ * @param T - The type to check
  * @example
  * // Expected: true
  * type CheckAny = IsAny<any>;
@@ -81,6 +87,7 @@ type False = "" | false | [] | null | undefined | 0 | { [P: string]: never }
 /**
  * Checks if any value in the tuple is true
  *
+ * @param {unknown[]} T - The tuple to check
  * @example
  * // Expected: true
  * type Test1 = AnyOf<[0, "", false, [], {}, undefined, null, true]>
@@ -93,5 +100,3 @@ export type AnyOf<T extends readonly any[]> = T extends [infer Item, ...infer Sp
         ? AnyOf<Spread>
         : true
     : false
-
-type Nose = AnyOf<[0, "", false, [], {}, undefined, null]>
