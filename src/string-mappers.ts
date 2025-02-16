@@ -52,11 +52,11 @@ export type Capitalize<Str extends string, FirstWord extends boolean = true> = S
 /**
  * @internal
  */
-type JoinImplementation<Array extends unknown[], Separator extends number | string, Str extends string = ""> = Array extends [
+type InternalJoin<Array extends unknown[], Separator extends number | string, Str extends string = ""> = Array extends [
     infer Char,
     ...infer Chars,
 ]
-    ? JoinImplementation<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
+    ? InternalJoin<Chars, Separator, `${Str}${Str extends "" ? "" : Separator}${Char & string}`>
     : Str
 
 /**
@@ -72,7 +72,7 @@ type JoinImplementation<Array extends unknown[], Separator extends number | stri
  * // Expected: "Hello World"
  * type Join2 = Join<["Hello", "World"], " ">
  */
-export type Join<Array extends unknown[], Separator extends number | string> = JoinImplementation<Array, Separator>
+export type Join<Array extends unknown[], Separator extends number | string> = InternalJoin<Array, Separator>
 
 /**
  * Checks if a string type matchs start with a strig `U`
@@ -94,12 +94,12 @@ export type StartsWith<Str extends string, Match extends string> = Str extends `
 /**
  * @internal
  */
-type DropCharImplementation<
+type InternalDropChar<
     Str extends string,
     Match extends string,
     Build extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
-    ? DropCharImplementation<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
+    ? InternalDropChar<Chars, Match, Char extends Match ? Build : `${Build}${Char}`>
     : Build
 
 /**
@@ -114,7 +114,7 @@ type DropCharImplementation<
  * // Expected: "butterfly!"
  * type Test2 = DropChar<" b u t t e r f l y ! ", " ">
  */
-export type DropChar<Str extends string, Match extends string> = DropCharImplementation<Str, Match>
+export type DropChar<Str extends string, Match extends string> = InternalDropChar<Str, Match>
 
 /**
  * Checks if a string type matchs start with a strig `Match`
@@ -133,8 +133,8 @@ export type EndsWith<Str extends string, Match extends string> = Str extends `${
 /**
  * @internal
  */
-type LengthOfStringImplementation<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
-    ? LengthOfStringImplementation<Chars, [...Length, Char]>
+type InternalLengthOfString<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
+    ? InternalLengthOfString<Chars, [...Length, Char]>
     : Length["length"]
 
 /**
@@ -148,19 +148,19 @@ type LengthOfStringImplementation<Str extends string, Length extends unknown[] =
  * // Expected: 6
  * type Length6 = LengthOfString<"foobar">
  */
-export type LengthOfString<Str extends string> = LengthOfStringImplementation<Str>
+export type LengthOfString<Str extends string> = InternalLengthOfString<Str>
 
 /**
  * @internal
  */
-type IndexOfStringImplementation<
+type InternalIndexOfString<
     Str extends string,
     Match extends string,
     Index extends unknown[] = [],
 > = Str extends `${infer Char}${infer Chars}`
     ? Equals<Char, Match> extends true
         ? Index["length"]
-        : IndexOfStringImplementation<Chars, Match, [...Index, 1]>
+        : InternalIndexOfString<Chars, Match, [...Index, 1]>
     : -1
 
 /**
@@ -175,21 +175,21 @@ type IndexOfStringImplementation<
  * // Expected: -1
  * type IndexOfOutBound = IndexOfString<"comparator is a function", "z">
  */
-export type IndexOfString<Str extends string, Match extends string> = IndexOfStringImplementation<Str, Match>
+export type IndexOfString<Str extends string, Match extends string> = InternalIndexOfString<Str, Match>
 
 /**
  * @internal
  */
-type FirstUniqueCharIndexImplementation<
+type InternalFirstUniqueCharIndex<
     Str extends string,
     Index extends unknown[] = [],
     Build extends string = "",
 > = Str extends `${infer Char}${infer Chars}`
     ? IndexOfString<Chars, Char> extends -1
         ? Char extends Build
-            ? FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
+            ? InternalFirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
             : Index["length"]
-        : FirstUniqueCharIndexImplementation<Chars, [...Index, 1], Char | Build>
+        : InternalFirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
     : -1
 
 /**
@@ -204,7 +204,7 @@ type FirstUniqueCharIndexImplementation<
  * // Expected: -1
  * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc">
  */
-export type FirstUniqueCharIndex<Str extends string> = FirstUniqueCharIndexImplementation<Str>
+export type FirstUniqueCharIndex<Str extends string> = InternalFirstUniqueCharIndex<Str>
 
 /**
  * Replaces the first match of the substring `From` in the string `S` with the new value `To`
@@ -228,13 +228,10 @@ export type Replace<S extends string, From extends string, To extends string> = 
 /**
  * @internal
  */
-type CheckRepeatedCharsImplementation<
-    Str extends string,
-    Characters extends string = "",
-> = Str extends `${infer Char}${infer Chars}`
+type InternalCheckRepeatedChars<Str extends string, Characters extends string = ""> = Str extends `${infer Char}${infer Chars}`
     ? Char extends Characters
         ? true
-        : CheckRepeatedCharsImplementation<Chars, Characters | Char>
+        : InternalCheckRepeatedChars<Chars, Characters | Char>
     : false
 
 /**
@@ -248,18 +245,18 @@ type CheckRepeatedCharsImplementation<
  * // Expected: true
  * type Check1 = CheckRepeatedChars<"hello world">
  */
-export type CheckRepeatedChars<Str extends string> = CheckRepeatedCharsImplementation<Str>
+export type CheckRepeatedChars<Str extends string> = InternalCheckRepeatedChars<Str>
 
 /**
  * @internal
  */
-type ParseUrlParamsImplementation<
+type InternalParseUrlParams<
     URLParams extends string,
     Params extends string = never,
 > = URLParams extends `${infer Segment}/${infer Route}`
     ? Segment extends `:${infer WithoutDots}`
-        ? ParseUrlParamsImplementation<Route, Params | WithoutDots>
-        : ParseUrlParamsImplementation<Route, Params>
+        ? InternalParseUrlParams<Route, Params | WithoutDots>
+        : InternalParseUrlParams<Route, Params>
     : URLParams extends `:${infer WithoutDots}`
       ? Params | WithoutDots
       : Params
@@ -275,12 +272,12 @@ type ParseUrlParamsImplementation<
  * // Expected: "id" | "postId"
  * type Test2 = ParseUrlParams<"users/:id/posts/:postId">
  */
-export type ParseUrlParams<URLParams extends string> = ParseUrlParamsImplementation<URLParams>
+export type ParseUrlParams<URLParams extends string> = InternalParseUrlParams<URLParams>
 
 /**
  * @internal
  */
-type FindAllImplementation<
+type InternalFindAll<
     Str extends string,
     Match extends string,
     Index extends unknown[] = [],
@@ -289,8 +286,8 @@ type FindAllImplementation<
     ? Indexes
     : Str extends `${any}${infer Characters}`
       ? Str extends `${Match}${string}`
-          ? FindAllImplementation<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
-          : FindAllImplementation<Characters, Match, [...Index, 1], Indexes>
+          ? InternalFindAll<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
+          : InternalFindAll<Characters, Match, [...Index, 1], Indexes>
       : Indexes
 
 /**
@@ -305,4 +302,4 @@ type FindAllImplementation<
  * // Expected: [2, 3, 9]
  * type Test2 = FindAll<"hello world", "l">
  */
-export type FindAll<Str extends string, Match extends string> = FindAllImplementation<Str, Match>
+export type FindAll<Str extends string, Match extends string> = InternalFindAll<Str, Match>

@@ -23,21 +23,109 @@ describe("Properties with keyof", () => {
         expectTypeOf<utilities.Properties<{ a: number }, { a: string }>>().toEqualTypeOf<"a">()
         expectTypeOf<utilities.Properties<{ a: number }, { b: string }>>().toEqualTypeOf<"a" | "b">()
         expectTypeOf<utilities.Properties<{ a: number }, { b: string; c: number }>>().toEqualTypeOf<"a" | "b" | "c">()
+        expectTypeOf<utilities.Properties<{ a: number }, { b: string }, true>>().toEqualTypeOf<never>()
     })
 })
 
 describe("Merge values", () => {
-    test("Union two object types", () => {
-        expectTypeOf<utilities.Merge<{ a: number }, { b: string }>>().toEqualTypeOf<{
-            a: number
-            b: string
+    test("Merge two object types with priority objects", () => {
+        expectTypeOf<utilities.Merge<{ foo: number; bar: number }, { bar: string }>>().toEqualTypeOf<{
+            foo: number
+            bar: number
         }>()
-        expectTypeOf<utilities.Merge<{ a: number }, { b: string; c: boolean }>>().toEqualTypeOf<{
-            a: number
-            b: string
-            c: boolean
+        expectTypeOf<utilities.Merge<{ foo: number }, { foo: string; bar: string }>>().toEqualTypeOf<{
+            foo: number
+            bar: string
         }>()
-        expectTypeOf<utilities.Merge<{ a: number }, { a: string; b: string }>>().toEqualTypeOf<{ a: string; b: string }>()
+        expectTypeOf<utilities.Merge<{ foo: string; bar: string }, { foo: { bar: boolean } }>>().toEqualTypeOf<{
+            foo: { bar: boolean }
+            bar: string
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: string; bar: { foobar: string } }, { foo: { bar: boolean } }>>().toEqualTypeOf<{
+            foo: { bar: boolean }
+            bar: { foobar: string }
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: number }, { foo: { bar: { foobar: number } } }>>().toEqualTypeOf<{
+            foo: { bar: { foobar: number } }
+        }>()
+        expectTypeOf<
+            utilities.Merge<
+                { foo: { bar: { foobar: string; barfoo: boolean } }; bar: number },
+                { foo: { bar: { foobar: { foo: string }; foofoo: number }; barbar: boolean }; bar: { foo: string } }
+            >
+        >().toEqualTypeOf<{
+            foo: { bar: { foobar: { foo: string }; barfoo: boolean; foofoo: number }; barbar: boolean }
+            bar: { foo: string }
+        }>()
+    })
+
+    test("Union two object types without priority objects", () => {
+        expectTypeOf<utilities.Merge<{ foo: number; bar: number }, { bar: string }, false, false>>().toEqualTypeOf<{
+            foo: number
+            bar: number
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: number }, { foo: string; bar: string }, false, false>>().toEqualTypeOf<{
+            foo: number
+            bar: string
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: string; bar: string }, { foo: { bar: boolean } }, false, false>>().toEqualTypeOf<{
+            foo: string
+            bar: string
+        }>()
+        expectTypeOf<
+            utilities.Merge<{ foo: { bar: boolean } }, { foo: string; bar: { foobar: string } }, false, false>
+        >().toEqualTypeOf<{
+            foo: { bar: boolean }
+            bar: { foobar: string }
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: number }, { foo: { bar: { foobar: number } } }, false, false>>().toEqualTypeOf<{
+            foo: number
+        }>()
+        expectTypeOf<
+            utilities.Merge<
+                { foo: { bar: { foobar: string; barfoo: boolean } }; bar: number },
+                { foo: { bar: { foobar: { foo: string }; foofoo: number }; barbar: boolean }; bar: { foo: string } },
+                false,
+                false
+            >
+        >().toEqualTypeOf<{
+            foo: { bar: { foobar: string; barfoo: boolean; foofoo: number }; barbar: boolean }
+            bar: number
+        }>()
+    })
+
+    test("Merge two object types with union enabled", () => {
+        expectTypeOf<
+            utilities.Merge<{ foo: number; bar: number; foobar: string[] }, { bar: string; foobar: number[] }, true>
+        >().toEqualTypeOf<{
+            foo: number
+            bar: number | string
+            foobar: string[] | number[]
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: number }, { foo: string; bar: string }, true>>().toEqualTypeOf<{
+            foo: number | string
+            bar: string
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: { bar: boolean } }, { foo: string; bar: string }, true>>().toEqualTypeOf<{
+            foo: { bar: boolean } | string
+            bar: string
+        }>()
+        expectTypeOf<utilities.Merge<{ foo: { bar: boolean } }, { foo: string; bar: { foobar: string } }, true>>().toEqualTypeOf<{
+            foo: { bar: boolean } | string
+            bar: { foobar: string }
+        }>()
+        expectTypeOf<
+            utilities.Merge<
+                { foo: { bar: { foobar: { barbar: number }; barfoo: boolean } } },
+                { foo: { bar: { foobar: { fofo: string }; foobarfoo: number }; foofoo: boolean }; bar: { foobar: string } },
+                true
+            >
+        >().toEqualTypeOf<{
+            foo:
+                | { bar: { foobar: { barbar: number }; barfoo: boolean } }
+                | { bar: { foobar: { fofo: string }; foobarfoo: number }; foofoo: boolean }
+            bar: { foobar: string }
+        }>()
     })
 })
 
@@ -86,16 +174,6 @@ describe("RequiredByKeys", () => {
     })
 })
 
-describe("UnionMerge", () => {
-    test("Merge the types of the properties of two objects.", () => {
-        expectTypeOf<utilities.UnionMerge<{ foo: string }, { bar: string }>>().toEqualTypeOf<{ foo: string; bar: string }>()
-        expectTypeOf<utilities.UnionMerge<{ foo: string }, { foo: number }>>().toEqualTypeOf<{ foo: string | number }>()
-        expectTypeOf<utilities.UnionMerge<{ foo: string | number }, { foo: boolean }>>().toEqualTypeOf<{
-            foo: string | number | boolean
-        }>()
-    })
-})
-
 describe("Mutable", () => {
     test("Converts properties to non readonly only one level", () => {
         expectTypeOf<utilities.Mutable<{ readonly foo: string }>>().toEqualTypeOf<{
@@ -113,23 +191,23 @@ describe("Mutable", () => {
 describe("DeepMutable", () => {
     test("Converts all properties to non readonly of an object type", () => {
         interface Test5 {
-            foo: [
-                { bar: string },
+            readonly foo: [
+                { readonly bar: string },
                 {
-                    foobar: {
-                        foofoo: number
+                    readonly foobar: {
+                        readonly foofoo: number
                     }
                 },
             ]
         }
 
         interface Test6 {
-            foo: {
-                bar: [
+            readonly foo: {
+                readonly bar: [
                     {
-                        foobar: string
-                        barfoo: {
-                            foofoo: number
+                        readonly foobar: string
+                        readonly barfoo: {
+                            readonly foofoo: number
                         }
                     },
                 ]
@@ -145,8 +223,28 @@ describe("DeepMutable", () => {
         expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<{ foo: [{ bar: string; foobar: number }] }>>>().toEqualTypeOf<{
             foo: [{ bar: string; foobar: number }]
         }>()
-        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test5>>>().toEqualTypeOf<Test5>()
-        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test6>>>().toEqualTypeOf<Test6>()
+        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test5>>>().toEqualTypeOf<{
+            foo: [
+                { bar: string },
+                {
+                    foobar: {
+                        foofoo: number
+                    }
+                },
+            ]
+        }>()
+        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test6>>>().toEqualTypeOf<{
+            foo: {
+                bar: [
+                    {
+                        foobar: string
+                        barfoo: {
+                            foofoo: number
+                        }
+                    },
+                ]
+            }
+        }>()
     })
 })
 
@@ -157,14 +255,20 @@ describe("MergeAll", () => {
             foo: string
             bar: { foobar: number }
         }>()
-        type Expect3 = {
-            foo: string | boolean
-            bar: number | string
-            foobar: string
-        }
         expectTypeOf<
             utilities.MergeAll<[{ foo: string }, { bar: string }, { bar: number; foo: boolean; foobar: string }]>
-        >().toEqualTypeOf<Expect3>()
+        >().toEqualTypeOf<{
+            foo: string
+            bar: string
+            foobar: string
+        }>()
+        expectTypeOf<
+            utilities.MergeAll<[{ foo: string }, { bar: string }, { bar: number; foo: { foobar: string }; foobar: string }]>
+        >().toEqualTypeOf<{
+            foo: { foobar: string }
+            bar: string
+            foobar: string
+        }>()
     })
 })
 
@@ -194,7 +298,28 @@ describe("Intersection", () => {
         expectTypeOf<utilities.Intersection<{ foo: string }, { foo: number; bar: boolean }>>().toEqualTypeOf<{ bar: boolean }>()
         expectTypeOf<utilities.Intersection<{ foo: string; bar: boolean }, { bar: number; foo: bigint }>>().toEqualTypeOf<{}>()
         expectTypeOf<
-            utilities.Intersection<{ foo: string; bar: { bar: number } }, { barfoo: { bar: number }; foo: bigint }>
+            utilities.Intersection<
+                {
+                    foo: string
+                    bar: { bar: number }
+                },
+                {
+                    foo: bigint
+                    barfoo: { bar: number }
+                }
+            >
+        >().toEqualTypeOf<{ bar: { bar: number }; barfoo: { bar: number } }>()
+        expectTypeOf<
+            utilities.Intersection<
+                {
+                    foo: bigint
+                    barfoo: { bar: number }
+                },
+                {
+                    foo: string
+                    bar: { bar: number }
+                }
+            >
         >().toEqualTypeOf<{ bar: { bar: number }; barfoo: { bar: number } }>()
     })
 })
@@ -270,6 +395,8 @@ describe("Pick Utilities", () => {
             }>()
         })
     })
+
+    type N = utilities.PickByType<{ foo: () => {}; bar: number; foobar: {} }, () => {}>
 })
 
 describe("ReplaceKeys", () => {
@@ -278,13 +405,13 @@ describe("ReplaceKeys", () => {
             foo: string
             bar: string
         }>()
-        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "foobar", { bar: string }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "foo", { foo: string }>>().toEqualTypeOf<{
             foo: string
             bar: number
         }>()
-        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "bar", { foobar: string }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "bar", { bar: string }>>().toEqualTypeOf<{
             foo: string
-            bar: unknown
+            bar: string
         }>()
         expectTypeOf<
             utilities.ReplaceKeys<{ foo: string; bar: number }, "foo" | "bar", { foo: number; bar: boolean }>
@@ -373,19 +500,6 @@ describe("GetOptional", () => {
     })
 })
 
-describe("Get", () => {
-    test("Get the value of a nested property", () => {
-        expectTypeOf<utilities.Get<{ foo: string }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<{ foo: string; bar: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<{ foo: { bar: number } }, "foo.bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar">>().toEqualTypeOf<{ foobar: boolean }>()
-        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar.foobar">>().toEqualTypeOf<boolean>()
-        expectTypeOf<
-            utilities.Get<{ foo: { bar: { foobar: { barfoo: number } } } }, "foo.bar.foobar.barfoo">
-        >().toEqualTypeOf<number>()
-    })
-})
-
 describe("DeepPick", () => {
     test("Pick properties from nested objects", () => {
         type Obj = {
@@ -405,9 +519,9 @@ describe("DeepPick", () => {
             }
         }
 
-        expectTypeOf<utilities.Get<Obj, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<Obj, "bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.Get<Obj, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar">>().toEqualTypeOf<{
             foofoo: number
             barbar: boolean
             foo: {
@@ -419,10 +533,24 @@ describe("DeepPick", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.Get<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
-        expectTypeOf<utilities.Get<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
             foobar: string
             bar: number
         }>()
+    })
+})
+
+describe("PartialByKeys", () => {
+    test("Convert required properties in an object", () => {
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }, "foo">>().toEqualTypeOf<{
+            foo?: string
+            bar: number
+        }>()
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }, "bar">>().toEqualTypeOf<{
+            foo: string
+            bar?: number
+        }>()
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }>>().toEqualTypeOf<{ foo?: string; bar?: number }>()
     })
 })

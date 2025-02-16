@@ -3,20 +3,20 @@ import type { DropChar } from "./string-mappers.js"
 /**
  * @internals
  */
-type PercentageParserInternal<
+type InternalPercentageParser<
     Percentage extends string,
     Sign extends string = "",
     Num extends string = "",
     Unit extends string = "",
 > = Percentage extends `${infer Char}${infer Chars}`
     ? Char extends "+" | "-"
-        ? PercentageParserInternal<Chars, Char, Num, Unit>
+        ? InternalPercentageParser<Chars, Char, Num, Unit>
         : Char extends "%"
-          ? PercentageParserInternal<Chars, Sign, Num, "%">
+          ? InternalPercentageParser<Chars, Sign, Num, "%">
           : Char extends `${number}`
-            ? PercentageParserInternal<Chars, Sign, `${Num}${Char}`, Unit>
+            ? InternalPercentageParser<Chars, Sign, `${Num}${Char}`, Unit>
             : Char extends "." | ","
-              ? PercentageParserInternal<Char, Sign, `${Num}${Char}`, Unit>
+              ? InternalPercentageParser<Char, Sign, `${Num}${Char}`, Unit>
               : never
     : [Sign, Num, Unit]
 
@@ -34,7 +34,7 @@ type PercentageParserInternal<
  * // Expected: ["+", "89", "%"]
  * type Test2 = PercentageParser<"+89%">;
  */
-export type PercentageParser<Percentage extends string> = PercentageParserInternal<Percentage, "", "", "">
+export type PercentageParser<Percentage extends string> = InternalPercentageParser<Percentage, "", "", "">
 
 /**
  * Returns the absolute version of a number, string or bigint as a string
@@ -74,19 +74,19 @@ export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.$
  *
  * @link `NumberRange`
  */
-type NumberRangeImplementation<
+type InternalNumberRange<
     Low extends number,
     High extends number,
     Range extends unknown = never,
     Index extends unknown[] = [],
     LowRange extends boolean = false,
 > = Index["length"] extends Low
-    ? NumberRangeImplementation<Low, High, Range | Index["length"], [...Index, 1], true>
+    ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], true>
     : Index["length"] extends High
       ? Range | Index["length"]
       : LowRange extends true
-        ? NumberRangeImplementation<Low, High, Range | Index["length"], [...Index, 1], LowRange>
-        : NumberRangeImplementation<Low, High, Range, [...Index, 1], LowRange>
+        ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], LowRange>
+        : InternalNumberRange<Low, High, Range, [...Index, 1], LowRange>
 
 /**
  * Creates a range of numbers that starts from `Low` and ends in `High`. The range is inclusive
@@ -108,4 +108,4 @@ export type NumberRange<Low extends number, High extends number> = `${Low}` exte
       ? never
       : Low extends High
         ? Low
-        : NumberRangeImplementation<Low, High>
+        : InternalNumberRange<Low, High>
