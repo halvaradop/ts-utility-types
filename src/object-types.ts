@@ -88,7 +88,7 @@ export type Awaited<T extends PromiseLike<unknown>> =
  *
  * @param {object} Obj1 - The first object to get the keys from
  * @param {object} Obj2 - The second object to get the keys from
- * @param {boolean} Extends - If `true`, it returns the intersection of the keys (defaults to `false`)
+ * @param {Common} Common - If `true`, returns the common keys between the two objects
  * @example
  * interface Foo {
  *   foo: string,
@@ -101,13 +101,43 @@ export type Awaited<T extends PromiseLike<unknown>> =
  * // Expected: "foo" | "bar"
  * type PropsFooBar = Properties<Foo, Bar>;
  */
-export type Properties<Obj1 extends object, Obj2 extends object, Extends extends boolean = false> = Extends extends true
+export type Properties<Obj1 extends object, Obj2 extends object, Common extends boolean = false> = Common extends true
     ? keyof Obj1 & keyof Obj2
     : keyof Obj1 | keyof Obj2
 
 /**
- * Creates a new object by merging two objects. Properties from `Obj1` override properties
- * from `Obj2` if they have the same key
+ * Checks if a key exists in either of the two objects and returns its value.
+ * If the key does not exist in either object, it returns `never`.
+ *
+ * @param {object} Obj1 - The first object to check
+ * @param {object} Obj2 - The second object to check
+ * @param {string} Key - The key to check
+ * @example
+ * interface Foo {
+ *   foo: string
+ * }
+ *
+ * interface Bar {
+ *   bar: number
+ * }
+ *
+ * // Expected: string
+ * type FooValue = RetrieveKeyValue<Foo, Bar, "foo">;
+ *
+ * // Expected: number
+ * type BarValue = RetrieveKeyValue<Foo, Bar, "bar">;
+ */
+export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
+    ? Obj1[Key]
+    : Key extends keyof Obj2
+      ? Obj2[Key]
+      : never
+
+/**
+ * Merges two objects into a new object at any depth. Properties from `Obj1` override properties from `Obj2` if they have the same key.
+ * Additionally, it has two optional parameters:
+ *   - `ByUnion` - If `true`, it creates a union type for properties with the same key, ignoring priority.
+ *   - `PriorityObject` - If `true`, it prioritizes the values which are objects over the values of the first object.
  *
  * @param {object} Obj1 - The first object to merge
  * @param {object} Obj2 - The second object to merge
@@ -119,22 +149,94 @@ export type Properties<Obj1 extends object, Obj2 extends object, Extends extends
  *
  * interface AppStore {
  *   path: string,
- *   hooks: ArgsFunction[]
+ *   hooks: ArgsFunction[],
+ *   storePath: {
+ *     path: string
+ *   }
  * };
  *
  * // Expected: { storePaths: string[], path: string, hooks: ArgsFunction[] }
  * type MergeConfig = Merge<Config, AppStore>;
+ *
+ * // Expected: { storePaths: string[], path: string, hooks: ArgsFunction[], storePath: { path: string } }
+ * type MergeConfigWithPriority = Merge<Config, AppStore, false, true>;
+ *
+ * // Expected: { storePaths: string[], path: string, hooks: ArgsFunction[] | unknown[], storePath: { path: string } }
+ * type MergeConfigWithUnion = Merge<Config, AppStore, true>;
  */
-export type Merge<Obj1 extends object, Obj2 extends object> = {
-    [Property in Properties<Obj1, Obj2>]: RetrieveKeyValue<Obj2, Obj1, Property>
+export type Merge<
+    Obj1 extends object,
+    Obj2 extends object,
+    ByUnion extends boolean = false,
+    PriorityObject extends boolean = true,
+> = {
+    [Property in Properties<Obj1, Obj2>]: Property extends keyof Obj1
+        ? Obj1[Property] extends object
+            ? Property extends keyof Obj2
+                ? ByUnion extends true
+                    ? Obj1[Property] | Obj2[Property]
+                    : Obj2[Property] extends object
+                      ? Prettify<Merge<Obj1[Property], Obj2[Property], ByUnion, PriorityObject>>
+                      : Obj1[Property]
+                : Obj1[Property]
+            : Property extends keyof Obj2
+              ? ByUnion extends true
+                  ? Obj1[Property] | Obj2[Property]
+                  : PriorityObject extends true
+                    ? Obj2[Property] extends object
+                        ? Obj2[Property]
+                        : Obj1[Property]
+                    : Obj1[Property]
+              : Obj1[Property]
+        : Property extends keyof Obj2
+          ? Obj2[Property]
+          : never
 }
 
 /**
  * @internal
  */
-type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys = Properties<Obj1, Obj2, true>> = {
-    [Property in Properties<Obj1, Obj2> as Discard<Property, Keys>]: RetrieveKeyValue<Obj1, Obj2, Property>
-}
+type InternalMerge<
+    Array extends readonly object[],
+    Obj extends object,
+    ByUnion extends boolean = false,
+    PriorityObject extends boolean = true,
+> = Array extends [infer Item, ...infer Spread]
+    ? InternalMerge<
+          Spread extends object[] ? Spread : never,
+          Merge<Obj, Item extends object ? Item : {}, ByUnion, PriorityObject>
+      >
+    : Obj
+
+/**
+ * Create a new object type based in the tuple of object types, if the properties
+ * are duplicated will create an union type. It is an implementation of `Merge` type.
+ * It is useful when you have a tuple of object types and you want to merge them into a single object type.
+ *
+ * @param {T[]} Array - The tuple of object types to merge
+ * @example
+ * interface Foo {
+ *   foo: string
+ * };
+ *
+ * interface Bar {
+ *   bar: string
+ * };
+ *
+ * interface FooBar {
+ *   bar: number,
+ *   foo: boolean,
+ *   foobar: string
+ * };
+ *
+ * // Expected: { foo: string | boolean, bar: string | number, foobar: string }
+ * type Merge = MergeAll<[Foo, Bar, FooBar], true>;
+ */
+export type MergeAll<
+    Array extends readonly object[],
+    ByUnion extends boolean = false,
+    PriorityObject extends boolean = true,
+> = InternalMerge<Array, {}, ByUnion, PriorityObject>
 
 /**
  * Create a new object based in the difference keys between the objects.
@@ -156,7 +258,7 @@ type IntersectionImplementation<Obj1 extends object, Obj2 extends object, Keys =
  * // Expected: { gender: number }
  * type DiffFoo = Intersection<Foo, Bar>;
  */
-export type Intersection<Obj1 extends object, Obj2 extends object> = IntersectionImplementation<Obj1, Obj2>
+export type Intersection<Obj1 extends object, Obj2 extends object> = Prettify<Omit<Obj1, keyof Obj2> & Omit<Obj2, keyof Obj1>>
 
 /**
  * Create a new object based in the keys that are assignable of type `Type`
@@ -262,34 +364,6 @@ export type PublicOnly<Obj extends object> = {
 }
 
 /**
- * Checks if a key exists in either of the two objects and returns its value.
- * If the key does not exist in either object, it returns `never`.
- *
- * @param {object} Obj1 - The first object to check
- * @param {object} Obj2 - The second object to check
- * @param {string} Key - The key to check
- * @example
- * interface Foo {
- *   foo: string
- * }
- *
- * interface Bar {
- *   bar: number
- * }
- *
- * // Expected: string
- * type FooValue = RetrieveKeyValue<Foo, Bar, "foo">;
- *
- * // Expected: number
- * type BarValue = RetrieveKeyValue<Foo, Bar, "bar">;
- */
-export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
-    ? Obj1[Key]
-    : Key extends keyof Obj2
-      ? Obj2[Key]
-      : never
-
-/**
  * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
  * their definition. When `Keys` is not provided, it should make all properties required. By default
  * it makes all properties required.
@@ -309,34 +383,6 @@ export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Ke
 export type RequiredByKeys<Obj extends object, Keys extends keyof Obj = keyof Obj> = Prettify<
     Required<Pick<Obj, Keys>> & Omit<Obj, Keys>
 >
-
-/**
- *
- * Merge the properties of two objects and it the properties are repeated the types create an union
- *
- * @param {object} Obj1 - The first object to merge
- * @param {object} Obj2 - The second object to merge
- * @example
- * interface Foo {
- *   bar: string
- * };
- *
- * interface Bar {
- *   bar: number
- * };
- *
- * // Expected: { bar: string | number }
- * type MergeFooBar = UnionMerge<Foo, Bar>;
- */
-export type UnionMerge<Obj1 extends object, Obj2 extends object> = {
-    [Prop in Properties<Obj1, Obj2>]: Prop extends keyof Obj1
-        ? Prop extends keyof Obj2
-            ? Obj1[Prop] | Obj2[Prop]
-            : Obj1[Prop]
-        : Prop extends keyof Obj2
-          ? Obj2[Prop]
-          : never
-}
 
 /**
  * Converts top-level readonly properties of an object to mutable properties.
@@ -378,41 +424,6 @@ export type Mutable<Obj extends object> = {
 export type DeepMutable<Obj extends object> = {
     -readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property]
 }
-
-/**
- * @internal
- */
-type MergeAllImplementation<Array extends readonly object[], Merge extends object = {}> = Array extends [
-    infer Item,
-    ...infer Spread,
-]
-    ? MergeAllImplementation<Spread extends object[] ? Spread : never, UnionMerge<Merge, Item extends object ? Item : {}>>
-    : Merge
-
-/**
- * Create a new object type based in the tuple of object types, if the properties
- * are duplicated will create an union type.
- *
- * @param {T[]} Array - The tuple of object types to merge
- * @example
- * interface Foo {
- *   foo: string
- * };
- *
- * interface Bar {
- *   bar: string
- * };
- *
- * interface FooBar {
- *   bar: number,
- *   foo: boolean,
- *   foobar: string
- * };
- *
- * // Expected: { foo: string | boolean, bar: string | number, foobar: string }
- * type Merge = MergeAll<[Foo, Bar, FooBar]>;
- */
-export type MergeAll<Array extends readonly object[]> = MergeAllImplementation<Array, {}>
 
 /**
  * Create a new object type appending a new property with its value
