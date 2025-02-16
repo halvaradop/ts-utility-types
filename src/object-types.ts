@@ -15,6 +15,8 @@ export type Prettify<Obj extends object> = {
     [Property in keyof Obj]: Obj[Property]
 } & {}
 
+export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
+
 /**
  * It creates a new type based on your object but marks every property as readonly
  *
@@ -202,10 +204,7 @@ type InternalMerge<
     ByUnion extends boolean = false,
     PriorityObject extends boolean = true,
 > = Array extends [infer Item, ...infer Spread]
-    ? InternalMerge<
-          Spread extends object[] ? Spread : never,
-          Merge<Obj, Item extends object ? Item : {}, ByUnion, PriorityObject>
-      >
+    ? InternalMerge<Spread extends object[] ? Spread : never, Merge<Obj, Item & object, ByUnion, PriorityObject>>
     : Obj
 
 /**
@@ -359,9 +358,7 @@ export type FlattenProperties<Obj extends object, Keys extends keyof Obj> = Pret
  * // Expected: { name: string }
  * type PublicUser = PublicOnly<User>;
  */
-export type PublicOnly<Obj extends object> = {
-    [Property in keyof Obj as Discard<Property, `_${string}`>]: Obj[Property]
-}
+export type PublicOnly<Obj extends object> = Omit<Obj, `_${string}`>
 
 /**
  * Convert to required the keys speficied in the type `Keys`, and the others fields mantein
@@ -439,9 +436,9 @@ export type DeepMutable<Obj extends object> = {
  * // Expected: { name: string, lastname: string }
  * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>;
  */
-export type AddPropertyToObject<Obj extends object, NewProp extends string, TypeValue> = {
-    [Property in keyof Obj | NewProp]: Property extends keyof Obj ? Obj[Property] : TypeValue
-}
+export type AddPropertyToObject<Obj extends object, NewProp extends string, TypeValue> = Prettify<
+    Obj & { [Prop in NewProp]: TypeValue }
+>
 
 /**
  * Returns a union type of the entries of the provided object
@@ -479,12 +476,8 @@ export type ObjectEntries<Obj extends object, RequiredObj extends object = Requi
  * //Expected: { foo: number, bar: number, foobar: number }
  * type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number, foobar: number }>;
  */
-export type ReplaceKeys<Obj extends object, Keys extends string, Replace extends object, Default = unknown> = {
-    [Property in keyof Obj]: Property extends Keys
-        ? Property extends keyof Replace
-            ? Replace[Property]
-            : Default
-        : Obj[Property]
+export type ReplaceKeys<Obj extends object, Keys extends keyof Obj, Replace extends Record<Keys, any>> = {
+    [Property in keyof Obj]: Property extends Keys ? (Property extends keyof Replace ? Replace[Property] : never) : Obj[Property]
 }
 
 /**
@@ -571,7 +564,7 @@ export type ToPrimitive<Obj extends object> = {
 /**
  * @internal
  */
-type GetRequiredImplementation<Obj extends object, RequiredKeys extends object = Required<Obj>> = {
+type InternalGetRequired<Obj extends object, RequiredKeys extends object = Required<Obj>> = {
     [Property in keyof RequiredKeys as Equals<
         RequiredKeys[Property],
         Property extends keyof Obj ? Obj[Property] : null
@@ -595,7 +588,7 @@ type GetRequiredImplementation<Obj extends object, RequiredKeys extends object =
  * // Expected: { name: string }
  * type UserRequired = GetRequired<User>
  */
-export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>
+export type GetRequired<Obj extends object> = InternalGetRequired<Obj>
 
 /**
  * Get only the keys of an object that are optional in the object type otherwise
@@ -615,35 +608,6 @@ export type GetRequired<Obj extends object> = GetRequiredImplementation<Obj>
 export type GetOptional<T extends object> = {
     [Key in keyof T as T[Key] extends Required<T>[Key] ? never : Key]: T[Key]
 }
-
-/**
- * Get the value of a key from an object without worrying about the nested properties
- * of the object only should separate the keys with a dot.
- *
- * @param {object} T - The object to get the value from
- * @param {string} K - The key to get the value from
- * @example
- * interface User {
- *   foo: {
- *     bar: {
- *       foobar: "Hello"
- *     },
- *     barfoo: "World"
- *   },
- *   age: number
- * }
- *
- * // Expected: "Hello"
- * type FooBar = GetValue<User, "foo.bar.foobar">
- *
- * // Expected: "World"
- * type FooBar = GetValue<User, "foo.barfoo">
- */
-export type Get<T, K extends string> = K extends keyof T
-    ? T[K]
-    : K extends `${infer Char extends keyof T & string}.${infer Substr}`
-      ? Get<T[Char], Substr>
-      : never
 
 /**
  * TODO: This type is the same as `Get` type, but it should be removed in the future or just

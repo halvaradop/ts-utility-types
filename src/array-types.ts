@@ -52,7 +52,7 @@ export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unkno
 /**
  * @internal
  */
-type FilterImplementation<
+type InternalFilter<
     Array extends readonly unknown[],
     Predicate,
     Build extends unknown[] = [],
@@ -60,8 +60,8 @@ type FilterImplementation<
     Comparator = ToUnion<Predicate>,
 > = Array extends [infer Item, ...infer Spread]
     ? Includes extends true
-        ? FilterImplementation<Spread, Predicate, Item extends Comparator ? [...Build, Item] : Build, Includes>
-        : FilterImplementation<Spread, Predicate, Item extends Comparator ? Build : [...Build, Item], Includes>
+        ? InternalFilter<Spread, Predicate, Item extends Comparator ? [...Build, Item] : Build, Includes>
+        : InternalFilter<Spread, Predicate, Item extends Comparator ? Build : [...Build, Item], Includes>
     : Build
 
 /**
@@ -84,7 +84,7 @@ type FilterImplementation<
  * // Expected: [1]
  * type FilterOut2 = Filter<[0, 1, 2], 0 | 2, false>
  */
-export type Filter<Array extends unknown[], Predicate, Includes extends boolean = true> = FilterImplementation<
+export type Filter<Array extends unknown[], Predicate, Includes extends boolean = true> = InternalFilter<
     Array,
     Predicate,
     [],
@@ -111,13 +111,10 @@ export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...inf
 /**
  * @internal
  */
-type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [
-    infer Item,
-    ...infer Spread,
-]
+type InternalIndexOf<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
     ? Equals<Item, Match> extends true
         ? Index["length"]
-        : IndexOfImplementation<Spread, Match, [...Index, Item]>
+        : InternalIndexOf<Spread, Match, [...Index, Item]>
     : -1
 
 /**
@@ -139,18 +136,18 @@ type IndexOfImplementation<Array extends unknown[], Match, Index extends unknown
  * // Expected: 1
  * type IndexOf4 = IndexOf<[string, "a"], "a">;
  */
-export type IndexOf<Array extends unknown[], Match> = IndexOfImplementation<Array, Match, []>
+export type IndexOf<Array extends unknown[], Match> = InternalIndexOf<Array, Match, []>
 
 /**
  * @internal
  */
-type LastIndexOfImplementation<
+type InternalLastIndexOf<
     Array extends unknown[],
     Match,
     Index extends unknown[] = [],
     IndexOf extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
-    ? LastIndexOfImplementation<
+    ? InternalLastIndexOf<
           Spread,
           Match,
           [...Index, Item],
@@ -179,18 +176,18 @@ type LastIndexOfImplementation<
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
-export type LastIndexOf<Array extends unknown[], Match> = LastIndexOfImplementation<Array, Match, [], []>
+export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Array, Match, [], []>
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
  * @interface
  */
-type RepeatConstructTuple<
+type InternalConstructTuple<
     Length extends number,
     Value extends unknown = unknown,
     Array extends unknown[] = [],
-> = Array["length"] extends Length ? Array : RepeatConstructTuple<Length, Value, [...Array, Value]>
+> = Array["length"] extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
 
 /**
  * reate a tuple with a defined size, where each element is of a specified type
@@ -205,7 +202,7 @@ type RepeatConstructTuple<
  * // Expected: ["", ""]
  * type TupleSize3 = ConstructTuple<2, "">;
  */
-export type ConstructTuple<Length extends number, Value extends unknown = unknown> = RepeatConstructTuple<Length, Value, []>
+export type ConstructTuple<Length extends number, Value extends unknown = unknown> = InternalConstructTuple<Length, Value, []>
 
 /**
  * Check if there are duplidated elements inside the tuple
@@ -241,15 +238,15 @@ export type AllEquals<Array extends unknown[], Comparator> = Array extends [infe
 /**
  * @internal
  */
-type ChunkImplementation<
+type InternalChunk<
     Array extends unknown[],
     Length extends number,
     Build extends unknown[] = [],
     Partition extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
     ? [...Partition, Item]["length"] extends Length
-        ? ChunkImplementation<Spread, Length, [...Build, [...Partition, Item]], []>
-        : ChunkImplementation<Spread, Length, Build, [...Partition, Item]>
+        ? InternalChunk<Spread, Length, [...Build, [...Partition, Item]], []>
+        : InternalChunk<Spread, Length, Build, [...Partition, Item]>
     : Size<Partition> extends 0
       ? Build
       : [...Build, Partition]
@@ -267,14 +264,14 @@ type ChunkImplementation<
  * // Expected: [[1, 2, 3], [4, 5]]
  * type Chunk2 = Chunk<[1, 2, 3, 4, 5], 3>;
  */
-export type Chunk<Array extends unknown[], Length extends number> = ChunkImplementation<Array, Length, [], []>
+export type Chunk<Array extends unknown[], Length extends number> = InternalChunk<Array, Length, [], []>
 
 /**
  * @internal
  */
-type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
+type InteralZip<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
     ? U extends [infer ItemU, ...infer SpreadU]
-        ? ZipImplementation<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
+        ? InteralZip<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
         : Build
     : Build
 
@@ -290,7 +287,7 @@ type ZipImplementation<T, U, Build extends unknown[] = []> = T extends [infer It
  * // Expected: [[1, "a"], [2, "b"]]
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
-export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = ZipImplementation<Array1, Array2>
+export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = InteralZip<Array1, Array2>
 
 /**
  * Returns the flatten type of an array.
@@ -332,13 +329,13 @@ export type CompareArrayLength<T extends any[], U extends any[]> = T extends [an
 /**
  * @internal
  */
-type UniqueImplementation<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
+type InternalUniques<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
     ? Includes<Set, Item> extends true
-        ? UniqueImplementation<Spread, Uniques, Set>
-        : UniqueImplementation<Spread, Uniques | Item, [...Set, Item]>
+        ? InternalUniques<Spread, Uniques, Set>
+        : InternalUniques<Spread, Uniques | Item, [...Set, Item]>
     : Set
 
 /**
@@ -352,7 +349,7 @@ type UniqueImplementation<Array extends unknown[], Uniques extends unknown = nev
  * // Expected: ["a", "b", "c"]
  * type Uniques2 = Unique<["a", "b", "c", "a", "b"]>;
  */
-export type Uniques<Array extends unknown[]> = UniqueImplementation<Array>
+export type Uniques<Array extends unknown[]> = InternalUniques<Array>
 
 /**
  * Create an union type based in the literal values of the tuple provided.
@@ -418,7 +415,7 @@ export type ReturnTypeOf<T> = T extends string
 /**
  * @internal
  */
-type TakeImplementation<
+type InternalTake<
     N extends number,
     Array extends unknown[],
     Negative = IsNegative<N>,
@@ -427,10 +424,10 @@ type TakeImplementation<
     ? Build
     : Negative extends true
       ? Array extends [...infer Spread, infer Item]
-          ? TakeImplementation<N, Spread, Negative, [Item, ...Build]>
+          ? InternalTake<N, Spread, Negative, [Item, ...Build]>
           : Build
       : Array extends [infer Item, ...infer Spread]
-        ? TakeImplementation<N, Spread, Negative, [...Build, Item]>
+        ? InternalTake<N, Spread, Negative, [...Build, Item]>
         : Build
 
 /**
@@ -446,4 +443,4 @@ type TakeImplementation<
  * // Expected: [3, 4]
  * type Take2 = Take<-2, [1, 2, 3, 4]>;
  */
-export type Take<N extends number, Array extends unknown[]> = TakeImplementation<N, Array>
+export type Take<N extends number, Array extends unknown[]> = InternalTake<N, Array>

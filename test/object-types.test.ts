@@ -191,23 +191,23 @@ describe("Mutable", () => {
 describe("DeepMutable", () => {
     test("Converts all properties to non readonly of an object type", () => {
         interface Test5 {
-            foo: [
-                { bar: string },
+            readonly foo: [
+                { readonly bar: string },
                 {
-                    foobar: {
-                        foofoo: number
+                    readonly foobar: {
+                        readonly foofoo: number
                     }
                 },
             ]
         }
 
         interface Test6 {
-            foo: {
-                bar: [
+            readonly foo: {
+                readonly bar: [
                     {
-                        foobar: string
-                        barfoo: {
-                            foofoo: number
+                        readonly foobar: string
+                        readonly barfoo: {
+                            readonly foofoo: number
                         }
                     },
                 ]
@@ -223,8 +223,28 @@ describe("DeepMutable", () => {
         expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<{ foo: [{ bar: string; foobar: number }] }>>>().toEqualTypeOf<{
             foo: [{ bar: string; foobar: number }]
         }>()
-        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test5>>>().toEqualTypeOf<Test5>()
-        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test6>>>().toEqualTypeOf<Test6>()
+        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test5>>>().toEqualTypeOf<{
+            foo: [
+                { bar: string },
+                {
+                    foobar: {
+                        foofoo: number
+                    }
+                },
+            ]
+        }>()
+        expectTypeOf<utilities.DeepMutable<utilities.DeepReadonly<Test6>>>().toEqualTypeOf<{
+            foo: {
+                bar: [
+                    {
+                        foobar: string
+                        barfoo: {
+                            foofoo: number
+                        }
+                    },
+                ]
+            }
+        }>()
     })
 })
 
@@ -375,6 +395,8 @@ describe("Pick Utilities", () => {
             }>()
         })
     })
+
+    type N = utilities.PickByType<{ foo: () => {}; bar: number; foobar: {} }, () => {}>
 })
 
 describe("ReplaceKeys", () => {
@@ -383,13 +405,13 @@ describe("ReplaceKeys", () => {
             foo: string
             bar: string
         }>()
-        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "foobar", { bar: string }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "foo", { foo: string }>>().toEqualTypeOf<{
             foo: string
             bar: number
         }>()
-        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "bar", { foobar: string }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ReplaceKeys<{ foo: string; bar: number }, "bar", { bar: string }>>().toEqualTypeOf<{
             foo: string
-            bar: unknown
+            bar: string
         }>()
         expectTypeOf<
             utilities.ReplaceKeys<{ foo: string; bar: number }, "foo" | "bar", { foo: number; bar: boolean }>
@@ -478,19 +500,6 @@ describe("GetOptional", () => {
     })
 })
 
-describe("Get", () => {
-    test("Get the value of a nested property", () => {
-        expectTypeOf<utilities.Get<{ foo: string }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<{ foo: string; bar: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<{ foo: { bar: number } }, "foo.bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar">>().toEqualTypeOf<{ foobar: boolean }>()
-        expectTypeOf<utilities.Get<{ foo: { bar: { foobar: boolean } } }, "foo.bar.foobar">>().toEqualTypeOf<boolean>()
-        expectTypeOf<
-            utilities.Get<{ foo: { bar: { foobar: { barfoo: number } } } }, "foo.bar.foobar.barfoo">
-        >().toEqualTypeOf<number>()
-    })
-})
-
 describe("DeepPick", () => {
     test("Pick properties from nested objects", () => {
         type Obj = {
@@ -510,9 +519,9 @@ describe("DeepPick", () => {
             }
         }
 
-        expectTypeOf<utilities.Get<Obj, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.Get<Obj, "bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.Get<Obj, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar">>().toEqualTypeOf<{
             foofoo: number
             barbar: boolean
             foo: {
@@ -524,10 +533,24 @@ describe("DeepPick", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.Get<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
-        expectTypeOf<utilities.Get<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
+        expectTypeOf<utilities.DeepPick<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
             foobar: string
             bar: number
         }>()
+    })
+})
+
+describe("PartialByKeys", () => {
+    test("Convert required properties in an object", () => {
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }, "foo">>().toEqualTypeOf<{
+            foo?: string
+            bar: number
+        }>()
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }, "bar">>().toEqualTypeOf<{
+            foo: string
+            bar?: number
+        }>()
+        expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }>>().toEqualTypeOf<{ foo?: string; bar?: number }>()
     })
 })
