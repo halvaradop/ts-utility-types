@@ -8,8 +8,6 @@ on:
   push:
     branches-ignore:
       - master
-    paths:
-      - app/
 
 jobs:
   deploy-preview:
