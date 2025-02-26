@@ -555,10 +555,10 @@ describe("PartialByKeys", () => {
     })
 })
 
-describe("DeepPaths", () => {
+describe("DeepKeys", () => {
     test("Get the paths of an object", () => {
         expectTypeOf<
-            utilities.DeepPaths<{
+            utilities.DeepKeys<{
                 foo: string
                 bar: number
                 foobar: {
