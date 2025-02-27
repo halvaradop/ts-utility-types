@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type * as utilities from "../src/object-types"
+import * as utilities from "../src/object-types"
 
 describe("Readonly", () => {
     test("DeepReadonly for objects", () => {
@@ -552,5 +552,50 @@ describe("PartialByKeys", () => {
             bar?: number
         }>()
         expectTypeOf<utilities.PartialByKeys<{ foo: string; bar: number }>>().toEqualTypeOf<{ foo?: string; bar?: number }>()
+    })
+})
+
+describe("DeepKeys", () => {
+    test("Get the paths of an object", () => {
+        expectTypeOf<
+            utilities.DeepKeys<{
+                foo: string
+                bar: number
+                foobar: {
+                    foofoo: number
+                    barbar: boolean
+                    foo: {
+                        bar: string
+                        foobar: number
+                        barfoo: {
+                            foobar: string
+                            bar: number
+                        }
+                        fn: () => {}
+                    }
+                }
+                fn: () => {}
+                123: string
+                "123-foo": string
+                "123-foo-bar": string
+            }>
+        >().toEqualTypeOf<
+            | "foo"
+            | "bar"
+            | "foobar"
+            | "foobar.foofoo"
+            | "foobar.barbar"
+            | "foobar.foo"
+            | "foobar.foo.bar"
+            | "foobar.foo.foobar"
+            | "foobar.foo.barfoo"
+            | "foobar.foo.barfoo.foobar"
+            | "foobar.foo.barfoo.bar"
+            | "foobar.foo.fn"
+            | "fn"
+            | "123"
+            | "123-foo"
+            | "123-foo-bar"
+        >()
     })
 })

@@ -1,7 +1,7 @@
 import type { Equals } from "./test.js"
 import type { IsNever } from "./type-guards.d.ts"
 import type { ArgsFunction } from "./types.js"
-import type { ReturnTypeOf } from "./array-types.js"
+import type { ReturnTypeOf, TupleToUnion } from "./array-types.js"
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -637,3 +637,29 @@ export type DeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Righ
     : Pattern extends keyof Obj
       ? Obj[Pattern]
       : unknown
+
+/**
+ * Returns the keys of an object of any depth of an object
+ *
+ * @param {object} Obj - The object to get the keys from
+ * @example
+ *
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: "name" | "address" | "address.street" | "address.avenue"
+ * type UserKeys = DeepKeys<User>
+ */
+export type DeepKeys<Obj extends object> = {
+    [Property in keyof Obj]: Obj[Property] extends object
+        ? // @ts-ignore
+          TupleToUnion<[Property, `${Property & string}.${DeepKeys<Obj[Property]>}`]>
+        : Property extends number
+          ? `${Property & number}`
+          : Property
+}[keyof Obj]
