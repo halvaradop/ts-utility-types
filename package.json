@@ -1,6 +1,6 @@
 {
   "name": "@halvaradop/ts-utility-types",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Utility types tools to enhances the productivity using typescript",
   "type": "module",
   "scripts": {
@@ -16,8 +16,7 @@
     "test:coverage": "vitest run --coverage",
     "clean": "pnpm clean:dist && pnpm clean:modules",
     "clean:dist": "rm -rf dist",
-    "clean:modules": "rm -rf node_modules",
-    "publish": "pnpm build"
+    "clean:modules": "rm -rf node_modules"
   },
   "repository": {
     "type": "git",
