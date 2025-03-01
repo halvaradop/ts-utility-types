@@ -33,30 +33,6 @@ export type Prettify<Obj extends object> = {
 export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 /**
- * It creates a new type based on your object but marks every property as readonly
- *
- * @param {object} Obj - The object to make readonly
- * @example
- * interface User {
- *   name: string,
- *   address: {
- *     street: string,
- *     avenue: string
- *   }
- * };
- *
- * // Expected: { readonly name: string, readonly address: { readonly street: string, readonly avenue: string } }
- * type ReadonlyUser = DeepReadonly<User>;
- */
-export type DeepReadonly<Obj extends object> = {
-    readonly [Property in keyof Obj]: Obj[Property] extends Function
-        ? Obj[Property]
-        : Obj[Property] extends object
-          ? DeepReadonly<Obj[Property]>
-          : Obj[Property]
-}
-
-/**
  * Conditionally excludes or includes types based on whether `Type` is assignable to `Extends`.
  * If `Reverse` is `true`, it includes types that are assignable to `Extends`, otherwise it excludes them.
  * If `Value` is provided, it returns `Value` instead of `never` when the condition is met.
@@ -121,34 +97,6 @@ export type Awaited<T extends PromiseLike<unknown>> =
 export type Properties<Obj1 extends object, Obj2 extends object, Common extends boolean = false> = Common extends true
     ? keyof Obj1 & keyof Obj2
     : keyof Obj1 | keyof Obj2
-
-/**
- * Checks if a key exists in either of the two objects and returns its value.
- * If the key does not exist in either object, it returns `never`.
- *
- * @param {object} Obj1 - The first object to check
- * @param {object} Obj2 - The second object to check
- * @param {string} Key - The key to check
- * @example
- * interface Foo {
- *   foo: string
- * }
- *
- * interface Bar {
- *   bar: number
- * }
- *
- * // Expected: string
- * type FooValue = Get<Foo, Bar, "foo">;
- *
- * // Expected: number
- * type BarValue = Get<Foo, Bar, "bar">;
- */
-export type Get<
-    Obj1 extends object,
-    Obj2 extends object,
-    Key extends LiteralUnion<Properties<Obj1, Obj2> & string>,
-> = Key extends keyof Obj1 ? Obj1[Key] : Key extends keyof Obj2 ? Obj2[Key] : never
 
 /**
  * Merges two objects into a new object at any depth. Properties from `Obj1` override properties from `Obj2` if they have the same key.
@@ -517,41 +465,6 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
 }
 
 /**
- * Omits properties of an object at any depth based on the provided path string that
- * is a dot-separated path to the property.
- *
- * @param {object} Obj - The object to omit the properties from
- * @param {string} Path - The path to omit the properties
- * @example
- * type User = {
- *   name: string,
- *   address: {
- *     street: string,
- *     avenue: string
- *   }
- * };
- *
- * // Expected: { name: string, address: { street: string } }
- * type OmitAvenueUser = DeepOmit<User, "addresss.avenue">;
- *
- * // Expected: { address: { street: string, avenue: string } }
- * type OmitNameUser = DeepOmit<User, "name">;
- */
-export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
-    [Property in keyof Obj as Path extends `${string}.${string}`
-        ? Property
-        : Property extends Path
-          ? never
-          : Property]: Path extends `${infer StartsWith}.${infer Spread}`
-        ? Property extends StartsWith
-            ? Obj[Property] extends object
-                ? DeepOmit<Obj[Property], Spread>
-                : Obj[Property]
-            : Obj[Property]
-        : Obj[Property]
-}
-
-/**
  * Transforms the object properties to their primitive types. If the properties are objects,
  * it recursively transforms their properties to their primitive types, and so on.
  *
@@ -573,6 +486,34 @@ export type ToPrimitive<Obj extends object> = {
             : ToPrimitive<Obj[Property]>
         : ReturnTypeOf<Obj[Property]>
 }
+
+/**
+ * Checks if a key exists in either of the two objects and returns its value.
+ * If the key does not exist in either object, it returns `never`.
+ *
+ * @param {object} Obj1 - The first object to check
+ * @param {object} Obj2 - The second object to check
+ * @param {string} Key - The key to check
+ * @example
+ * interface Foo {
+ *   foo: string
+ * }
+ *
+ * interface Bar {
+ *   bar: number
+ * }
+ *
+ * // Expected: string
+ * type FooValue = Get<Foo, Bar, "foo">;
+ *
+ * // Expected: number
+ * type BarValue = Get<Foo, Bar, "bar">;
+ */
+export type Get<
+    Obj1 extends object,
+    Obj2 extends object,
+    Key extends LiteralUnion<Properties<Obj1, Obj2> & string>,
+> = Key extends keyof Obj1 ? Obj1[Key] : Key extends keyof Obj2 ? Obj2[Key] : never
 
 /**
  * @internal
@@ -620,6 +561,65 @@ export type GetRequired<Obj extends object> = InternalGetRequired<Obj>
  */
 export type GetOptional<T extends object> = {
     [Key in keyof T as T[Key] extends Required<T>[Key] ? never : Key]: T[Key]
+}
+
+/**
+ * It creates a new type based on your object but marks every property as readonly
+ *
+ * @param {object} Obj - The object to make readonly
+ * @example
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * };
+ *
+ * // Expected: { readonly name: string, readonly address: { readonly street: string, readonly avenue: string } }
+ * type ReadonlyUser = DeepReadonly<User>;
+ */
+export type DeepReadonly<Obj extends object> = {
+    readonly [Property in keyof Obj]: Obj[Property] extends Function
+        ? Obj[Property]
+        : Obj[Property] extends object
+          ? DeepReadonly<Obj[Property]>
+          : Obj[Property]
+}
+
+/**
+ * Omits properties of an object at any depth based on the provided path string that
+ * is a dot-separated path to the property.
+ *
+ * @param {object} Obj - The object to omit the properties from
+ * @param {string} Path - The path to omit the properties
+ * @example
+ * type User = {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * };
+ *
+ * // Expected: { name: string, address: { street: string } }
+ * type OmitAvenueUser = DeepOmit<User, "addresss.avenue">;
+ *
+ * // Expected: { address: { street: string, avenue: string } }
+ * type OmitNameUser = DeepOmit<User, "name">;
+ */
+export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
+    [Property in keyof Obj as Path extends `${string}.${string}`
+        ? Property
+        : Property extends Path
+          ? never
+          : Property]: Path extends `${infer StartsWith}.${infer Spread}`
+        ? Property extends StartsWith
+            ? Obj[Property] extends object
+                ? DeepOmit<Obj[Property], Spread>
+                : Obj[Property]
+            : Obj[Property]
+        : Obj[Property]
 }
 
 /**
