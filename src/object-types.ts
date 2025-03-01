@@ -1,6 +1,5 @@
 import type { Equals } from "./test.js"
 import type { IsNever } from "./type-guards.d.ts"
-import type { ArgsFunction } from "./types.js"
 import type { ReturnTypeOf, TupleToUnion } from "./array-types.js"
 
 /**
@@ -15,6 +14,22 @@ export type Prettify<Obj extends object> = {
     [Property in keyof Obj]: Obj[Property]
 } & {}
 
+/**
+ * Extends the values of the provided `T` type with the provided `U` type.
+ * This is useful when you want to create a union type that includes specific
+ * literal types along with a broader type.
+ *
+ * @param {T} T - The specific literal type to extend
+ * @param {U} U - The broader type to extend with (defaults to `string`)
+ * @example
+ * interface Foo {
+ *   foo: string
+ *   bar: number
+ * }
+ *
+ * // Expected: "foo" | "bar" | string
+ * type ExtendedFoo = LiteralUnion<keyof Foo>
+ */
 export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 /**
@@ -124,16 +139,16 @@ export type Properties<Obj1 extends object, Obj2 extends object, Common extends 
  * }
  *
  * // Expected: string
- * type FooValue = RetrieveKeyValue<Foo, Bar, "foo">;
+ * type FooValue = Get<Foo, Bar, "foo">;
  *
  * // Expected: number
- * type BarValue = RetrieveKeyValue<Foo, Bar, "bar">;
+ * type BarValue = Get<Foo, Bar, "bar">;
  */
-export type RetrieveKeyValue<Obj1 extends object, Obj2 extends object, Key> = Key extends keyof Obj1
-    ? Obj1[Key]
-    : Key extends keyof Obj2
-      ? Obj2[Key]
-      : never
+export type Get<
+    Obj1 extends object,
+    Obj2 extends object,
+    Key extends LiteralUnion<Properties<Obj1, Obj2> & string>,
+> = Key extends keyof Obj1 ? Obj1[Key] : Key extends keyof Obj2 ? Obj2[Key] : never
 
 /**
  * Merges two objects into a new object at any depth. Properties from `Obj1` override properties from `Obj2` if they have the same key.
@@ -426,19 +441,17 @@ export type DeepMutable<Obj extends object> = {
  * Create a new object type appending a new property with its value
  *
  * @param {object} Obj - The object to append the property
- * @param {string} NewProp - The new property to append
- * @param {TypeValue} TypeValue - The type of the new property
+ * @param {string} Property - The new property to append
+ * @param {TypeValue} value - The type of the new property
  * @example
  * interface User {
  *   name: string
  * };
  *
  * // Expected: { name: string, lastname: string }
- * type UserAppendLastname = AddPropertyToObject<User, "lastname", string>;
+ * type UserAppendLastname = Append<User, "lastname", string>;
  */
-export type AddPropertyToObject<Obj extends object, NewProp extends string, TypeValue> = Prettify<
-    Obj & { [Prop in NewProp]: TypeValue }
->
+export type Append<Obj extends object, Property extends string, value> = Prettify<Obj & { [Prop in Property]: value }>
 
 /**
  * Returns a union type of the entries of the provided object
@@ -504,11 +517,11 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
 }
 
 /**
- * Omits properties of an object at any depth based on the provided pattern string that
+ * Omits properties of an object at any depth based on the provided path string that
  * is a dot-separated path to the property.
  *
  * @param {object} Obj - The object to omit the properties from
- * @param {string} Pattern - The pattern to omit the properties
+ * @param {string} Path - The path to omit the properties
  * @example
  * type User = {
  *   name: string,
@@ -524,12 +537,12 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  * // Expected: { address: { street: string, avenue: string } }
  * type OmitNameUser = DeepOmit<User, "name">;
  */
-export type DeepOmit<Obj extends object, Pattern extends string> = {
-    [Property in keyof Obj as Pattern extends `${string}.${string}`
+export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
+    [Property in keyof Obj as Path extends `${string}.${string}`
         ? Property
-        : Property extends Pattern
+        : Property extends Path
           ? never
-          : Property]: Pattern extends `${infer StartsWith}.${infer Spread}`
+          : Property]: Path extends `${infer StartsWith}.${infer Spread}`
         ? Property extends StartsWith
             ? Obj[Property] extends object
                 ? DeepOmit<Obj[Property], Spread>
@@ -610,13 +623,21 @@ export type GetOptional<T extends object> = {
 }
 
 /**
- * TODO: This type is the same as `Get` type, but it should be removed in the future or just
- * update the logic to make it different from `Get` type.
- *
- * Picks the properties of an object at any depth based on the provided pattern.
+ * @internal
+ */
+type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`
+    ? Left extends keyof Obj
+        ? InternalDeepPick<Obj[Left], Right>
+        : unknown
+    : Path extends keyof Obj
+      ? Obj[Path]
+      : unknown
+
+/**
+ * Picks the properties of an object at any depth based on the provided path.
  *
  * @param {object} Obj - The object to pick the properties from
- * @param {string} Pattern - The pattern to pick the properties
+ * @param {string} Path - The path to pick the properties
  * @example
  * interface User {
  *   name: string,
@@ -630,13 +651,10 @@ export type GetOptional<T extends object> = {
  * type UserPick = DeepPick<User, "address.street">
  *
  */
-export type DeepPick<Obj, Pattern> = Pattern extends `${infer Left}.${infer Right}`
-    ? Left extends keyof Obj
-        ? DeepPick<Obj[Left], Right>
-        : unknown
-    : Pattern extends keyof Obj
-      ? Obj[Pattern]
-      : unknown
+export type DeepPick<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ? Obj : never> & string>> = InternalDeepPick<
+    Obj,
+    Path
+>
 
 /**
  * Returns the keys of an object of any depth of an object
