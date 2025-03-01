@@ -47,14 +47,7 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.d.ts",
-      "require": "./dist/index.d.ts"
-    },
-    "./validate": {
-      "types": "./dist/utils/validate-types.d.ts",
-      "import": "./dist/utils/validate-types.js",
-      "require": "./dist/utils/validate-types.cjs"
+      "types": "./dist/index.d.ts"
     },
     "./arrays": {
       "types": "./dist/array-types.d.ts"
@@ -76,6 +69,11 @@
     },
     "./utilities": {
       "types": "./dist/utility-types.d.ts"
+    },
+    "./validate": {
+      "types": "./dist/utils/validate-types.d.ts",
+      "import": "./dist/utils/validate-types.js",
+      "require": "./dist/utils/validate-types.cjs"
     }
   },
   "files": [

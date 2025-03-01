@@ -151,12 +151,12 @@ describe("PublicOnly", () => {
     })
 })
 
-describe("RetrieveKeyValue", () => {
+describe("Get", () => {
     test("Exist the key within objects", () => {
-        expectTypeOf<utilities.RetrieveKeyValue<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.RetrieveKeyValue<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.RetrieveKeyValue<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.RetrieveKeyValue<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
+        expectTypeOf<utilities.Get<{ foo: string }, { bar: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<{ foo: string }, { bar: number }, "bar">>().toEqualTypeOf<number>()
+        expectTypeOf<utilities.Get<{ foo: string }, { foo: number }, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<{ foo: string }, { foo: number }, "foobar">>().toEqualTypeOf<never>()
     })
 })
 
@@ -272,21 +272,21 @@ describe("MergeAll", () => {
     })
 })
 
-describe("AddPropertyToObject", () => {
+describe("Append", () => {
     test("Append a new property of an exist object type", () => {
-        expectTypeOf<utilities.AddPropertyToObject<{ foo: string }, "bar", number>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<{ foo: string }, "bar", number>>().toEqualTypeOf<{
             foo: string
             bar: number
         }>()
-        expectTypeOf<utilities.AddPropertyToObject<{ foo: string }, "bar", { foobar: number; barfoo: boolean }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<{ foo: string }, "bar", { foobar: number; barfoo: boolean }>>().toEqualTypeOf<{
             foo: string
             bar: { foobar: number; barfoo: boolean }
         }>()
-        expectTypeOf<utilities.AddPropertyToObject<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<{ foo: string }, "bar", [1, 2, 3]>>().toEqualTypeOf<{
             foo: string
             bar: [1, 2, 3]
         }>()
-        expectTypeOf<utilities.AddPropertyToObject<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<{ foo: string }, "bar", string | boolean | number>>().toEqualTypeOf<{
             foo: string
             bar: string | boolean | number
         }>()
