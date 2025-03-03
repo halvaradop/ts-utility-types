@@ -588,6 +588,13 @@ export type DeepReadonly<Obj extends object> = {
 }
 
 /**
+ * @internal
+ */
+type DiscardLeft<T extends string> = {
+    [Property in T]: Property extends `${string}.${infer Right}` ? Right : never
+}[T]
+
+/**
  * Omits properties of an object at any depth based on the provided path string that
  * is a dot-separated path to the property.
  *
@@ -609,20 +616,14 @@ export type DeepReadonly<Obj extends object> = {
  * type OmitNameUser = DeepOmit<User, "name">;
  */
 export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
-    [Property in keyof Obj as Path extends `${string}.${string}`
-        ? Property
-        : Property extends Path
-          ? never
-          : Property]: Path extends `${infer StartsWith}.${infer Spread}`
-        ? Property extends StartsWith
-            ? Obj[Property] extends object
-                ? DeepOmit<Obj[Property], Spread>
-                : Obj[Property]
-            : Obj[Property]
+    [Property in Exclude<keyof Obj, Path>]: Obj[Property] extends object
+        ? Prettify<DeepOmit<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
         : Obj[Property]
 }
 
 /**
+ *
+ *
  * @internal
  */
 type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`

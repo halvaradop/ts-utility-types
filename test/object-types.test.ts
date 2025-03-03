@@ -1,29 +1,28 @@
 import { describe, test, expectTypeOf } from "vitest"
 import * as utilities from "../src/object-types"
-
-describe("Readonly", () => {
-    test("DeepReadonly for objects", () => {
-        expectTypeOf<utilities.DeepReadonly<{ foo: string; bar: number }>>().toEqualTypeOf<{
-            readonly foo: string
-            readonly bar: number
-        }>()
-        expectTypeOf<utilities.DeepReadonly<{ foo: string; bar: { foo: number } }>>().toEqualTypeOf<{
-            readonly foo: string
-            readonly bar: { readonly foo: number }
-        }>()
-        expectTypeOf<utilities.DeepReadonly<{ foo: { bar: string }; bar: { foo: number } }>>().toEqualTypeOf<{
-            readonly foo: { readonly bar: string }
-            readonly bar: { readonly foo: number }
-        }>()
-    })
-})
+import type {
+    TestDeepWithObjectsA,
+    TestDeepWithObjectsB,
+    TestDeepWithArray,
+    TestDeepWithFunctions,
+    CaseWithDeep,
+} from "./test-cases"
 
 describe("Properties with keyof", () => {
     test("Combines keys of two object types", () => {
-        expectTypeOf<utilities.Properties<{ a: number }, { a: string }>>().toEqualTypeOf<"a">()
-        expectTypeOf<utilities.Properties<{ a: number }, { b: string }>>().toEqualTypeOf<"a" | "b">()
-        expectTypeOf<utilities.Properties<{ a: number }, { b: string; c: number }>>().toEqualTypeOf<"a" | "b" | "c">()
-        expectTypeOf<utilities.Properties<{ a: number }, { b: string }, true>>().toEqualTypeOf<never>()
+        expectTypeOf<utilities.Properties<CaseWithDeep<TestDeepWithObjectsA, 1>, {}>>().toEqualTypeOf<"foo" | "bar" | "foobar">()
+        expectTypeOf<utilities.Properties<CaseWithDeep<TestDeepWithObjectsB, 1>, {}>>().toEqualTypeOf<"bar" | "biz" | "foobar">()
+        expectTypeOf<
+            utilities.Properties<CaseWithDeep<TestDeepWithObjectsA, 1>, CaseWithDeep<TestDeepWithObjectsB, 1>>
+        >().toEqualTypeOf<"foo" | "bar" | "foobar" | "biz">()
+        expectTypeOf<utilities.Properties<CaseWithDeep<TestDeepWithObjectsA, 1>, {}, true>>().toEqualTypeOf<never>()
+        expectTypeOf<utilities.Properties<CaseWithDeep<TestDeepWithObjectsB, 1>, {}, true>>().toEqualTypeOf<never>()
+        expectTypeOf<
+            utilities.Properties<CaseWithDeep<TestDeepWithObjectsA, 1>, CaseWithDeep<TestDeepWithObjectsA, 1>, true>
+        >().toEqualTypeOf<"foo" | "bar" | "foobar">()
+        expectTypeOf<
+            utilities.Properties<CaseWithDeep<TestDeepWithObjectsA, 1>, CaseWithDeep<TestDeepWithObjectsB, 1>, true>
+        >().toEqualTypeOf<"bar" | "foobar">()
     })
 })
 
@@ -448,22 +447,75 @@ describe("MapTypes", () => {
 
 describe("DeepOmit", () => {
     test("Omit properties from nested objects", () => {
-        expectTypeOf<utilities.DeepOmit<{ foo: string; bar: { foobar: number } }, "foo">>().toEqualTypeOf<{
-            bar: { foobar: number }
-        }>()
-        expectTypeOf<utilities.DeepOmit<{ foo: string; bar: { foobar: number } }, "bar.foobar">>().toEqualTypeOf<{
+        type TestCase = {
             foo: string
-            bar: {}
+            bar: number
+            foobar: {
+                foo: number
+                bar: boolean
+                foobar: {
+                    foo: string
+                    bar: number
+                    foobar: {
+                        foo: string
+                        bar: number
+                        fiz: {
+                            buz: number
+                        }
+                    }
+                }
+            }
+        }
+
+        expectTypeOf<utilities.DeepOmit<TestCase, "foo">>().toEqualTypeOf<{
+            bar: number
+            foobar: {
+                foo: number
+                bar: boolean
+                foobar: {
+                    foo: string
+                    bar: number
+                    foobar: {
+                        foo: string
+                        bar: number
+                        fiz: {
+                            buz: number
+                        }
+                    }
+                }
+            }
         }>()
-        expectTypeOf<utilities.DeepOmit<{ foo: string; bar: { foobar: number } }, "foobar">>().toEqualTypeOf<{
-            foo: string
-            bar: { foobar: number }
+        expectTypeOf<utilities.DeepOmit<TestCase, "foo" | "bar">>().toEqualTypeOf<{
+            foobar: {
+                foo: number
+                bar: boolean
+                foobar: {
+                    foo: string
+                    bar: number
+                    foobar: {
+                        foo: string
+                        bar: number
+                        fiz: {
+                            buz: number
+                        }
+                    }
+                }
+            }
         }>()
+
         expectTypeOf<
-            utilities.DeepOmit<{ foo: string; bar: { foobar: number; nested: { baz: string } } }, "bar.nested.baz">
+            utilities.DeepOmit<TestCase, "foo" | "bar" | "foobar.foo" | "foobar.foobar.bar" | "foobar.foobar.foobar.fiz">
         >().toEqualTypeOf<{
-            foo: string
-            bar: { foobar: number; nested: {} }
+            foobar: {
+                bar: boolean
+                foobar: {
+                    foo: string
+                    foobar: {
+                        foo: string
+                        bar: number
+                    }
+                }
+            }
         }>()
     })
 })
@@ -597,5 +649,22 @@ describe("DeepKeys", () => {
             | "123-foo"
             | "123-foo-bar"
         >()
+    })
+})
+
+describe("Readonly", () => {
+    test("DeepReadonly for objects", () => {
+        expectTypeOf<utilities.DeepReadonly<{ foo: string; bar: number }>>().toEqualTypeOf<{
+            readonly foo: string
+            readonly bar: number
+        }>()
+        expectTypeOf<utilities.DeepReadonly<{ foo: string; bar: { foo: number } }>>().toEqualTypeOf<{
+            readonly foo: string
+            readonly bar: { readonly foo: number }
+        }>()
+        expectTypeOf<utilities.DeepReadonly<{ foo: { bar: string }; bar: { foo: number } }>>().toEqualTypeOf<{
+            readonly foo: { readonly bar: string }
+            readonly bar: { readonly foo: number }
+        }>()
     })
 })
