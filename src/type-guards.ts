@@ -100,3 +100,29 @@ export type AnyOf<T extends readonly any[]> = T extends [infer Item, ...infer Sp
         ? AnyOf<Spread>
         : true
     : false
+
+/**
+ * Checks if all values in the tuple are true
+ *
+ * @param {unknown[]} T - The tuple to check
+ * @example
+ * // Expected: true
+ * type Test1 = IsArray<[1, 2, 3]>
+ *
+ * // Expected: false
+ * type Test2 = IsArray<{ key: string }>
+ */
+export type IsArray<T> = T extends unknown[] ? true : false
+
+/**
+ * Checks if the type provided is an object
+ *
+ * @param T - The type to check
+ * @example
+ * // Expected: true
+ * type Test1 = IsObject<{ key: string }>
+ *
+ * // Expected: false
+ * type Test2 = IsObject<[1, 2, 3]>
+ */
+export type IsObject<T> = T extends object ? Not<IsArray<T>> : false
