@@ -1,5 +1,5 @@
 import type { Equals } from "./test.js"
-import type { IsNever } from "./type-guards.d.ts"
+import type { IsNever, IsObject } from "./type-guards.d.ts"
 import type { ReturnTypeOf, TupleToUnion } from "./array-types.js"
 
 /**
@@ -281,6 +281,10 @@ export type OmitByType<Obj extends object, Type> = {
 }
 
 /**
+ * @unstable
+ * The type is unstable and may be removed in the future.
+ * The behavior of this type is not the expected one.
+ *
  * Extracts the value of a key from an object and returns a new object with that value,
  * while keeping the other values unchanged.
  *
@@ -382,7 +386,11 @@ export type Mutable<Obj extends object> = {
  * type NonReadonlyFoo = DeepMutable<Foo>;
  */
 export type DeepMutable<Obj extends object> = {
-    -readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property]
+    -readonly [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepMutable<Obj[Property]>>
+            : never
+        : Obj[Property]
 }
 
 /**
@@ -583,7 +591,7 @@ export type DeepReadonly<Obj extends object> = {
     readonly [Property in keyof Obj]: Obj[Property] extends Function
         ? Obj[Property]
         : Obj[Property] extends object
-          ? DeepReadonly<Obj[Property]>
+          ? Prettify<DeepReadonly<Obj[Property]>>
           : Obj[Property]
 }
 
@@ -682,3 +690,41 @@ export type DeepKeys<Obj extends object> = {
           ? `${Property & number}`
           : Property
 }[keyof Obj]
+
+/**
+ * @internal
+ */
+type DeepTruncateInternal<Obj extends object, Depth extends number, Level extends unknown[]> = {
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? [1, ...Level]["length"] extends Depth
+            ? {}
+            : Obj[Property] extends object
+              ? Prettify<DeepTruncateInternal<Obj[Property], Depth, [1, ...Level]>>
+              : never
+        : Obj[Property]
+}
+
+/**
+ * Truncates an object at any depth based on the provided depth.
+ *
+ * @param {object} Obj - The object to truncate
+ * @param {number} Depth - The depth to truncate the object
+ * @example
+ *
+ * interface Foo {
+ *   foo: string
+ *   bar: number
+ *   foobar: {
+ *     foo: boolean
+ *     bar: string
+ *     foobar: {
+ *       foo: number
+ *     }
+ *   }
+ * }
+ *
+ * // Expected: { foo: string, bar: number, foobar: {} }
+ * type TruncatedFoo = DeepTruncate<Foo, 1>
+ */
+export type DeepTruncate<Obj extends object, Depth extends number> =
+    IsObject<Obj> extends true ? DeepTruncateInternal<Obj, Depth, []> : never

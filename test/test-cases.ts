@@ -1,4 +1,6 @@
-export interface TestDeepWithObjectsA {
+import type { MergeAll, DeepTruncate } from "../src/object-types"
+
+export interface DeepWithObjectsA {
     foo: string
     bar: number
     foobar: {
@@ -18,9 +20,9 @@ export interface TestDeepWithObjectsA {
     }
 }
 
-export interface TestDeepWithObjectsB {
+export interface DeepWithObjectsB {
     bar: boolean
-    biz: string
+    fiz: string
     foobar: {
         foo: symbol
         foobar: number
@@ -35,7 +37,7 @@ export interface TestDeepWithObjectsB {
     }
 }
 
-export interface TestDeepWithFunctions {
+export interface DeepWithFunctions {
     fix: () => number
     foobar: {
         fix: () => string
@@ -51,7 +53,7 @@ export interface TestDeepWithFunctions {
     }
 }
 
-export interface TestDeepWithArray {
+export interface DeepWithArray {
     buz: string[]
     foobar: {
         buz: number[]
@@ -67,12 +69,11 @@ export interface TestDeepWithArray {
     }
 }
 
-type CaseWithDeepInternal<Obj extends object, Depth extends number, Level extends unknown[]> = Depth extends Level["length"]
-    ? Obj
-    : {
-          [Property in keyof Obj]: Obj[Property] extends object
-              ? CaseWithDeepInternal<Obj[Property], Depth, [...Level, Property]>
-              : Obj[Property]
-      }
-
-export type CaseWithDeep<Obj extends object, Depth extends number> = CaseWithDeepInternal<Obj, Depth, []>
+export type MergeCases<Depth extends number = 1> = MergeAll<
+    [
+        DeepTruncate<DeepWithObjectsA, Depth>,
+        DeepTruncate<DeepWithObjectsB, Depth>,
+        DeepTruncate<DeepWithArray, Depth>,
+        DeepTruncate<DeepWithFunctions, Depth>,
+    ]
+>

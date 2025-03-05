@@ -1,5 +1,16 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type { IsNegative, IsNever, IsOdd, IsPositive, IsAny, IsEven, AnyOf } from "../src/type-guards"
+import type {
+    IsNegative,
+    IsNever,
+    IsOdd,
+    IsPositive,
+    IsAny,
+    IsEven,
+    AnyOf,
+    IsArray,
+    IsFunction,
+    IsObject,
+} from "../src/type-guards"
 
 describe("Utility types for type guards", () => {
     describe("IsNever", () => {
@@ -82,5 +93,48 @@ describe("Utility types for type guards", () => {
             expectTypeOf<AnyOf<[0, "", false, [], {}, undefined, null]>>().toEqualTypeOf<false>()
             expectTypeOf<AnyOf<[0, "", false, [], {}, undefined, null, true]>>().toEqualTypeOf<true>()
         })
+    })
+
+    test("IsArray", () => {
+        expectTypeOf<IsArray<string>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<number>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<boolean>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<bigint>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<symbol>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<{ foo: "bar" }>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<Function>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<() => void>>().toEqualTypeOf<false>()
+        expectTypeOf<IsArray<unknown[]>>().toEqualTypeOf<true>()
+        expectTypeOf<IsArray<[]>>().toEqualTypeOf<true>()
+    })
+
+    test("IsFunction", () => {
+        expectTypeOf<IsFunction<string>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<number>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<boolean>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<bigint>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<symbol>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<unknown[]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<{ foo: "bar" }>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<[]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<[string]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<[number]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsFunction<Function>>().toEqualTypeOf<true>()
+        expectTypeOf<IsFunction<() => void>>().toEqualTypeOf<true>()
+    })
+
+    test("IsObject", () => {
+        expectTypeOf<IsObject<string>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<number>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<boolean>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<bigint>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<symbol>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<unknown[]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<Function>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<() => void>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<[]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<[string]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<[number]>>().toEqualTypeOf<false>()
+        expectTypeOf<IsObject<{ foo: "bar" }>>().toEqualTypeOf<true>()
     })
 })
