@@ -121,6 +121,7 @@ describe("Utility types for type guards", () => {
         expectTypeOf<IsFunction<[number]>>().toEqualTypeOf<false>()
         expectTypeOf<IsFunction<Function>>().toEqualTypeOf<true>()
         expectTypeOf<IsFunction<() => void>>().toEqualTypeOf<true>()
+        expectTypeOf<IsFunction<() => void>>().toEqualTypeOf<true>()
     })
 
     test("IsObject", () => {

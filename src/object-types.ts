@@ -463,13 +463,7 @@ export type ReplaceKeys<Obj extends object, Keys extends keyof Obj, Replace exte
  * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>;
  */
 export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unknown }> = {
-    [Property in keyof Obj]: Obj[Property] extends Mapper["from"]
-        ? Mapper extends { from: infer From; to: infer To }
-            ? Obj[Property] extends From
-                ? To
-                : never
-            : Obj[Property]
-        : Obj[Property]
+    [Property in keyof Obj]: Equals<Obj[Property], Mapper["from"]> extends true ? Mapper["to"] : Obj[Property]
 }
 
 /**
@@ -588,11 +582,11 @@ export type GetOptional<T extends object> = {
  * type ReadonlyUser = DeepReadonly<User>;
  */
 export type DeepReadonly<Obj extends object> = {
-    readonly [Property in keyof Obj]: Obj[Property] extends Function
-        ? Obj[Property]
-        : Obj[Property] extends object
-          ? Prettify<DeepReadonly<Obj[Property]>>
-          : Obj[Property]
+    readonly [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepReadonly<Obj[Property]>>
+            : never
+        : Obj[Property]
 }
 
 /**
@@ -624,8 +618,10 @@ type DiscardLeft<T extends string> = {
  * type OmitNameUser = DeepOmit<User, "name">;
  */
 export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
-    [Property in Exclude<keyof Obj, Path>]: Obj[Property] extends object
-        ? Prettify<DeepOmit<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
+    [Property in Exclude<keyof Obj, Path>]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepOmit<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
+            : never
         : Obj[Property]
 }
 
@@ -683,7 +679,7 @@ export type DeepPick<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object 
  * type UserKeys = DeepKeys<User>
  */
 export type DeepKeys<Obj extends object> = {
-    [Property in keyof Obj]: Obj[Property] extends object
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
         ? // @ts-ignore
           TupleToUnion<[Property, `${Property & string}.${DeepKeys<Obj[Property]>}`]>
         : Property extends number
