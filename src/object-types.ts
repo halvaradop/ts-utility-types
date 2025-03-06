@@ -728,3 +728,45 @@ type DeepTruncateInternal<Obj extends object, Depth extends number, Level extend
  */
 export type DeepTruncate<Obj extends object, Depth extends number> =
     IsObject<Obj> extends true ? DeepTruncateInternal<Obj, Depth, []> : never
+
+/**
+ * Create a new object type with all properties being optional at any depth.
+ *
+ * @param {object} Obj - The object to make optional
+ * @example
+ *
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: { name?: string, address?: { street?: string, avenue?: string } }
+ * type UserOptional = DeepPartial<User>
+ */
+export type DeepPartial<Obj extends object> = {
+    [Property in keyof Obj]?: Obj[Property] extends object ? Prettify<DeepPartial<Obj[Property]>> : Obj[Property]
+}
+
+/**
+ * Create a new object type with all properties being required at any depth.
+ *
+ * @param {object} Obj - The object to make required
+ * @example
+ *
+ * interface User {
+ *   name?: string,
+ *   address?: {
+ *     street?: string,
+ *     avenue?: string
+ *   }
+ * }
+ *
+ * // Expected: { name: string, address: { street: string, avenue: string } }
+ * type UserRequired = DeepRequired<User>
+ */
+export type DeepRequired<Obj extends object> = {
+    [Property in keyof Obj]-?: Obj[Property] extends object ? Prettify<DeepRequired<Obj[Property]>> : Obj[Property]
+}
