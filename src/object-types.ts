@@ -482,10 +482,10 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  * type UserPrimitive = ToPrimitive<User>;
  */
 export type ToPrimitive<Obj extends object> = {
-    [Property in keyof Obj]: Obj[Property] extends object
-        ? Obj[Property] extends Function
-            ? Function
-            : ToPrimitive<Obj[Property]>
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<ToPrimitive<Obj[Property]>>
+            : never
         : ReturnTypeOf<Obj[Property]>
 }
 
@@ -743,7 +743,22 @@ export type DeepTruncate<Obj extends object, Depth extends number> =
  * type UserOptional = DeepPartial<User>
  */
 export type DeepPartial<Obj extends object> = {
-    [Property in keyof Obj]?: Obj[Property] extends object ? Prettify<DeepPartial<Obj[Property]>> : Obj[Property]
+    [Property in keyof Obj]?: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepPartial<Obj[Property]>>
+            : never
+        : Obj[Property]
+}
+
+/**
+ * @internal
+ */
+type DeepRequiredInternal<Obj extends object, RequiredObj = Required<Obj>> = {
+    [Property in keyof RequiredObj]-?: IsObject<RequiredObj[Property]> extends true
+        ? RequiredObj[Property] extends object
+            ? Prettify<DeepRequired<RequiredObj[Property]>>
+            : never
+        : RequiredObj[Property]
 }
 
 /**
@@ -763,6 +778,4 @@ export type DeepPartial<Obj extends object> = {
  * // Expected: { name: string, address: { street: string, avenue: string } }
  * type UserRequired = DeepRequired<User>
  */
-export type DeepRequired<Obj extends object> = {
-    [Property in keyof Obj]-?: Obj[Property] extends object ? Prettify<DeepRequired<Obj[Property]>> : Obj[Property]
-}
+export type DeepRequired<Obj extends object> = DeepRequiredInternal<Obj>

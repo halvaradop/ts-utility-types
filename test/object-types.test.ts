@@ -663,25 +663,39 @@ describe("DeepOmit", () => {
                 }
             }
         }>()
-        type Nose = utilities.DeepOmit<CaseTruncate<DeepWithArray, 5>, "">
     })
 })
 
 describe("ToPrimitive", () => {
     test("Converts a string to a primitive type", () => {
-        expectTypeOf<utilities.ToPrimitive<{ foo: string; bar: string }>>().toEqualTypeOf<{ foo: string; bar: string }>()
-        expectTypeOf<utilities.ToPrimitive<{ foo: "foobar"; bar: string }>>().toEqualTypeOf<{ foo: string; bar: string }>()
-        expectTypeOf<utilities.ToPrimitive<{ foo: "foobar"; bar: 12 }>>().toEqualTypeOf<{ foo: string; bar: number }>()
-        expectTypeOf<utilities.ToPrimitive<{ foo: { foobar: "fo"; bar: false }; bar: 12 }>>().toEqualTypeOf<{
-            foo: { foobar: string; bar: boolean }
+        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithObjectsA, 2>>>().toEqualTypeOf<{
+            foo: string
             bar: number
+            foobar: {
+                foo: boolean
+                bar: string
+                foobar: {}
+            }
+        }>()
+        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithFunctions, 2>>>().toEqualTypeOf<{
+            fix: Function
+            foobar: {
+                fix: Function
+                foobar: {}
+            }
+        }>()
+        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithArray, 2>>>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: number[]
+                foobar: {}
+            }
         }>()
     })
 })
 
 describe("GetRequired", () => {
     test("Get the required properties of an object", () => {
-        expectTypeOf<utilities.GetRequired<{ foo: string; bar?: number }>>().toEqualTypeOf<{ foo: string }>()
         expectTypeOf<utilities.GetRequired<{ foo: string; bar: number }>>().toEqualTypeOf<{ foo: string; bar: number }>()
         expectTypeOf<utilities.GetRequired<{ foo: null; bar: number }>>().toEqualTypeOf<{ foo: null; bar: number }>()
         expectTypeOf<utilities.GetRequired<{ foo: undefined; bar: number }>>().toEqualTypeOf<{ foo: undefined; bar: number }>()
@@ -701,42 +715,72 @@ describe("GetOptional", () => {
 
 describe("DeepPick", () => {
     test("Pick properties from nested objects", () => {
-        type Obj = {
-            foo: string
-            bar: number
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar">>().toEqualTypeOf<{
+            foo: boolean
+            bar: string
             foobar: {
-                foofoo: number
-                barbar: boolean
-                foo: {
+                foo: symbol
+                bar: number
+                foobar: {
+                    foo: bigint
                     bar: string
-                    foobar: number
-                    barfoo: {
-                        foobar: string
+                    foobar: {
                         bar: number
                     }
                 }
             }
-        }
-
-        expectTypeOf<utilities.DeepPick<Obj, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.DeepPick<Obj, "bar">>().toEqualTypeOf<number>()
-        expectTypeOf<utilities.DeepPick<Obj, "foobar">>().toEqualTypeOf<{
-            foofoo: number
-            barbar: boolean
-            foo: {
+        }>()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar">>().toEqualTypeOf<{
+            foo: symbol
+            bar: number
+            foobar: {
+                foo: bigint
                 bar: string
-                foobar: number
-                barfoo: {
-                    foobar: string
+                foobar: {
                     bar: number
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepPick<Obj, "foobar.barbar">>().toEqualTypeOf<boolean>()
-        expectTypeOf<utilities.DeepPick<Obj, "foobar.foo.barfoo">>().toEqualTypeOf<{
-            foobar: string
-            bar: number
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar.foobar">>().toEqualTypeOf<{
+            foo: bigint
+            bar: string
+            foobar: {
+                bar: number
+            }
         }>()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar.foo" | "foobar.foobar.bar">>().toEqualTypeOf<
+            symbol | number
+        >()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar" | "foobar.foobar.foobar">>().toEqualTypeOf<
+            | {
+                  foo: symbol
+                  bar: number
+                  foobar: {
+                      foo: bigint
+                      bar: string
+                      foobar: {
+                          bar: number
+                      }
+                  }
+              }
+            | {
+                  foo: bigint
+                  bar: string
+                  foobar: {
+                      bar: number
+                  }
+              }
+        >()
+        expectTypeOf<utilities.DeepPick<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix">>().toEqualTypeOf<
+            (() => number) | (() => string) | (() => boolean)
+        >()
+        expectTypeOf<utilities.DeepPick<DeepWithArray, "buz" | "foobar.buz" | "foobar.foobar.buz">>().toEqualTypeOf<
+            string[] | number[] | boolean[]
+        >()
+        expectTypeOf<
+            utilities.DeepPick<utilities.Merge<DeepWithArray, DeepWithFunctions>, "fix" | "buz" | "foobar.fix" | "foobar.buz">
+        >().toEqualTypeOf<(() => number) | string[] | (() => string) | number[]>()
     })
 })
 
@@ -917,6 +961,114 @@ describe("DeepTruncate", () => {
             foobar: {
                 fix: () => string
                 foobar: {}
+            }
+        }>()
+    })
+})
+
+describe("DeepPartial", () => {
+    test("DeepPartial for objects", () => {
+        expectTypeOf<utilities.DeepPartial<DeepWithObjectsA>>().toEqualTypeOf<{
+            foo?: string
+            bar?: number
+            foobar?: {
+                foo?: boolean
+                bar?: string
+                foobar?: {
+                    foo?: symbol
+                    bar?: number
+                    foobar?: {
+                        foo?: bigint
+                        bar?: string
+                        foobar?: {
+                            bar?: number
+                        }
+                    }
+                }
+            }
+        }>()
+    })
+    expectTypeOf<utilities.DeepPartial<DeepWithArray>>().toEqualTypeOf<{
+        buz?: string[]
+        foobar?: {
+            buz?: number[]
+            foobar?: {
+                buz?: boolean[]
+                foobar?: {
+                    buz?: symbol[]
+                    foobar?: {
+                        buz?: bigint[]
+                    }
+                }
+            }
+        }
+    }>()
+    expectTypeOf<utilities.DeepPartial<DeepWithFunctions>>().toEqualTypeOf<{
+        fix?: () => number
+        foobar?: {
+            fix?: () => string
+            foobar?: {
+                fix?: () => boolean
+                foobar?: {
+                    fix?: () => symbol
+                    foobar?: {
+                        fix?: () => bigint
+                    }
+                }
+            }
+        }
+    }>()
+})
+
+describe("DeepRequired", () => {
+    test("DeepRequired for objects", () => {
+        expectTypeOf<utilities.DeepRequired<utilities.DeepPartial<DeepWithObjectsA>>>().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: {
+                foo: boolean
+                bar: string
+                foobar: {
+                    foo: symbol
+                    bar: number
+                    foobar: {
+                        foo: bigint
+                        bar: string
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepRequired<utilities.DeepPartial<DeepWithFunctions>>>().toEqualTypeOf<{
+            fix: () => number
+            foobar: {
+                fix: () => string
+                foobar: {
+                    fix: () => boolean
+                    foobar: {
+                        fix: () => symbol
+                        foobar: {
+                            fix: () => bigint
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepRequired<utilities.DeepPartial<DeepWithArray>>>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: number[]
+                foobar: {
+                    buz: boolean[]
+                    foobar: {
+                        buz: symbol[]
+                        foobar: {
+                            buz: bigint[]
+                        }
+                    }
+                }
             }
         }>()
     })
