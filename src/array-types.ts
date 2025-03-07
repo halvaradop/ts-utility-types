@@ -1,5 +1,5 @@
 import type { Equals } from "./test.js"
-import type { IsNegative } from "./type-guards.js"
+import type { IsArray, IsFunction, IsNegative, IsObject } from "./type-guards.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -390,6 +390,8 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
     : false
 
 /**
+ * TODO: is it the correct location for this type?
+ *
  * Determines the primitive type corresponding to the provided value.
  *
  * @param {unknown} T - The value to get the type of
@@ -404,13 +406,15 @@ export type ReturnTypeOf<T> = T extends string
     ? string
     : T extends number
       ? number
-      : T extends object
-        ? object
-        : T extends boolean
-          ? boolean
-          : T extends Function
+      : T extends boolean
+        ? boolean
+        : IsObject<T> extends true
+          ? object
+          : IsFunction<T> extends true
             ? Function
-            : never
+            : IsArray<T> extends true
+              ? T
+              : T
 
 /**
  * @internal
