@@ -1116,3 +1116,124 @@ describe("DeepPick", () => {
         }>()
     })
 })
+
+describe("DeepNullable", () => {
+    test("Adds null vaalues for all of the properties of an objects", () => {
+        expectTypeOf<utilities.DeepNullable<Case<DeepWithObjectsA>>>().toEqualTypeOf<{
+            foo: string | null
+            bar: number | null
+            foobar: {} | null
+        }>()
+        expectTypeOf<utilities.DeepNullable<DeepWithObjectsA>>().toEqualTypeOf<{
+            foo: string | null
+            bar: number | null
+            foobar: {
+                foo: boolean | null
+                bar: string | null
+                foobar: {
+                    foo: symbol | null
+                    bar: number | null
+                    foobar: {
+                        foo: bigint | null
+                        bar: string | null
+                        foobar: {
+                            bar: number | null
+                        } | null
+                    } | null
+                } | null
+            } | null
+        }>()
+        expectTypeOf<utilities.DeepNullable<Case<DeepWithFunctions>>>().toEqualTypeOf<{
+            fix: (() => number) | null
+            foobar: {} | null
+        }>()
+        expectTypeOf<utilities.DeepNullable<DeepWithFunctions>>().toEqualTypeOf<{
+            fix: (() => number) | null
+            foobar: {
+                fix: (() => string) | null
+                foobar: {
+                    fix: (() => boolean) | null
+                    foobar: {
+                        fix: (() => symbol) | null
+                        foobar: {
+                            fix: (() => bigint) | null
+                        } | null
+                    } | null
+                } | null
+            } | null
+        }>()
+        expectTypeOf<utilities.DeepNullable<Case<DeepWithArray>>>().toEqualTypeOf<{
+            buz: string[] | null
+            foobar: {} | null
+        }>()
+        expectTypeOf<utilities.DeepNullable<DeepWithArray>>().toEqualTypeOf<{
+            buz: string[] | null
+            foobar: {
+                buz: number[] | null
+                foobar: {
+                    buz: boolean[] | null
+                    foobar: {
+                        buz: symbol[] | null
+                        foobar: {
+                            buz: bigint[] | null
+                        } | null
+                    } | null
+                } | null
+            } | null
+        }>()
+    })
+})
+
+describe("DeepNonNullable", () => {
+    test("Removes null values for all of the properties of an objects", () => {
+        expectTypeOf<utilities.DeepNonNullable<utilities.DeepNullable<DeepWithObjectsA>>>().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: {
+                foo: boolean
+                bar: string
+                foobar: {
+                    foo: symbol
+                    bar: number
+                    foobar: {
+                        foo: bigint
+                        bar: string
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepNonNullable<utilities.DeepNullable<DeepWithArray>>>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: number[]
+                foobar: {
+                    buz: boolean[]
+                    foobar: {
+                        buz: symbol[]
+                        foobar: {
+                            buz: bigint[]
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepNonNullable<utilities.DeepNullable<DeepWithFunctions>>>().toEqualTypeOf<{
+            fix: () => number
+            foobar: {
+                fix: () => string
+                foobar: {
+                    fix: () => boolean
+                    foobar: {
+                        fix: () => symbol
+                        foobar: {
+                            fix: () => bigint
+                        }
+                    }
+                }
+            }
+        }>()
+    })
+})
