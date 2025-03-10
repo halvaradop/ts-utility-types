@@ -814,3 +814,51 @@ export type DeepPick<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj>
             : never
         : Obj[Property]
 }
+
+/**
+ * Append a null value to all properties of an object at any depth.
+ * This is the opposite of `DeepNonNullable`.
+ *
+ * @param {object} Obj - The object to append the null value
+ * @example
+ *
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: { name: string | null, address: { street: string | null, avenue: string | null } }
+ * type UserNullable = DeepNullable<User>
+ */
+export type DeepNullable<Obj extends object> = {
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Prettify<DeepNullable<Obj[Property] & {}>> | null
+        : Obj[Property] | null
+}
+
+/**
+ * Removes the null value from all properties of an object at any depth.
+ * This is the opposite of `DeepNullable`.
+ *
+ * @param {object} Obj - The object to remove the null value
+ * @example
+ *
+ * interface User {
+ *   name: string | null,
+ *   address: {
+ *     street: string | null,
+ *     avenue: string | null
+ *   } | null
+ * }
+ *
+ * // Expected: { name: string, address: { street: string, avenue: string } }
+ * type UserNonNullable = DeepNonNullable<User>
+ */
+export type DeepNonNullable<Obj extends object> = {
+    [Property in keyof Obj]: IsObject<Exclude<Obj[Property], null>> extends true
+        ? Prettify<DeepNonNullable<Exclude<Obj[Property] & {}, null>>>
+        : Exclude<Obj[Property], null>
+}
