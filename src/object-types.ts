@@ -630,20 +630,20 @@ export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj>
  *
  * @internal
  */
-type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`
+type InternalDeepGet<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`
     ? Left extends keyof Obj
-        ? InternalDeepPick<Obj[Left], Right>
+        ? InternalDeepGet<Obj[Left], Right>
         : unknown
     : Path extends keyof Obj
       ? Obj[Path]
       : unknown
 
 /**
- * Picks the properties of an object at any depth based on the provided path.
- *
- * @param {object} Obj - The object to pick the properties from
- * @param {string} Path - The path to pick the properties
+ * Get the value of a property in an object at any depth based on the provided path string
+ * @param {object} Obj - The object to get the value from
+ * @param {string} Path - The path to get the value
  * @example
+ *
  * interface User {
  *   name: string,
  *   address: {
@@ -653,10 +653,12 @@ type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${
  * }
  *
  * // Expected: string
- * type UserPick = DeepPick<User, "address.street">
+ * type UserName = DeepGet<User, "name">
  *
+ * // Expected: string
+ * type UserStreet = DeepGet<User, "address.street">
  */
-export type DeepPick<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ? Obj : never> & string>> = InternalDeepPick<
+export type DeepGet<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ? Obj : never> & string>> = InternalDeepGet<
     Obj,
     Path
 >
@@ -779,3 +781,36 @@ type DeepRequiredInternal<Obj extends object, RequiredObj = Required<Obj>> = {
  * type UserRequired = DeepRequired<User>
  */
 export type DeepRequired<Obj extends object> = DeepRequiredInternal<Obj>
+
+/**
+ * @internal
+ */
+type DiscardRight<T extends string> = {
+    [Property in T]: Property extends `${infer Left}.${string}` ? Left : never
+}[T]
+
+/**
+ * Picks the properties of an object at any depth based on the provided path.
+ *
+ * @param {object} Obj - The object to pick the properties from
+ * @param {string} Path - The path to pick the properties
+ * @example
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: string
+ * type UserPick = DeepPick<User, "address.street">
+ *
+ */
+export type DeepPick<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
+    [Property in Extract<keyof Obj, Path | DiscardRight<Path>>]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepPick<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
+            : never
+        : Obj[Property]
+}

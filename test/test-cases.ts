@@ -77,3 +77,5 @@ export type MergeCases<Depth extends number = 1> = MergeAll<
         DeepTruncate<DeepWithFunctions, Depth>,
     ]
 >
+
+export type Case<Obj extends object, Depth extends number = 1> = DeepTruncate<Obj, Depth>

@@ -1,45 +1,44 @@
 import { describe, test, expectTypeOf } from "vitest"
 import type * as utilities from "../src/object-types"
-import type { DeepTruncate as CaseTruncate } from "../src/object-types"
-import type { DeepWithObjectsA, DeepWithObjectsB, DeepWithArray, DeepWithFunctions, MergeCases } from "./test-cases"
+import type { DeepWithObjectsA, DeepWithObjectsB, DeepWithArray, DeepWithFunctions, MergeCases, Case } from "./test-cases"
 
 describe("Properties with keyof", () => {
     test("Combines keys of two object types", () => {
-        expectTypeOf<utilities.Properties<CaseTruncate<DeepWithObjectsA, 1>, {}>>().toEqualTypeOf<"foo" | "bar" | "foobar">()
-        expectTypeOf<utilities.Properties<CaseTruncate<DeepWithObjectsB, 1>, {}>>().toEqualTypeOf<"bar" | "fiz" | "foobar">()
-        expectTypeOf<utilities.Properties<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>>>().toEqualTypeOf<
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsA>, {}>>().toEqualTypeOf<"foo" | "bar" | "foobar">()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsB>, {}>>().toEqualTypeOf<"bar" | "fiz" | "foobar">()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>>>().toEqualTypeOf<
             "foo" | "bar" | "foobar" | "fiz"
         >()
-        expectTypeOf<utilities.Properties<CaseTruncate<DeepWithObjectsA, 1>, {}, true>>().toEqualTypeOf<never>()
-        expectTypeOf<utilities.Properties<CaseTruncate<DeepWithObjectsB, 1>, {}, true>>().toEqualTypeOf<never>()
-        expectTypeOf<
-            utilities.Properties<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsA, 1>, true>
-        >().toEqualTypeOf<"foo" | "bar" | "foobar">()
-        expectTypeOf<
-            utilities.Properties<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>, true>
-        >().toEqualTypeOf<"bar" | "foobar">()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsA>, {}, true>>().toEqualTypeOf<never>()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsB>, {}, true>>().toEqualTypeOf<never>()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsA>, Case<DeepWithObjectsA>, true>>().toEqualTypeOf<
+            "foo" | "bar" | "foobar"
+        >()
+        expectTypeOf<utilities.Properties<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, true>>().toEqualTypeOf<
+            "bar" | "foobar"
+        >()
     })
 })
 
 describe("Merge", () => {
     test("Merge two object types with source priority", () => {
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 1>, {}>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA>, {}>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsB, 1>, {}>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsB>, {}>>().toEqualTypeOf<{
             fiz: string
             bar: boolean
             foobar: {}
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
             fiz: string
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 2>, CaseTruncate<DeepWithObjectsB, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 2>, Case<DeepWithObjectsB, 2>>>().toEqualTypeOf<{
             foo: string
             bar: number
             fiz: string
@@ -49,7 +48,7 @@ describe("Merge", () => {
                 foobar: {}
             }
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 3>, CaseTruncate<DeepWithObjectsB, 3>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 3>, Case<DeepWithObjectsB, 3>>>().toEqualTypeOf<{
             foo: string
             bar: number
             fiz: string
@@ -67,7 +66,7 @@ describe("Merge", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 4>, CaseTruncate<DeepWithObjectsB, 4>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 4>, Case<DeepWithObjectsB, 4>>>().toEqualTypeOf<{
             foo: string
             bar: number
             fiz: string
@@ -95,27 +94,23 @@ describe("Merge", () => {
     })
 
     test("Merge two object types with union enabled", () => {
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsA, 1>, {}, true>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA>, {}, true>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
         }>()
-        expectTypeOf<utilities.Merge<CaseTruncate<DeepWithObjectsB, 1>, {}, true>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsB>, {}, true>>().toEqualTypeOf<{
             fiz: string
             bar: boolean
             foobar: {}
         }>()
-        expectTypeOf<
-            utilities.Merge<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>, true>
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, true>>().toEqualTypeOf<{
             foo: string
             bar: number | boolean
             foobar: {}
             fiz: string
         }>()
-        expectTypeOf<
-            utilities.Merge<CaseTruncate<DeepWithObjectsA, 2>, CaseTruncate<DeepWithObjectsB, 2>, true>
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 2>, Case<DeepWithObjectsB, 2>, true>>().toEqualTypeOf<{
             foo: string
             bar: number | boolean
             fiz: string
@@ -131,9 +126,7 @@ describe("Merge", () => {
                       bar: {}
                   }
         }>()
-        expectTypeOf<
-            utilities.Merge<CaseTruncate<DeepWithObjectsA, 3>, CaseTruncate<DeepWithObjectsB, 3>, true>
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 3>, Case<DeepWithObjectsB, 3>, true>>().toEqualTypeOf<{
             foo: string
             bar: number | boolean
             fiz: string
@@ -158,9 +151,7 @@ describe("Merge", () => {
                   }
         }>()
 
-        expectTypeOf<
-            utilities.Merge<CaseTruncate<DeepWithObjectsA, 4>, CaseTruncate<DeepWithObjectsB, 4>, true>
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Merge<Case<DeepWithObjectsA, 4>, Case<DeepWithObjectsB, 4>, true>>().toEqualTypeOf<{
             foo: string
             bar: number | boolean
             fiz: string
@@ -204,7 +195,7 @@ describe("MergeAll", () => {
             fix: () => number
             buz: string[]
         }>()
-        expectTypeOf<utilities.MergeAll<[CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>]>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MergeAll<[Case<DeepWithObjectsA>, Case<DeepWithObjectsB>]>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
@@ -215,22 +206,24 @@ describe("MergeAll", () => {
 
 describe("Intersection", () => {
     test("Intersection of properties between two objects", () => {
-        expectTypeOf<
-            utilities.Intersection<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>>
-        >().toEqualTypeOf<{ foo: string; fiz: string }>()
-        expectTypeOf<utilities.Intersection<CaseTruncate<DeepWithArray, 1>, CaseTruncate<DeepWithObjectsB, 1>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Intersection<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>>>().toEqualTypeOf<{
+            foo: string
+            fiz: string
+        }>()
+        expectTypeOf<utilities.Intersection<Case<DeepWithArray>, Case<DeepWithObjectsB>>>().toEqualTypeOf<{
             bar: boolean
             fiz: string
             buz: string[]
         }>()
-        expectTypeOf<
-            utilities.Intersection<CaseTruncate<DeepWithObjectsA, 2>, CaseTruncate<DeepWithObjectsB, 2>>
-        >().toEqualTypeOf<{ foo: string; fiz: string }>()
-        expectTypeOf<utilities.Intersection<CaseTruncate<DeepWithArray, 2>, CaseTruncate<DeepWithFunctions, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Intersection<Case<DeepWithObjectsA, 2>, Case<DeepWithObjectsB, 2>>>().toEqualTypeOf<{
+            foo: string
+            fiz: string
+        }>()
+        expectTypeOf<utilities.Intersection<Case<DeepWithArray, 2>, Case<DeepWithFunctions, 2>>>().toEqualTypeOf<{
             fix: () => number
             buz: string[]
         }>()
-        expectTypeOf<utilities.Intersection<CaseTruncate<DeepWithArray, 2>, CaseTruncate<DeepWithFunctions, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Intersection<Case<DeepWithArray, 2>, Case<DeepWithFunctions, 2>>>().toEqualTypeOf<{
             fix: () => number
             buz: string[]
         }>()
@@ -239,13 +232,13 @@ describe("Intersection", () => {
 
 describe("FlattenProperties", () => {
     test("Extract property from object", () => {
-        expectTypeOf<utilities.FlattenProperties<CaseTruncate<DeepWithObjectsA, 1>, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.FlattenProperties<Case<DeepWithObjectsA>, "foobar">>().toEqualTypeOf<{
             foo: string
             bar: number
         }>()
         // Please check the behavior of this test
         // @ts-expect-error
-        expectTypeOf<utilities.FlattenProperties<CaseTruncate<DeepWithObjectsA, 2>, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.FlattenProperties<Case<DeepWithObjectsA, 2>, "foobar">>().toEqualTypeOf<{
             foo: boolean
             bar: string
         }>()
@@ -264,53 +257,43 @@ describe("PublicOnly", () => {
 
 describe("Get", () => {
     test("Exist the key within objects", () => {
-        expectTypeOf<
-            utilities.Get<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>, "foo">
-        >().toEqualTypeOf<string>()
-        expectTypeOf<
-            utilities.Get<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>, "foo" | "bar">
-        >().toEqualTypeOf<string | number>()
-        expectTypeOf<
-            utilities.Get<CaseTruncate<DeepWithObjectsA, 1>, CaseTruncate<DeepWithObjectsB, 1>, "foo" | "fiz">
-        >().toEqualTypeOf<string>()
-        expectTypeOf<
-            utilities.Get<CaseTruncate<DeepWithArray, 1>, CaseTruncate<DeepWithFunctions, 1>, "buz" | "fix">
-        >().toEqualTypeOf<string[] | (() => number)>()
-        expectTypeOf<
-            utilities.Get<CaseTruncate<DeepWithObjectsA, 2>, CaseTruncate<DeepWithObjectsB, 2>, "foobar">
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Get<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, "foo" | "bar">>().toEqualTypeOf<
+            string | number
+        >()
+        expectTypeOf<utilities.Get<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, "foo" | "fiz">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.Get<Case<DeepWithArray>, Case<DeepWithFunctions>, "buz" | "fix">>().toEqualTypeOf<
+            string[] | (() => number)
+        >()
+        expectTypeOf<utilities.Get<Case<DeepWithObjectsA, 2>, Case<DeepWithObjectsB, 2>, "foobar">>().toEqualTypeOf<{
             foo: boolean
             bar: string
             foobar: {}
         }>()
-        expectTypeOf<utilities.Get<CaseTruncate<DeepWithArray, 2>, CaseTruncate<DeepWithObjectsB, 2>, "buz">>().toEqualTypeOf<
-            string[]
-        >()
-        expectTypeOf<utilities.Get<CaseTruncate<DeepWithFunctions, 2>, CaseTruncate<DeepWithObjectsB, 2>, "fix">>().toEqualTypeOf<
-            () => number
-        >()
+        expectTypeOf<utilities.Get<Case<DeepWithArray, 2>, Case<DeepWithObjectsB, 2>, "buz">>().toEqualTypeOf<string[]>()
+        expectTypeOf<utilities.Get<Case<DeepWithFunctions, 2>, Case<DeepWithObjectsB, 2>, "fix">>().toEqualTypeOf<() => number>()
         expectTypeOf<utilities.Get<MergeCases, {}, "fix" | "fiz" | "buz">>().toEqualTypeOf<string | string[] | (() => number)>()
     })
 })
 
 describe("RequiredByKeys", () => {
     test("Convert required properties in an object", () => {
-        expectTypeOf<utilities.RequiredByKeys<Partial<CaseTruncate<DeepWithObjectsA, 1>>, "bar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.RequiredByKeys<Partial<Case<DeepWithObjectsA>>, "bar">>().toEqualTypeOf<{
             bar: number
             foo?: string
             foobar?: {}
         }>()
-        expectTypeOf<utilities.RequiredByKeys<Partial<CaseTruncate<DeepWithObjectsA, 1>>, "bar" | "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.RequiredByKeys<Partial<Case<DeepWithObjectsA>>, "bar" | "foobar">>().toEqualTypeOf<{
             bar: number
             foo?: string
             foobar: {}
         }>()
-        expectTypeOf<utilities.RequiredByKeys<Partial<CaseTruncate<DeepWithObjectsB, 1>>, "fiz">>().toEqualTypeOf<{
+        expectTypeOf<utilities.RequiredByKeys<Partial<Case<DeepWithObjectsB>>, "fiz">>().toEqualTypeOf<{
             bar?: boolean
             fiz: string
             foobar?: {}
         }>()
-        expectTypeOf<utilities.RequiredByKeys<Partial<CaseTruncate<DeepWithObjectsB, 1>>, "fiz">>().toEqualTypeOf<{
+        expectTypeOf<utilities.RequiredByKeys<Partial<Case<DeepWithObjectsB>>, "fiz">>().toEqualTypeOf<{
             bar?: boolean
             fiz: string
             foobar?: {}
@@ -344,7 +327,7 @@ describe("RequiredByKeys", () => {
 
 describe("Mutable", () => {
     test("Converts properties to non readonly only one level", () => {
-        expectTypeOf<utilities.Mutable<utilities.DeepReadonly<CaseTruncate<DeepWithObjectsA, 2>>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Mutable<utilities.DeepReadonly<Case<DeepWithObjectsA, 2>>>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {
@@ -353,7 +336,7 @@ describe("Mutable", () => {
                 readonly foobar: {}
             }
         }>()
-        expectTypeOf<utilities.Mutable<utilities.DeepReadonly<CaseTruncate<DeepWithObjectsA, 3>>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Mutable<utilities.DeepReadonly<Case<DeepWithObjectsA, 3>>>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {
@@ -453,19 +436,17 @@ describe("Append", () => {
             foo: string
             bar: string | boolean | number
         }>()
-        expectTypeOf<utilities.Append<CaseTruncate<DeepWithArray, 1>, "bar", [1, 2, 3]>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<Case<DeepWithArray>, "bar", [1, 2, 3]>>().toEqualTypeOf<{
             buz: string[]
             foobar: {}
             bar: [1, 2, 3]
         }>()
-        expectTypeOf<utilities.Append<CaseTruncate<DeepWithFunctions, 1>, "buz", (num: number) => string>>().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<Case<DeepWithFunctions>, "buz", (num: number) => string>>().toEqualTypeOf<{
             fix: () => number
             foobar: {}
             buz: (num: number) => string
         }>()
-        expectTypeOf<
-            utilities.Append<CaseTruncate<DeepWithObjectsA, 1>, "appened", CaseTruncate<DeepWithObjectsB, 1>>
-        >().toEqualTypeOf<{
+        expectTypeOf<utilities.Append<Case<DeepWithObjectsA>, "appened", Case<DeepWithObjectsB>>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
@@ -481,23 +462,23 @@ describe("Append", () => {
 describe("Omit Properties", () => {
     describe("OmitByType", () => {
         test("Omit the properties based on the type", () => {
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithObjectsA, 1>, string>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithObjectsA>, string>>().toEqualTypeOf<{
                 bar: number
                 foobar: {}
             }>()
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithObjectsA, 1>, string | object>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithObjectsA>, string | object>>().toEqualTypeOf<{
                 bar: number
             }>()
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithObjectsA, 1>, string | number>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithObjectsA>, string | number>>().toEqualTypeOf<{
                 foobar: {}
             }>()
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithObjectsB, 1>, boolean | object>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithObjectsB>, boolean | object>>().toEqualTypeOf<{
                 fiz: string
             }>()
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithArray, 1>, string[]>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithArray>, string[]>>().toEqualTypeOf<{
                 foobar: {}
             }>()
-            expectTypeOf<utilities.OmitByType<CaseTruncate<DeepWithFunctions, 1>, () => number>>().toEqualTypeOf<{
+            expectTypeOf<utilities.OmitByType<Case<DeepWithFunctions>, () => number>>().toEqualTypeOf<{
                 foobar: {}
             }>()
         })
@@ -518,24 +499,24 @@ describe("ObjectEntries", () => {
 describe("Pick Utilities", () => {
     describe("PickByType", () => {
         test("Pick by type", () => {
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithObjectsA, 1>, number>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithObjectsA>, number>>().toEqualTypeOf<{
                 bar: number
             }>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithObjectsA, 1>, object>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithObjectsA>, object>>().toEqualTypeOf<{
                 foobar: {}
             }>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithObjectsB, 1>, boolean | string>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithObjectsB>, boolean | string>>().toEqualTypeOf<{
                 bar: boolean
                 fiz: string
             }>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithFunctions, 1>, () => number>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithFunctions>, () => number>>().toEqualTypeOf<{
                 fix: () => number
             }>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithFunctions, 1>, () => string>>().toEqualTypeOf<{}>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithArray, 1>, string[]>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithFunctions>, () => string>>().toEqualTypeOf<{}>()
+            expectTypeOf<utilities.PickByType<Case<DeepWithArray>, string[]>>().toEqualTypeOf<{
                 buz: string[]
             }>()
-            expectTypeOf<utilities.PickByType<CaseTruncate<DeepWithArray, 1>, unknown[]>>().toEqualTypeOf<{
+            expectTypeOf<utilities.PickByType<Case<DeepWithArray>, unknown[]>>().toEqualTypeOf<{
                 buz: string[]
             }>()
         })
@@ -544,13 +525,13 @@ describe("Pick Utilities", () => {
 
 describe("ReplaceKeys", () => {
     test("Replace the key types", () => {
-        expectTypeOf<utilities.ReplaceKeys<CaseTruncate<DeepWithObjectsA, 1>, "bar", { bar: boolean }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ReplaceKeys<Case<DeepWithObjectsA>, "bar", { bar: boolean }>>().toEqualTypeOf<{
             foo: string
             bar: boolean
             foobar: {}
         }>()
         expectTypeOf<
-            utilities.ReplaceKeys<CaseTruncate<DeepWithObjectsA, 1>, "foobar", { foobar: { bar: boolean; fiz: string } }>
+            utilities.ReplaceKeys<Case<DeepWithObjectsA>, "foobar", { foobar: { bar: boolean; fiz: string } }>
         >().toEqualTypeOf<{
             foo: string
             bar: number
@@ -560,7 +541,7 @@ describe("ReplaceKeys", () => {
             }
         }>()
         expectTypeOf<
-            utilities.ReplaceKeys<CaseTruncate<DeepWithObjectsA, 1>, "bar" | "foobar", { bar: boolean; foobar: () => void }>
+            utilities.ReplaceKeys<Case<DeepWithObjectsA>, "bar" | "foobar", { bar: boolean; foobar: () => void }>
         >().toEqualTypeOf<{
             foo: string
             bar: boolean
@@ -571,32 +552,32 @@ describe("ReplaceKeys", () => {
 
 describe("MapTypes", () => {
     test("Replace the types of the keys that match with Mapper type", () => {
-        expectTypeOf<utilities.MapTypes<CaseTruncate<DeepWithObjectsA, 1>, { from: boolean; to: number }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MapTypes<Case<DeepWithObjectsA>, { from: boolean; to: number }>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {}
         }>()
-        expectTypeOf<utilities.MapTypes<CaseTruncate<DeepWithObjectsA, 1>, { from: string; to: number }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MapTypes<Case<DeepWithObjectsA>, { from: string; to: number }>>().toEqualTypeOf<{
             foo: number
             bar: number
             foobar: {}
         }>()
-        expectTypeOf<utilities.MapTypes<CaseTruncate<DeepWithObjectsA, 1>, { from: {}; to: number }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MapTypes<Case<DeepWithObjectsA>, { from: {}; to: number }>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: number
         }>()
-        expectTypeOf<utilities.MapTypes<CaseTruncate<DeepWithArray, 1>, { from: object; to: number }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MapTypes<Case<DeepWithArray>, { from: object; to: number }>>().toEqualTypeOf<{
             buz: string[]
             foobar: {}
         }>()
-        expectTypeOf<utilities.MapTypes<CaseTruncate<DeepWithFunctions, 1>, { from: () => number; to: string }>>().toEqualTypeOf<{
+        expectTypeOf<utilities.MapTypes<Case<DeepWithFunctions>, { from: () => number; to: string }>>().toEqualTypeOf<{
             fix: string
             foobar: {}
         }>()
         expectTypeOf<
             utilities.MapTypes<
-                CaseTruncate<DeepWithObjectsA, 2>,
+                Case<DeepWithObjectsA, 2>,
                 {
                     from: {
                         foo: boolean
@@ -613,7 +594,7 @@ describe("MapTypes", () => {
         }>()
         // TODO: Check why this test is failing
         expectTypeOf<
-            utilities.MapTypes<CaseTruncate<DeepWithObjectsA, 1>, { from: string; to: number } | { from: {}; to: number }>
+            utilities.MapTypes<Case<DeepWithObjectsA>, { from: string; to: number } | { from: {}; to: number }>
             // @ts-ignore
         >().toEqualTypeOf<{
             foo: number
@@ -625,7 +606,7 @@ describe("MapTypes", () => {
 
 describe("DeepOmit", () => {
     test("Omit properties from nested objects", () => {
-        expectTypeOf<utilities.DeepOmit<CaseTruncate<DeepWithObjectsA, 5>, "foo">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepOmit<Case<DeepWithObjectsA, 5>, "foo">>().toEqualTypeOf<{
             bar: number
             foobar: {
                 foo: boolean
@@ -644,10 +625,7 @@ describe("DeepOmit", () => {
             }
         }>()
         expectTypeOf<
-            utilities.DeepOmit<
-                CaseTruncate<DeepWithObjectsA, 5>,
-                "foo" | "foobar.bar" | "foobar.foobar.foo" | "foobar.foobar.foobar.bar"
-            >
+            utilities.DeepOmit<DeepWithObjectsA, "foo" | "foobar.bar" | "foobar.foobar.foo" | "foobar.foobar.foobar.bar">
         >().toEqualTypeOf<{
             bar: number
             foobar: {
@@ -668,7 +646,7 @@ describe("DeepOmit", () => {
 
 describe("ToPrimitive", () => {
     test("Converts a string to a primitive type", () => {
-        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithObjectsA, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ToPrimitive<Case<DeepWithObjectsA, 2>>>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar: {
@@ -677,14 +655,14 @@ describe("ToPrimitive", () => {
                 foobar: {}
             }
         }>()
-        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithFunctions, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ToPrimitive<Case<DeepWithFunctions, 2>>>().toEqualTypeOf<{
             fix: Function
             foobar: {
                 fix: Function
                 foobar: {}
             }
         }>()
-        expectTypeOf<utilities.ToPrimitive<CaseTruncate<DeepWithArray, 2>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.ToPrimitive<Case<DeepWithArray, 2>>>().toEqualTypeOf<{
             buz: string[]
             foobar: {
                 buz: number[]
@@ -713,10 +691,10 @@ describe("GetOptional", () => {
     })
 })
 
-describe("DeepPick", () => {
+describe("DeepGet", () => {
     test("Pick properties from nested objects", () => {
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foo">>().toEqualTypeOf<string>()
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foo">>().toEqualTypeOf<string>()
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foobar">>().toEqualTypeOf<{
             foo: boolean
             bar: string
             foobar: {
@@ -731,7 +709,7 @@ describe("DeepPick", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foobar.foobar">>().toEqualTypeOf<{
             foo: symbol
             bar: number
             foobar: {
@@ -742,17 +720,17 @@ describe("DeepPick", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar.foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foobar.foobar.foobar">>().toEqualTypeOf<{
             foo: bigint
             bar: string
             foobar: {
                 bar: number
             }
         }>()
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar.foo" | "foobar.foobar.bar">>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foobar.foobar.foo" | "foobar.foobar.bar">>().toEqualTypeOf<
             symbol | number
         >()
-        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar" | "foobar.foobar.foobar">>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepGet<DeepWithObjectsA, "foobar.foobar" | "foobar.foobar.foobar">>().toEqualTypeOf<
             | {
                   foo: symbol
                   bar: number
@@ -772,35 +750,35 @@ describe("DeepPick", () => {
                   }
               }
         >()
-        expectTypeOf<utilities.DeepPick<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix">>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepGet<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix">>().toEqualTypeOf<
             (() => number) | (() => string) | (() => boolean)
         >()
-        expectTypeOf<utilities.DeepPick<DeepWithArray, "buz" | "foobar.buz" | "foobar.foobar.buz">>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepGet<DeepWithArray, "buz" | "foobar.buz" | "foobar.foobar.buz">>().toEqualTypeOf<
             string[] | number[] | boolean[]
         >()
         expectTypeOf<
-            utilities.DeepPick<utilities.Merge<DeepWithArray, DeepWithFunctions>, "fix" | "buz" | "foobar.fix" | "foobar.buz">
+            utilities.DeepGet<utilities.Merge<DeepWithArray, DeepWithFunctions>, "fix" | "buz" | "foobar.fix" | "foobar.buz">
         >().toEqualTypeOf<(() => number) | string[] | (() => string) | number[]>()
     })
 })
 
 describe("PartialByKeys", () => {
     test("Convert required properties in an object", () => {
-        expectTypeOf<utilities.PartialByKeys<CaseTruncate<DeepWithObjectsA, 1>, "foobar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.PartialByKeys<Case<DeepWithObjectsA>, "foobar">>().toEqualTypeOf<{
             foo: string
             bar: number
             foobar?: {}
         }>()
-        expectTypeOf<utilities.PartialByKeys<CaseTruncate<DeepWithObjectsA, 1>, "foo" | "bar">>().toEqualTypeOf<{
+        expectTypeOf<utilities.PartialByKeys<Case<DeepWithObjectsA>, "foo" | "bar">>().toEqualTypeOf<{
             foo?: string
             bar?: number
             foobar: {}
         }>()
-        expectTypeOf<utilities.PartialByKeys<CaseTruncate<DeepWithFunctions, 1>, "fix">>().toEqualTypeOf<{
+        expectTypeOf<utilities.PartialByKeys<Case<DeepWithFunctions>, "fix">>().toEqualTypeOf<{
             fix?: () => number
             foobar: {}
         }>()
-        expectTypeOf<utilities.PartialByKeys<CaseTruncate<DeepWithArray, 1>, "buz">>().toEqualTypeOf<{
+        expectTypeOf<utilities.PartialByKeys<Case<DeepWithArray>, "buz">>().toEqualTypeOf<{
             buz?: string[]
             foobar: {}
         }>()
@@ -809,7 +787,7 @@ describe("PartialByKeys", () => {
 
 describe("DeepKeys", () => {
     test("Get the paths of an object", () => {
-        expectTypeOf<utilities.DeepKeys<CaseTruncate<DeepWithObjectsA, 5>>>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepKeys<DeepWithObjectsA>>().toEqualTypeOf<
             | "foo"
             | "bar"
             | "foobar"
@@ -824,7 +802,7 @@ describe("DeepKeys", () => {
             | "foobar.foobar.foobar.foobar"
             | "foobar.foobar.foobar.foobar.bar"
         >()
-        expectTypeOf<utilities.DeepKeys<CaseTruncate<DeepWithArray, 5>>>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepKeys<DeepWithArray>>().toEqualTypeOf<
             | "buz"
             | "foobar"
             | "foobar.buz"
@@ -835,7 +813,7 @@ describe("DeepKeys", () => {
             | "foobar.foobar.foobar.foobar"
             | "foobar.foobar.foobar.foobar.buz"
         >()
-        expectTypeOf<utilities.DeepKeys<CaseTruncate<DeepWithFunctions, 5>>>().toEqualTypeOf<
+        expectTypeOf<utilities.DeepKeys<DeepWithFunctions>>().toEqualTypeOf<
             | "fix"
             | "foobar"
             | "foobar.fix"
@@ -851,12 +829,12 @@ describe("DeepKeys", () => {
 
 describe("Readonly", () => {
     test("DeepReadonly for objects", () => {
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithObjectsA, 1>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<Case<DeepWithObjectsA>>>().toEqualTypeOf<{
             readonly foo: string
             readonly bar: number
             readonly foobar: {}
         }>()
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithObjectsA, 5>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<DeepWithObjectsA>>().toEqualTypeOf<{
             readonly foo: string
             readonly bar: number
             readonly foobar: {
@@ -875,11 +853,11 @@ describe("Readonly", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithFunctions, 1>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<Case<DeepWithFunctions>>>().toEqualTypeOf<{
             readonly fix: () => number
             readonly foobar: {}
         }>()
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithFunctions, 5>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<DeepWithFunctions>>().toEqualTypeOf<{
             readonly fix: () => number
             readonly foobar: {
                 readonly fix: () => string
@@ -894,11 +872,11 @@ describe("Readonly", () => {
                 }
             }
         }>()
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithArray, 1>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<Case<DeepWithArray>>>().toEqualTypeOf<{
             readonly buz: string[]
             readonly foobar: {}
         }>()
-        expectTypeOf<utilities.DeepReadonly<CaseTruncate<DeepWithArray, 5>>>().toEqualTypeOf<{
+        expectTypeOf<utilities.DeepReadonly<DeepWithArray>>().toEqualTypeOf<{
             readonly buz: string[]
             readonly foobar: {
                 readonly buz: number[]
@@ -1068,6 +1046,71 @@ describe("DeepRequired", () => {
                             buz: bigint[]
                         }
                     }
+                }
+            }
+        }>()
+    })
+})
+
+describe("DeepPick", () => {
+    test("Pick properties from nested objects", () => {
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foo">>().toEqualTypeOf<{ foo: string }>()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foo" | "bar">>().toEqualTypeOf<{ foo: string; bar: number }>()
+        expectTypeOf<
+            utilities.DeepPick<DeepWithObjectsA, "foo" | "bar" | "foobar" | "foobar.foo" | "foobar.bar">
+        >().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: {
+                foo: boolean
+                bar: string
+            }
+        }>()
+        expectTypeOf<utilities.DeepPick<DeepWithObjectsA, "foobar.foobar.foobar.foobar.bar">>().toEqualTypeOf<{
+            foobar: {
+                foobar: {
+                    foobar: {
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<
+            utilities.DeepPick<
+                DeepWithObjectsA,
+                "foobar.foo" | "foobar.foobar.bar" | "foobar.foobar.foobar.foo" | "foobar.foobar.foobar.foobar.bar"
+            >
+        >().toEqualTypeOf<{
+            foobar: {
+                foo: boolean
+                foobar: {
+                    bar: number
+                    foobar: {
+                        foo: bigint
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepPick<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix">>().toEqualTypeOf<{
+            fix: () => number
+            foobar: {
+                fix: () => string
+                foobar: {
+                    fix: () => boolean
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepPick<DeepWithArray, "buz" | "foobar.buz" | "foobar.foobar.buz">>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: number[]
+                foobar: {
+                    buz: boolean[]
                 }
             }
         }>()
