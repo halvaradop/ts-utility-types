@@ -1,5 +1,5 @@
 import type { Equals } from "./test.js"
-import type { IsNever } from "./type-guards.d.ts"
+import type { IsNever, IsObject } from "./type-guards.d.ts"
 import type { ReturnTypeOf, TupleToUnion } from "./array-types.js"
 
 /**
@@ -281,6 +281,10 @@ export type OmitByType<Obj extends object, Type> = {
 }
 
 /**
+ * @unstable
+ * The type is unstable and may be removed in the future.
+ * The behavior of this type is not the expected one.
+ *
  * Extracts the value of a key from an object and returns a new object with that value,
  * while keeping the other values unchanged.
  *
@@ -382,7 +386,11 @@ export type Mutable<Obj extends object> = {
  * type NonReadonlyFoo = DeepMutable<Foo>;
  */
 export type DeepMutable<Obj extends object> = {
-    -readonly [Property in keyof Obj]: Obj[Property] extends object ? DeepMutable<Obj[Property]> : Obj[Property]
+    -readonly [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepMutable<Obj[Property]>>
+            : never
+        : Obj[Property]
 }
 
 /**
@@ -455,13 +463,7 @@ export type ReplaceKeys<Obj extends object, Keys extends keyof Obj, Replace exte
  * type ReplaceTypesII = MapTypes<{ foo: string, bar: string }, { from: string, bar: number }>;
  */
 export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unknown }> = {
-    [Property in keyof Obj]: Obj[Property] extends Mapper["from"]
-        ? Mapper extends { from: infer From; to: infer To }
-            ? Obj[Property] extends From
-                ? To
-                : never
-            : Obj[Property]
-        : Obj[Property]
+    [Property in keyof Obj]: Equals<Obj[Property], Mapper["from"]> extends true ? Mapper["to"] : Obj[Property]
 }
 
 /**
@@ -480,10 +482,10 @@ export type MapTypes<Obj extends object, Mapper extends { from: unknown; to: unk
  * type UserPrimitive = ToPrimitive<User>;
  */
 export type ToPrimitive<Obj extends object> = {
-    [Property in keyof Obj]: Obj[Property] extends object
-        ? Obj[Property] extends Function
-            ? Function
-            : ToPrimitive<Obj[Property]>
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<ToPrimitive<Obj[Property]>>
+            : never
         : ReturnTypeOf<Obj[Property]>
 }
 
@@ -580,12 +582,19 @@ export type GetOptional<T extends object> = {
  * type ReadonlyUser = DeepReadonly<User>;
  */
 export type DeepReadonly<Obj extends object> = {
-    readonly [Property in keyof Obj]: Obj[Property] extends Function
-        ? Obj[Property]
-        : Obj[Property] extends object
-          ? DeepReadonly<Obj[Property]>
-          : Obj[Property]
+    readonly [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepReadonly<Obj[Property]>>
+            : never
+        : Obj[Property]
 }
+
+/**
+ * @internal
+ */
+type DiscardLeft<T extends string> = {
+    [Property in T]: Property extends `${string}.${infer Right}` ? Right : never
+}[T]
 
 /**
  * Omits properties of an object at any depth based on the provided path string that
@@ -609,36 +618,32 @@ export type DeepReadonly<Obj extends object> = {
  * type OmitNameUser = DeepOmit<User, "name">;
  */
 export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
-    [Property in keyof Obj as Path extends `${string}.${string}`
-        ? Property
-        : Property extends Path
-          ? never
-          : Property]: Path extends `${infer StartsWith}.${infer Spread}`
-        ? Property extends StartsWith
-            ? Obj[Property] extends object
-                ? DeepOmit<Obj[Property], Spread>
-                : Obj[Property]
-            : Obj[Property]
+    [Property in Exclude<keyof Obj, Path>]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepOmit<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
+            : never
         : Obj[Property]
 }
 
 /**
+ *
+ *
  * @internal
  */
-type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`
+type InternalDeepGet<Obj, Path extends string> = Path extends `${infer Left}.${infer Right}`
     ? Left extends keyof Obj
-        ? InternalDeepPick<Obj[Left], Right>
+        ? InternalDeepGet<Obj[Left], Right>
         : unknown
     : Path extends keyof Obj
       ? Obj[Path]
       : unknown
 
 /**
- * Picks the properties of an object at any depth based on the provided path.
- *
- * @param {object} Obj - The object to pick the properties from
- * @param {string} Path - The path to pick the properties
+ * Get the value of a property in an object at any depth based on the provided path string
+ * @param {object} Obj - The object to get the value from
+ * @param {string} Path - The path to get the value
  * @example
+ *
  * interface User {
  *   name: string,
  *   address: {
@@ -648,10 +653,12 @@ type InternalDeepPick<Obj, Path extends string> = Path extends `${infer Left}.${
  * }
  *
  * // Expected: string
- * type UserPick = DeepPick<User, "address.street">
+ * type UserName = DeepGet<User, "name">
  *
+ * // Expected: string
+ * type UserStreet = DeepGet<User, "address.street">
  */
-export type DeepPick<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ? Obj : never> & string>> = InternalDeepPick<
+export type DeepGet<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ? Obj : never> & string>> = InternalDeepGet<
     Obj,
     Path
 >
@@ -674,13 +681,51 @@ export type DeepPick<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object 
  * type UserKeys = DeepKeys<User>
  */
 export type DeepKeys<Obj extends object> = {
-    [Property in keyof Obj]: Obj[Property] extends object
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
         ? // @ts-ignore
           TupleToUnion<[Property, `${Property & string}.${DeepKeys<Obj[Property]>}`]>
         : Property extends number
           ? `${Property & number}`
           : Property
 }[keyof Obj]
+
+/**
+ * @internal
+ */
+type DeepTruncateInternal<Obj extends object, Depth extends number, Level extends unknown[]> = {
+    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+        ? [1, ...Level]["length"] extends Depth
+            ? {}
+            : Obj[Property] extends object
+              ? Prettify<DeepTruncateInternal<Obj[Property], Depth, [1, ...Level]>>
+              : never
+        : Obj[Property]
+}
+
+/**
+ * Truncates an object at any depth based on the provided depth.
+ *
+ * @param {object} Obj - The object to truncate
+ * @param {number} Depth - The depth to truncate the object
+ * @example
+ *
+ * interface Foo {
+ *   foo: string
+ *   bar: number
+ *   foobar: {
+ *     foo: boolean
+ *     bar: string
+ *     foobar: {
+ *       foo: number
+ *     }
+ *   }
+ * }
+ *
+ * // Expected: { foo: string, bar: number, foobar: {} }
+ * type TruncatedFoo = DeepTruncate<Foo, 1>
+ */
+export type DeepTruncate<Obj extends object, Depth extends number> =
+    IsObject<Obj> extends true ? DeepTruncateInternal<Obj, Depth, []> : never
 
 /**
  * Create a new object type with all properties being optional at any depth.
@@ -700,7 +745,22 @@ export type DeepKeys<Obj extends object> = {
  * type UserOptional = DeepPartial<User>
  */
 export type DeepPartial<Obj extends object> = {
-    [Property in keyof Obj]?: Obj[Property] extends object ? Prettify<DeepPartial<Obj[Property]>> : Obj[Property]
+    [Property in keyof Obj]?: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepPartial<Obj[Property]>>
+            : never
+        : Obj[Property]
+}
+
+/**
+ * @internal
+ */
+type DeepRequiredInternal<Obj extends object, RequiredObj = Required<Obj>> = {
+    [Property in keyof RequiredObj]-?: IsObject<RequiredObj[Property]> extends true
+        ? RequiredObj[Property] extends object
+            ? Prettify<DeepRequired<RequiredObj[Property]>>
+            : never
+        : RequiredObj[Property]
 }
 
 /**
@@ -720,6 +780,37 @@ export type DeepPartial<Obj extends object> = {
  * // Expected: { name: string, address: { street: string, avenue: string } }
  * type UserRequired = DeepRequired<User>
  */
-export type DeepRequired<Obj extends object> = {
-    [Property in keyof Obj]-?: Obj[Property] extends object ? Prettify<DeepRequired<Obj[Property]>> : Obj[Property]
+export type DeepRequired<Obj extends object> = DeepRequiredInternal<Obj>
+
+/**
+ * @internal
+ */
+type DiscardRight<T extends string> = {
+    [Property in T]: Property extends `${infer Left}.${string}` ? Left : never
+}[T]
+
+/**
+ * Picks the properties of an object at any depth based on the provided path.
+ *
+ * @param {object} Obj - The object to pick the properties from
+ * @param {string} Path - The path to pick the properties
+ * @example
+ * interface User {
+ *   name: string,
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ * // Expected: string
+ * type UserPick = DeepPick<User, "address.street">
+ *
+ */
+export type DeepPick<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
+    [Property in Extract<keyof Obj, Path | DiscardRight<Path>>]: IsObject<Obj[Property]> extends true
+        ? Obj[Property] extends object
+            ? Prettify<DeepPick<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
+            : never
+        : Obj[Property]
 }

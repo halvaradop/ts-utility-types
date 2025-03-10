@@ -125,4 +125,17 @@ export type IsArray<T> = T extends unknown[] ? true : false
  * // Expected: false
  * type Test2 = IsObject<[1, 2, 3]>
  */
-export type IsObject<T> = T extends object ? Not<IsArray<T>> : false
+export type IsObject<T> = T extends object ? (IsArray<T> extends true ? false : IsFunction<T> extends true ? false : true) : false
+
+/**
+ * Checks if the type provided is a function
+ *
+ * @param T - The type to check
+ * @example
+ * // Expected: true
+ * type Test1 = IsFunction<() => void>
+ *
+ * // Expected: false
+ * type Test2 = IsFunction<{ key: string }>
+ */
+export type IsFunction<T> = T extends Function ? true : false
