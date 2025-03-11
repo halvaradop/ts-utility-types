@@ -880,7 +880,6 @@ export type DeepNonNullish<Obj extends object> = {
           : Obj[Property]
 }
 
-
 /**
  * Filters the properties of an object at any depth based on the provided predicate.
  *
@@ -935,3 +934,5 @@ export type DeepSet<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> 
         ? Value
         : IsObject<Obj[Property]> extends true
           ? Prettify<DeepSet<Obj[Property] & {}, DiscardLeft<Exclude<Path, keyof Obj>>, Value>>
+          : Obj[Property]
+}
