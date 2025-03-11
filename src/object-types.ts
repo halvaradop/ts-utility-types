@@ -619,9 +619,7 @@ type DiscardLeft<T extends string> = {
  */
 export type DeepOmit<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
     [Property in Exclude<keyof Obj, Path>]: IsObject<Obj[Property]> extends true
-        ? Obj[Property] extends object
-            ? Prettify<DeepOmit<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
-            : never
+        ? Prettify<DeepOmit<Obj[Property] & {}, DiscardLeft<Exclude<Path, keyof Obj>>>>
         : Obj[Property]
 }
 
@@ -745,11 +743,7 @@ export type DeepTruncate<Obj extends object, Depth extends number> =
  * type UserOptional = DeepPartial<User>
  */
 export type DeepPartial<Obj extends object> = {
-    [Property in keyof Obj]?: IsObject<Obj[Property]> extends true
-        ? Obj[Property] extends object
-            ? Prettify<DeepPartial<Obj[Property]>>
-            : never
-        : Obj[Property]
+    [Property in keyof Obj]?: IsObject<Obj[Property]> extends true ? Prettify<DeepPartial<Obj[Property] & {}>> : Obj[Property]
 }
 
 /**
@@ -757,9 +751,7 @@ export type DeepPartial<Obj extends object> = {
  */
 type DeepRequiredInternal<Obj extends object, RequiredObj = Required<Obj>> = {
     [Property in keyof RequiredObj]-?: IsObject<RequiredObj[Property]> extends true
-        ? RequiredObj[Property] extends object
-            ? Prettify<DeepRequired<RequiredObj[Property]>>
-            : never
+        ? Prettify<DeepRequired<RequiredObj[Property] & {}>>
         : RequiredObj[Property]
 }
 
@@ -809,9 +801,7 @@ type DiscardRight<T extends string> = {
  */
 export type DeepPick<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>> = {
     [Property in Extract<keyof Obj, Path | DiscardRight<Path>>]: IsObject<Obj[Property]> extends true
-        ? Obj[Property] extends object
-            ? Prettify<DeepPick<Obj[Property], DiscardLeft<Exclude<Path, keyof Obj>>>>
-            : never
+        ? Prettify<DeepPick<Obj[Property] & {}, DiscardLeft<Exclude<Path, keyof Obj>>>>
         : Obj[Property]
 }
 
@@ -861,4 +851,61 @@ export type DeepNonNullable<Obj extends object> = {
     [Property in keyof Obj]: IsObject<Exclude<Obj[Property], null>> extends true
         ? Prettify<DeepNonNullable<Exclude<Obj[Property] & {}, null>>>
         : Exclude<Obj[Property], null>
+}
+
+/**
+ * Filters the properties of an object at any depth based on the provided predicate.
+ *
+ * @param {object} Obj - The object to filter the properties from
+ * @param {Predicate} Predicate - The predicate to filter the properties
+ * @example
+ *
+ * interface User {
+ *   name: string,
+ *   age: number
+ *   address: {
+ *     street: string,
+ *     avenue: string
+ *   }
+ * }
+ *
+ */
+export type DeepFilter<Obj extends object, Predicate> = {
+    [Property in keyof Obj as Equals<Obj[Property], Predicate> extends true ? Property : never]: IsObject<
+        Obj[Property]
+    > extends true
+        ? Prettify<DeepFilter<Obj[Property] & {}, Predicate>>
+        : Obj[Property]
+}
+
+/**
+ * Replaces the values of the properties of an object at any depth based on the provided `From` and `To` types.
+ *
+ * @param {object} Obj - The object to replace the values
+ * @param {From} From - The type to replace
+ * @param {To} To - The new type to replace
+ * @example
+ */
+export type DeepReplace<Obj extends object, From, To> = {
+    [Property in keyof Obj]: Equals<Obj[Property], From> extends true
+        ? To
+        : IsObject<Obj[Property]> extends true
+          ? Prettify<DeepReplace<Obj[Property] & {}, From, To>>
+          : Obj[Property]
+}
+
+/**
+ * Update the value of a property in an object at any depth based on the provided path string.
+ *
+ * @param {object} Obj - The object to update the value
+ * @param {Path} Path - The path to update the value
+ * @param {Value} Value - The new value to update
+ * @example
+ */
+export type DeepSet<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> & string>, Value> = {
+    [Property in keyof Obj]: Property extends Path
+        ? Value
+        : IsObject<Obj[Property]> extends true
+          ? Prettify<DeepSet<Obj[Property] & {}, DiscardLeft<Exclude<Path, keyof Obj>>, Value>>
+          : Obj[Property]
 }
