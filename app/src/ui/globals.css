@@ -1,6 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "../../node_modules/@halvaradop/ui-button";
+/*
+@plugin "@halvaradop/tailwindcss-utilities"; 
+*/
+
+@theme {
+    --breakpoint-*: initial;
+    --breakpoint-base: 900px;
+    --spacing-semi: 89%;
+    --font-noto-sans: var(---font-noto-sans);
+
+    --color-primary: #000;
+    --color-primary-hover: #0f0f0f;
+}
+
+@theme static {
+    --color-text-100: #fff;
+    --color-text-200: #000;
+}
 
 @layer base {
     body {
