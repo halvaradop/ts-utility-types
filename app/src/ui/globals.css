@@ -1,8 +1,5 @@
 @import "tailwindcss";
 @source "../../node_modules/@halvaradop/ui-button";
-/*
-@plugin "@halvaradop/tailwindcss-utilities"; 
-*/
 
 @theme {
     --breakpoint-*: initial;
@@ -12,11 +9,9 @@
 
     --color-primary: #000;
     --color-primary-hover: #0f0f0f;
-}
 
-@theme static {
-    --color-text-100: #fff;
-    --color-text-200: #000;
+    --color-color-100: #fff;
+    --color-color-200: #000;
 }
 
 @layer base {

@@ -1,4 +1,4 @@
-"use client"
+//"use client"
 import Image from "next/image"
 import arrowIcon from "@/assets/arrow.svg"
 import { Button } from "@halvaradop/ui-button"
