@@ -1,6 +1,7 @@
 import type { Equals } from "./test.js"
 import type { IsNever, IsObject } from "./type-guards.d.ts"
-import type { ReturnTypeOf, TupleToUnion } from "./array-types.js"
+import type { ReturnTypeOf, TupleToUnion, FilterNonNullish } from "./array-types.js"
+import type { Nullish } from "./types.js"
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -854,6 +855,33 @@ export type DeepNonNullable<Obj extends object> = {
 }
 
 /**
+ * Removes the key-value pairs of an object that are nullish (null or undefined).
+ *
+ * @param {object} Obj - The object to remove the nullish values
+ * @example
+ *
+ * interface User {
+ *   name: string | null,
+ *   address: {
+ *     zip: string
+ *     street: string | null,
+ *     avenue: undefined
+ *   }
+ * }
+ *
+ * // Expected: { address: { zip: string } }
+ * type UserNonNullish = DeepNonNullish<User>
+ */
+export type DeepNonNullish<Obj extends object> = {
+    [Property in keyof Obj as Obj[Property] extends Nullish ? never : Property]: IsObject<Obj[Property]> extends true
+        ? Prettify<DeepNonNullish<Obj[Property] & {}>>
+        : Obj[Property] extends unknown[]
+          ? FilterNonNullish<Obj[Property]>
+          : Obj[Property]
+}
+
+
+/**
  * Filters the properties of an object at any depth based on the provided predicate.
  *
  * @param {object} Obj - The object to filter the properties from
@@ -907,5 +935,3 @@ export type DeepSet<Obj extends object, Path extends LiteralUnion<DeepKeys<Obj> 
         ? Value
         : IsObject<Obj[Property]> extends true
           ? Prettify<DeepSet<Obj[Property] & {}, DiscardLeft<Exclude<Path, keyof Obj>>, Value>>
-          : Obj[Property]
-}
