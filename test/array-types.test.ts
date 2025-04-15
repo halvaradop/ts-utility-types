@@ -203,3 +203,30 @@ describe("Take", () => {
         expectTypeOf<utilities.Take<-4, [1, 2, 3, 4, 5]>>().toEqualTypeOf<[2, 3, 4, 5]>()
     })
 })
+
+describe("FilterNonNullish", () => {
+    test("Filter out nullish values", () => {
+        expectTypeOf<utilities.FilterNonNullish<[1, 2, null, undefined, 3]>>().toEqualTypeOf<[1, 2, 3]>()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined]>>().toEqualTypeOf<[]>()
+        expectTypeOf<utilities.FilterNonNullish<[1, 2, 3]>>().toEqualTypeOf<[1, 2, 3]>()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined, "foo", "bar"]>>().toEqualTypeOf<["foo", "bar"]>()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined, 1, 2, 3]>>().toEqualTypeOf<[1, 2, 3]>()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined, {}, []]>>().toEqualTypeOf<[{}, []]>()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined, { foo: string }, { bar: number }]>>().toEqualTypeOf<
+            [{ foo: string }, { bar: number }]
+        >()
+        expectTypeOf<utilities.FilterNonNullish<[null, undefined, () => void, () => void]>>().toEqualTypeOf<
+            [() => void, () => void]
+        >()
+        expectTypeOf<
+            utilities.FilterNonNullish<
+                [null, undefined, { foo: string; bar: undefined }, { bar: null; foo: { foobar: undefined } }]
+            >
+        >().toEqualTypeOf<[{ foo: string }, { foo: {} }]>()
+        expectTypeOf<
+            utilities.FilterNonNullish<
+                [{ foo: string; bar: [null, undefined, { foobar: [null, undefined, { barbar: [null, undefined] }] }] }]
+            >
+        >().toEqualTypeOf<[{ foo: string; bar: [{ foobar: [{ barbar: [] }] }] }]>()
+    })
+})

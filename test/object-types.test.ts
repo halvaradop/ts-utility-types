@@ -1237,3 +1237,148 @@ describe("DeepNonNullable", () => {
         }>()
     })
 })
+
+describe("DeepNonNullish", () => {
+    test("Removes null and undefined values for all of the properties of an objects", () => {
+        expectTypeOf<
+            utilities.DeepNonNullish<{
+                foo: string
+                bar: null
+                foobar: {
+                    foo: undefined
+                    bar: string
+                    foobar: {
+                        foo: null
+                        bar: number
+                        foobar: {
+                            foo: undefined
+                            bar: string
+                            foobar: {
+                                bar: null
+                            }
+                        }
+                    }
+                }
+            }>
+        >().toEqualTypeOf<{
+            foo: string
+            foobar: {
+                bar: string
+                foobar: {
+                    bar: number
+                    foobar: {
+                        bar: string
+                        foobar: {}
+                    }
+                }
+            }
+        }>
+        type Nose = utilities.DeepNonNullish<{
+            foo: string
+            bar: null
+            foobar: {
+                foo: undefined
+                bar: string
+                foobar: [
+                    {
+                        foo: null
+                        bar: number
+                        foobar: {
+                            foo: undefined
+                            bar: string
+                            foobar: {
+                                bar: null
+                            }
+                        }
+                    },
+                    null,
+                    undefined,
+                ]
+            }
+        }>
+        expectTypeOf<
+            utilities.DeepNonNullish<{
+                foo: string
+                bar: null
+                foobar: {
+                    foo: undefined
+                    bar: string
+                    foobar: [
+                        {
+                            foo: null
+                            bar: number
+                            foobar: {
+                                foo: undefined
+                                bar: string
+                                foobar: {
+                                    bar: null
+                                }
+                            }
+                        },
+                        null,
+                        undefined,
+                    ]
+                }
+            }>
+        >().toEqualTypeOf<{
+            foo: string
+            foobar: {
+                bar: string
+                foobar: [
+                    {
+                        bar: number
+                        foobar: {
+                            bar: string
+                            foobar: {}
+                        }
+                    },
+                ]
+            }
+        }>
+        expectTypeOf<
+            utilities.DeepNonNullish<{
+                foo: string
+                bar: null
+                foobar: {
+                    foo: undefined
+                    bar: string
+                    foobar: [
+                        {
+                            foo: null
+                            bar: number
+                            foobar: {
+                                foo: undefined
+                                bar: string
+                                foobar: {
+                                    bar: null
+                                }
+                            }
+                        },
+                        null,
+                        undefined,
+                        {
+                            foo: [null, undefined, { bar: [null, undefined] }]
+                        },
+                    ]
+                }
+            }>
+        >().toEqualTypeOf<{
+            foo: string
+            foobar: {
+                bar: string
+                foobar: [
+                    {
+                        bar: number
+                        foobar: {
+                            bar: string
+                            foobar: {}
+                        }
+                    },
+                    {
+                        foo: [{ bar: [] }]
+                    },
+                ]
+            }
+        }>
+    })
+})
