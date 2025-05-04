@@ -1,5 +1,7 @@
 import type { Equals } from "./test.js"
+import type { Prettify, DeepNonNullish } from "./object-types.js"
 import type { IsArray, IsFunction, IsNegative, IsObject } from "./type-guards.js"
+import type { Nullish } from "./types.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -448,3 +450,17 @@ type InternalTake<
  * type Take2 = Take<-2, [1, 2, 3, 4]>;
  */
 export type Take<N extends number, Array extends unknown[]> = InternalTake<N, Array>
+
+/**
+ * Removes all nullish values from the provided array. This utility type implements the
+ * `DeepNonNullish` type to ensure that all nested objects are also checked for nullish values.
+ *
+ * @param {unknown[]} Array - The array to filter
+ */
+export type FilterNonNullish<Array extends unknown[]> = Array extends [infer Item, ...infer Spread]
+    ? Item extends Nullish
+        ? FilterNonNullish<Spread>
+        : IsObject<Item> extends true
+          ? [Prettify<DeepNonNullish<Item & {}>>, ...FilterNonNullish<Spread>]
+          : [Item, ...FilterNonNullish<Spread>]
+    : Array
