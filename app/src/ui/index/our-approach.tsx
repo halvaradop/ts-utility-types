@@ -13,8 +13,8 @@ export const OurApproach = () => {
     return (
         <section className="w-11/12 mx-auto base:w-10/12 xl:max-w-screen-2xl">
             <div className="py-20 text-center md:w-11/12 md:mx-auto base:w-10/12">
-                <h2 className="fluency-4xl font-bold base:fluency-5xl">OUR APPROACH</h2>
-                <p className="mt-6 fluency-base base:mt-8">
+                <h2 className="text-fluid-4xl font-bold base:text-fluid-5xl">OUR APPROACH</h2>
+                <p className="mt-6 text-fluid-base base:mt-8">
                     A comprehensive set of utility types designed to handle complex type scenarios with ease and precision. Solve
                     common patterns and tackle challenging cases in TypeScript development. Eliminate duplicate code and boost
                     productivity in your projects.

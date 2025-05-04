@@ -1,3 +1,4 @@
+"use client"
 import { Hero } from "@/ui/index/hero"
 import { Power } from "@/ui/index/power"
 import { OurApproach } from "@/ui/index/our-approach"

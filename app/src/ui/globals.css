@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @source "../../node_modules/@halvaradop/ui-button";
+@reference "../../node_modules/@halvaradop/tailwindcss-utilities/dist/plugin.css";
 
 @theme {
     --breakpoint-*: initial;

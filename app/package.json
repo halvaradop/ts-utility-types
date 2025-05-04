@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@halvaradop/tailwindcss-utilities": "^0.2.3",
+    "@halvaradop/tailwindcss-animations": "^1.0.0",
+    "@halvaradop/tailwindcss-utilities": "^1.0.0",
     "@tailwindcss/postcss": "^4.1.3",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.0",
