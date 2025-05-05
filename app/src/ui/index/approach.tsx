@@ -14,7 +14,7 @@ export const Approach = ({ index, title, paragraph, selectedId, onClick }: Appro
             <div className="flex items-center justify-between ">
                 <div className="flex items-center gap-x-3">
                     <span>0{index + 1}</span>
-                    <h3 className="fluency-2xl font-bold uppercase">{title}</h3>
+                    <h3 className="text-fluid-2xl font-bold uppercase">{title}</h3>
                 </div>
                 <Button
                     className="size-10 p-0 rounded-full border border-black transition-transform duration-500 ease-out group-data-[isselected='true']:-rotate-180 group-hover:border-white"
