@@ -883,6 +883,7 @@ export type DeepNonNullish<Obj extends object> = {
 /**
  * Filters the properties of an object at any depth based on the provided predicate.
  *
+ * @unstable Currently, this type is not working deeply as expected.
  * @param {object} Obj - The object to filter the properties from
  * @param {Predicate} Predicate - The predicate to filter the properties
  * @example

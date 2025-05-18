@@ -1359,3 +1359,173 @@ describe("DeepNonNullish", () => {
         }>
     })
 })
+
+describe("DeepReplace", () => {
+    test("Replace properties from nested objects", () => {
+        expectTypeOf<utilities.DeepReplace<Case<DeepWithObjectsA>, string, number>>().toEqualTypeOf<{
+            foo: number
+            bar: number
+            foobar: {}
+        }>()
+        expectTypeOf<utilities.DeepReplace<Case<DeepWithObjectsA>, string, number | boolean>>().toEqualTypeOf<{
+            foo: number | boolean
+            bar: number
+            foobar: {}
+        }>()
+        expectTypeOf<utilities.DeepReplace<Case<DeepWithObjectsA>, {}, number | boolean>>().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: number | boolean
+        }>()
+        expectTypeOf<
+            utilities.DeepReplace<Case<DeepWithObjectsA, 2>, { foo: boolean; bar: string; foobar: {} }, number | boolean>
+        >().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: number | boolean
+        }>()
+        expectTypeOf<utilities.DeepReplace<DeepWithObjectsA, string, number | boolean | string>>().toEqualTypeOf<{
+            foo: number | boolean | string
+            bar: number
+            foobar: {
+                foo: boolean
+                bar: number | boolean | string
+                foobar: {
+                    foo: symbol
+                    bar: number
+                    foobar: {
+                        foo: bigint
+                        bar: number | boolean | string
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepReplace<DeepWithArray, number[], string[]>>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: string[]
+                foobar: {
+                    buz: boolean[]
+                    foobar: {
+                        buz: symbol[]
+                        foobar: {
+                            buz: bigint[]
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepReplace<DeepWithFunctions, () => number, () => string>>().toEqualTypeOf<{
+            fix: () => string
+            foobar: {
+                fix: () => string
+                foobar: {
+                    fix: () => boolean
+                    foobar: {
+                        fix: () => symbol
+                        foobar: {
+                            fix: () => bigint
+                        }
+                    }
+                }
+            }
+        }>()
+    })
+})
+
+describe("DeepSet", () => {
+    test("Set properties from nested objects", () => {
+        expectTypeOf<utilities.DeepSet<Case<DeepWithObjectsA>, "foo", string>>().toEqualTypeOf<{
+            foo: string
+            bar: number
+            foobar: {}
+        }>()
+        expectTypeOf<utilities.DeepSet<Case<DeepWithObjectsA>, "foo" | "bar", string>>().toEqualTypeOf<{
+            foo: string
+            bar: string
+            foobar: {}
+        }>()
+        expectTypeOf<
+            utilities.DeepSet<Case<DeepWithObjectsA, 2>, "foo" | "bar" | "foobar.foo" | "foobar.bar", string>
+        >().toEqualTypeOf<{
+            foo: string
+            bar: string
+            foobar: {
+                foo: string
+                bar: string
+                foobar: {}
+            }
+        }>()
+        expectTypeOf<
+            utilities.DeepSet<Case<DeepWithObjectsA, 3>, "foo" | "bar" | "foobar.foo" | "foobar.bar", string>
+        >().toEqualTypeOf<{
+            foo: string
+            bar: string
+            foobar: {
+                foo: string
+                bar: string
+                foobar: {
+                    foo: symbol
+                    bar: number
+                    foobar: {}
+                }
+            }
+        }>()
+        expectTypeOf<
+            utilities.DeepSet<DeepWithObjectsA, "foo" | "bar" | "foobar.foo" | "foobar.bar" | "foobar.foobar.foobar.foo", string>
+        >().toEqualTypeOf<{
+            foo: string
+            bar: string
+            foobar: {
+                foo: string
+                bar: string
+                foobar: {
+                    foo: symbol
+                    bar: number
+                    foobar: {
+                        foo: string
+                        bar: string
+                        foobar: {
+                            bar: number
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<
+            utilities.DeepSet<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix", () => string>
+        >().toEqualTypeOf<{
+            fix: () => string
+            foobar: {
+                fix: () => string
+                foobar: {
+                    fix: () => string
+                    foobar: {
+                        fix: () => symbol
+                        foobar: {
+                            fix: () => bigint
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepSet<DeepWithArray, "buz" | "foobar.buz" | "foobar.foobar.buz", string[]>>().toEqualTypeOf<{
+            buz: string[]
+            foobar: {
+                buz: string[]
+                foobar: {
+                    buz: string[]
+                    foobar: {
+                        buz: symbol[]
+                        foobar: {
+                            buz: bigint[]
+                        }
+                    }
+                }
+            }
+        }>()
+    })
+})
