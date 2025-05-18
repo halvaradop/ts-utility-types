@@ -1,31 +1,15 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type * as utilities from "../src/array-types"
+import type * as utilities from "../src/arrays"
 
-describe("TupleToUnion", () => {
+describe("ArrayToUnion", () => {
     test("Create union type", () => {
-        expectTypeOf<utilities.TupleToUnion<["foo", "bar"]>>().toEqualTypeOf<"foo" | "bar">()
-        expectTypeOf<utilities.TupleToUnion<[1, 2]>>().toEqualTypeOf<1 | 2>()
-        expectTypeOf<utilities.TupleToUnion<["foo", 1, "bar", 2]>>().toEqualTypeOf<"foo" | "bar" | 1 | 2>()
+        expectTypeOf<utilities.ArrayToUnion<["foo", "bar"]>>().toEqualTypeOf<"foo" | "bar">()
+        expectTypeOf<utilities.ArrayToUnion<[1, 2]>>().toEqualTypeOf<1 | 2>()
+        expectTypeOf<utilities.ArrayToUnion<["foo", 1, "bar", 2]>>().toEqualTypeOf<"foo" | "bar" | 1 | 2>()
     })
 })
 
 describe("Tuple methods", () => {
-    describe("Last", () => {
-        test("Retrieve the last element of a tuple", () => {
-            expectTypeOf<utilities.Last<[]>>().toEqualTypeOf<never>()
-            expectTypeOf<utilities.Last<[1, 2, 3]>>().toEqualTypeOf<3>()
-            expectTypeOf<utilities.Last<["foo", "bar", "foobar"]>>().toEqualTypeOf<"foobar">()
-        })
-    })
-
-    describe("Pop", () => {
-        test("Remove the last element of a tuple", () => {
-            expectTypeOf<utilities.Pop<[]>>().toEqualTypeOf<[]>()
-            expectTypeOf<utilities.Pop<[1, 2, 3]>>().toEqualTypeOf<[1, 2]>()
-            expectTypeOf<utilities.Pop<["foo", "bar", "foobar"]>>().toEqualTypeOf<["foo", "bar"]>()
-        })
-    })
-
     describe("Size", () => {
         test("Returns the size of the tuple", () => {
             expectTypeOf<utilities.Size<[]>>().toEqualTypeOf<0>()

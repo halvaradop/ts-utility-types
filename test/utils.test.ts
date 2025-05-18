@@ -1,15 +1,6 @@
 import { describe, test, expectTypeOf } from "vitest"
 import type * as utilities from "../src/utils"
 
-describe("PercentageParser", () => {
-    test("Parses a percentage string into a tuple", () => {
-        expectTypeOf<utilities.PercentageParser<"foobar">>().toEqualTypeOf<never>()
-        expectTypeOf<utilities.PercentageParser<"2024">>().toEqualTypeOf<["", "2024", ""]>()
-        expectTypeOf<utilities.PercentageParser<"-89">>().toEqualTypeOf<["-", "89", ""]>()
-        expectTypeOf<utilities.PercentageParser<"+89%">>().toEqualTypeOf<["+", "89", "%"]>()
-    })
-})
-
 describe("Absolute", () => {
     test("Returns the absolute version of a number", () => {
         expectTypeOf<utilities.Absolute<-100>>().toEqualTypeOf<"100">()

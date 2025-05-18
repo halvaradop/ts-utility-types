@@ -1,7 +1,8 @@
 import type { Equals } from "./test.js"
-import type { Prettify, DeepNonNullish } from "./object-types.js"
-import type { IsArray, IsFunction, IsNegative, IsObject } from "./type-guards.js"
-import type { Nullish } from "./types.js"
+import type { IsNegative } from "./numbers.js"
+import type { DeepNonNullish } from "./deep.js"
+import type { Prettify, Nullish } from "./utils.js"
+import type { IsArray, IsFunction, IsObject } from "./guards.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -12,8 +13,8 @@ import type { Nullish } from "./types.js"
  * // Expected: "1" | "2" | "3"
  * type Union = TypleToUnion<["1", "2", "3"]>;
  */
-export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
-    ? Item | TupleToUnion<Spread>
+export type ArrayToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
+    ? Item | ArrayToUnion<Spread>
     : never
 
 /**
@@ -26,30 +27,6 @@ export type TupleToUnion<Array extends readonly unknown[]> = Array extends [infe
  * type SizeOfNumbers = Size<typeof numbers>;
  */
 export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["length"] : 0
-
-/**
- * Gets the type of the last element in an array, or `never` if the array is empty.
- *
- * @param {unknown[]} Array - The array to get the last element of
- * @example
- * // Expected: 4
- * type LastItem = Last<1, 2, 3, 4>;
- */
-export type Last<Array extends unknown[]> = Array extends [...any, infer Last] ? Last : never
-
-/**
- * Removes the last element from an array and returns a new array type with all elements
- * except the last. If the array is empty, returns an empty array type
- *
- * @param {unknown[]} Array - The array to remove the last element from
- * @example
- * // Expected: ["a", "b"]
- * type PopStr = Pop<["a", "b", "c"]>;
- *
- * // Expected: [1, 2]
- * type PopNums = Pop<[1, 2, 3]>;
- */
-export type Pop<Array extends unknown[]> = Array extends [...infer Spread, unknown] ? Spread : []
 
 /**
  * @internal
@@ -355,7 +332,7 @@ export type Uniques<Array extends unknown[]> = InternalUniques<Array>
 
 /**
  * Create an union type based in the literal values of the tuple provided.
- * This utility type is similar to `TupleToUnion` but this utility type
+ * This utility type is similar to `ArrayToUnion` but this utility type
  * receive whatever type
  *
  * @param {unknown} T - The tuple to convert to a union type

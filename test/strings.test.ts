@@ -1,5 +1,5 @@
 import { describe, test, expectTypeOf } from "vitest"
-import type * as utilities from "../src/string-mappers"
+import type * as utilities from "../src/strings"
 
 describe("String mappers", () => {
     test("TrimLeft", () => {
@@ -84,31 +84,12 @@ describe("IndexOfString", () => {
     })
 })
 
-describe("FirstUniqueCharIndex", () => {
-    test("Returns the first index of a character that is not repeated", () => {
-        expectTypeOf<utilities.FirstUniqueCharIndex<"">>().toEqualTypeOf<-1>()
-        expectTypeOf<utilities.FirstUniqueCharIndex<"comparator">>().toEqualTypeOf<0>()
-        expectTypeOf<utilities.FirstUniqueCharIndex<"comparator and comparable">>().toEqualTypeOf<7>()
-        expectTypeOf<utilities.FirstUniqueCharIndex<"aabbcc">>().toEqualTypeOf<-1>()
-        expectTypeOf<utilities.FirstUniqueCharIndex<"aabcb">>().toEqualTypeOf<3>()
-    })
-})
-
 describe("Replace", () => {
     test("Replace the first match with a new value", () => {
         expectTypeOf<utilities.Replace<"foobar", "bar", "foo">>().toEqualTypeOf<"foofoo">()
         expectTypeOf<utilities.Replace<"foobarbar", "bar", "foo">>().toEqualTypeOf<"foofoobar">()
         expectTypeOf<utilities.Replace<"foobarbar", "", "foo">>().toEqualTypeOf<"foobarbar">()
         expectTypeOf<utilities.Replace<"foobarbar", "bar", "">>().toEqualTypeOf<"foobar">()
-    })
-})
-
-describe("CheckRepeatedChars", () => {
-    test("Check if there are repeated characters in the string", () => {
-        expectTypeOf<utilities.CheckRepeatedChars<"">>().toEqualTypeOf<false>()
-        expectTypeOf<utilities.CheckRepeatedChars<"aba">>().toEqualTypeOf<true>()
-        expectTypeOf<utilities.CheckRepeatedChars<"abcza">>().toEqualTypeOf<true>()
-        expectTypeOf<utilities.CheckRepeatedChars<"añlamnhj">>().toEqualTypeOf<true>()
     })
 })
 
