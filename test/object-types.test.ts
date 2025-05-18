@@ -1272,7 +1272,7 @@ describe("DeepNonNullish", () => {
                     }
                 }
             }
-        }>
+        }>()
         expectTypeOf<
             utilities.DeepNonNullish<{
                 foo: string
