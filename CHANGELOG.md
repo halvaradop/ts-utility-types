@@ -13,12 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced `DeepOmit`, `DeepPartial`, and `DeepPick` by leveraging the new `IsObject` type for stricter type checking, reducing code duplication and improving reliability. [#164](https://github.com/halvaradop/ts-utility-types/pull/164)
 - Added `DeepNonNullish` for object types and `FilterNonNullish` for array types, providing utilities to recursively remove `null` and `undefined` values from deeply nested structures. [#169](https://github.com/halvaradop/ts-utility-types/pull/169)
 
-### Changed
-
-- Refactored and reorganized utility types into grouped files for improved maintainability, discoverability, and clarity. This structural change makes it easier for users to find and use the right utility types for their needs.
-- Improved the robustness and coverage of utility type tests, ensuring more reliable type safety across the package.
-- Updated dependencies in both the `root` and `app` workspaces to ensure compatibility and security with the latest ecosystem updates.
-- Enhanced CI/CD workflows: updated `ci.yaml` for better automation and added a dedicated `test` job to ensure code quality and reliability on every commit.
+- Refactored and reorganized utility types into more focused and descriptive files for better maintainability and usability:
+  - Renamed `array-types.ts` to `arrays.ts`
+  - Renamed `object-types.ts` to `objects.ts`
+  - Renamed `string-mappers.ts` to `strings.ts`
+  - Renamed `type-guards` to `guards.ts`
+  - Introduced new files: `deep.ts` and `numbers.ts`
+  - Removed `types.ts` in favor of dedicated type files
+  - Deprecated the `/utility-types` entry point, scheduled for removal in the next major release  
+     [#171](https://github.com/halvaradop/ts-utility-types/pull/171)
 
 ### Fixed
 
@@ -27,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Cleaned up the codebase by removing redundant or deprecated types as part of the restructuring and modernization effort, reducing maintenance overhead and potential confusion for users.
+
+### CI
+
+- Updated CI workflow configuration in `ci.yaml`
 
 ## [0.19.0] - 2025-03-15
 
