@@ -1,5 +1,5 @@
 import type { Equals } from "./test.js"
-import type { WhiteSpaces } from "./types.js"
+import type { WhiteSpaces } from "./utils.js"
 
 /**
  * Removes leading whitespace characters from a string type
@@ -178,35 +178,6 @@ type InternalIndexOfString<
 export type IndexOfString<Str extends string, Match extends string> = InternalIndexOfString<Str, Match>
 
 /**
- * @internal
- */
-type InternalFirstUniqueCharIndex<
-    Str extends string,
-    Index extends unknown[] = [],
-    Build extends string = "",
-> = Str extends `${infer Char}${infer Chars}`
-    ? IndexOfString<Chars, Char> extends -1
-        ? Char extends Build
-            ? InternalFirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
-            : Index["length"]
-        : InternalFirstUniqueCharIndex<Chars, [...Index, 1], Char | Build>
-    : -1
-
-/**
- * Returns the first index of a character that is unique within the given string.
- * If all of the characters are repeated, it returns -1.
- *
- * @param {string} Str - The string to search
- * @example
- * // Expected: 3
- * type IndexOfC = FirstUniqueCharIndex<"aabcb">
- *
- * // Expected: -1
- * type IndexOfOutBound = FirstUniqueCharIndex<"aabbcc">
- */
-export type FirstUniqueCharIndex<Str extends string> = InternalFirstUniqueCharIndex<Str>
-
-/**
  * Replaces the first match of the substring `From` in the string `S` with the new value `To`
  *
  * @param {string} S - The string to replace
@@ -224,28 +195,6 @@ export type Replace<S extends string, From extends string, To extends string> = 
     : S extends `${infer Head}${From}${infer Tail}`
       ? `${Head}${To}${Tail}`
       : S
-
-/**
- * @internal
- */
-type InternalCheckRepeatedChars<Str extends string, Characters extends string = ""> = Str extends `${infer Char}${infer Chars}`
-    ? Char extends Characters
-        ? true
-        : InternalCheckRepeatedChars<Chars, Characters | Char>
-    : false
-
-/**
- * Check if there are repeated characters in a string type
- *
- * @param {string} Str - The string to check
- * @example
- * // Expected: false
- * type Check11 = CheckRepeatedChars<"hello">
- *
- * // Expected: true
- * type Check1 = CheckRepeatedChars<"hello world">
- */
-export type CheckRepeatedChars<Str extends string> = InternalCheckRepeatedChars<Str>
 
 /**
  * @internal

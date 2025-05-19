@@ -1,111 +1,126 @@
-import type { DropChar } from "./string-mappers.js"
+import type { IsNever } from "./guards.js"
 
 /**
- * @internals
- */
-type InternalPercentageParser<
-    Percentage extends string,
-    Sign extends string = "",
-    Num extends string = "",
-    Unit extends string = "",
-> = Percentage extends `${infer Char}${infer Chars}`
-    ? Char extends "+" | "-"
-        ? InternalPercentageParser<Chars, Char, Num, Unit>
-        : Char extends "%"
-          ? InternalPercentageParser<Chars, Sign, Num, "%">
-          : Char extends `${number}`
-            ? InternalPercentageParser<Chars, Sign, `${Num}${Char}`, Unit>
-            : Char extends "." | ","
-              ? InternalPercentageParser<Char, Sign, `${Num}${Char}`, Unit>
-              : never
-    : [Sign, Num, Unit]
-
-/**
- * Parses a percentage string into a tuple of [Sign, Number, Unit].
- * - `Sign` can be "+" or "-" or an empty string if no sign is present.
- * - `Number` is the numerical part of the percentage.
- * - `Unit` is the percentage symbol "%" or an empty string if no unit is present.
+ * Utility type that transforms an object to have each property on a new line
+ * for better readability.
  *
- * @param {string} Percentage - The percentage string to parse
+ * It doesn't change the original object type.
+ *
+ * @param {object} Obj - The object to prettify
+ */
+export type Prettify<Obj extends object> = {
+    [Property in keyof Obj]: Obj[Property]
+} & {}
+
+/**
+ * Extends the values of the provided `T` type with the provided `U` type.
+ * This is useful when you want to create a union type that includes specific
+ * literal types along with a broader type.
+ *
+ * @param {T} T - The specific literal type to extend
+ * @param {U} U - The broader type to extend with (defaults to `string`)
  * @example
- * // Expected: ["-", "12", ""]
- * type Test1 = PercentageParser<"-12">;
+ * interface Foo {
+ *   foo: string
+ *   bar: number
+ * }
  *
- * // Expected: ["+", "89", "%"]
- * type Test2 = PercentageParser<"+89%">;
+ * // Expected: "foo" | "bar" | string
+ * type ExtendedFoo = LiteralUnion<keyof Foo>
  */
-export type PercentageParser<Percentage extends string> = InternalPercentageParser<Percentage, "", "", "">
+export type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>)
 
 /**
- * Returns the absolute version of a number, string or bigint as a string
+ * Conditionally excludes or includes types based on whether `Type` is assignable to `Extends`.
+ * If `Reverse` is `true`, it includes types that are assignable to `Extends`, otherwise it excludes them.
+ * If `Value` is provided, it returns `Value` instead of `never` when the condition is met.
  *
- * @param {number | string | bigint} Expression - The number, string or bigint to convert
+ * @param {Type} Type - The type to evaluate
+ * @param {Extends} Extends - The type to compare against
+ * @param {unknown} Value - The value to return if the condition is met (defaults to `never`)
+ * @param {boolean} Reverse - If `true`, reverses the condition (defaults to `false`)
  * @example
- * // Expected: "2024"
- * type Positive = Absolute<2024>;
+ * // Expected: number
+ * type A = Discard<string | number, string>;
  *
- * // Expected: "2024"
- * type PositiveString = Absolute<"-2024">;
+ * // Expected: string | number
+ * type B = Discard<string | number, boolean>;
  */
-export type Absolute<Expression extends number | string | bigint> = DropChar<`${Expression}`, "-" | "n">
-
-/**
- * Truncates a number to its integer part.
- *
- * @param {string | number | bigint} Math - The number to truncate
- * @example
- * // Expected: 3
- * type Truncated = Trunc<3.14>;
- *
- * // Expected: -2
- * type TruncatedNegative = Trunc<-2.99>;
- */
-export type Trunc<Math extends string | number | bigint> = `${Math}` extends `.${number}`
-    ? "0"
-    : `${Math}` extends `${infer Chars}.${number}`
-      ? Chars extends `-0${string}`
-          ? "0"
-          : Chars
-      : `${Math}`
-
-/**
- * Creates a series of numbers between the range of `Low` and `High`. This utility type
- * is internally used by `NumberRange`.
- *
- * @link `NumberRange`
- */
-type InternalNumberRange<
-    Low extends number,
-    High extends number,
-    Range extends unknown = never,
-    Index extends unknown[] = [],
-    LowRange extends boolean = false,
-> = Index["length"] extends Low
-    ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], true>
-    : Index["length"] extends High
-      ? Range | Index["length"]
-      : LowRange extends true
-        ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], LowRange>
-        : InternalNumberRange<Low, High, Range, [...Index, 1], LowRange>
-
-/**
- * Creates a range of numbers that starts from `Low` and ends in `High`. The range is inclusive
- * and the values should be positive numbers. If the `Low` or `High` values are negative numbers
- * it returns `never`.
- *
- * @param {number} Low - The starting number of the range
- * @param {number} High - The ending number of the range
- * @example
- * // Expected: 1 | 2 | 3 | 4 | 5
- * type Range1 = NumberRange<1, 5>;
- *
- * // Expected: never
- * type Range2 = NumberRange<-1, 5>;
- */
-export type NumberRange<Low extends number, High extends number> = `${Low}` extends `-${number}`
-    ? never
-    : `${High}` extends `-${number}`
+export type Discard<Type, Extends, Value = never, Reverse extends boolean = false> = Reverse extends true
+    ? Type extends Extends
+        ? Value
+        : never
+    : Type extends Extends
       ? never
-      : Low extends High
-        ? Low
-        : InternalNumberRange<Low, High>
+      : IsNever<Value> extends true
+        ? Type
+        : Value
+
+/**
+ * Represents a function that can accept any number of arguments of any type.
+ * This type is useful for callbacks or event handlers where you don't care
+ * about the specific argument types or return value.
+ *
+ * @example
+ * function getPointsAsync(callback: ArgsFunction) {
+ *   // do anything here
+ *   callback((x: number, y: number, z: number) => {})
+ * }
+ */
+export type ArgsFunction = (...args: any) => void
+
+/**
+ * Represents the absence of a value, typically `null` or `undefined`.
+ * This type is useful for checking for optional values or indicating
+ * a lack of data.
+ */
+export type Nullish = null | undefined
+
+/**
+ * Represents a primitive data type that can also be null or undefined.
+ * This type is useful for situations where nullish values are allowed.
+ */
+export type PrimitiveNullish = number | string | boolean | bigint | symbol | Nullish
+
+/**
+ * Represents a primitive data type: number, string, boolean, bigint, or symbol.
+ * This type is useful for identifying simple, immutable values.
+ *
+ * @remarks This type excludes nullish values (null and undefined).
+ */
+export type Primitive = Omit<PrimitiveNullish, "null" | "undefined">
+
+/**
+ * Represents a whitespace character: space, newline, tab, carriage return, form feed,
+ * line separator, or paragraph separator.
+ */
+export type WhiteSpaces =
+    | " "
+    | "\n"
+    | "\t"
+    | "\r"
+    | "\f"
+    | "\v"
+    | "\u00A0"
+    | "\u1680"
+    | "\u2000"
+    | "\u2001"
+    | "\u2002"
+    | "\u2003"
+    | "\u2004"
+    | "\u2005"
+    | "\u2006"
+    | "\u2007"
+    | "\u2008"
+    | "\u2009"
+    | "\u200A"
+    | "\u2028"
+    | "\u2029"
+    | "\u202F"
+    | "\u205F"
+    | "\u3000"
+
+/**
+ * Represents the empty values
+ */
+export type Falsy = Nullish | 0 | false | ""

@@ -2,8 +2,9 @@ name: ci
 
 on:
   push:
-    paths-ignore:
-      - app/**
+    paths:
+      - "src/**"
+      - "tests/**"
 
 jobs:
   build:

@@ -1,4 +1,4 @@
-import type { MergeAll, DeepTruncate } from "../src/object-types"
+import type { DeepMergeAll, DeepTruncate } from "../src/deep"
 
 export interface DeepWithObjectsA {
     foo: string
@@ -69,7 +69,7 @@ export interface DeepWithArray {
     }
 }
 
-export type MergeCases<Depth extends number = 1> = MergeAll<
+export type MergeCases<Depth extends number = 1> = DeepMergeAll<
     [
         DeepTruncate<DeepWithObjectsA, Depth>,
         DeepTruncate<DeepWithObjectsB, Depth>,

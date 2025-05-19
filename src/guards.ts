@@ -1,5 +1,42 @@
-import type { Equals, Not } from "./test.js"
-import type { Even, Odd } from "./types.js"
+/**
+ * Checks if two values are strictly equal, regardless of their distribution within conditional types
+ *
+ * @param {X} X - The first value to compare
+ * @param {Y} Y - The second value to compare
+ * @example
+ * // Expected: true
+ * type CheckTrue = Equals<true, true>;
+ *
+ * // Expected: false
+ * type CheckTrue = Equals<() => {}, true>;
+ */
+export type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false
+
+/**
+ * Ensures that the parameter is true.
+ *
+ * @param {T} T - The value to expect to be true
+ * @example
+ * // Expected: true
+ * type CheckTrue = Expect<true>;
+ *
+ * // Expected: false
+ * type CheckFalse = Expect<false>;
+ */
+export type Expect<T extends true> = T
+
+/**
+ * Check if the boolean provided is false
+ *
+ * @param {T} T - The boolean value to negate
+ * @example
+ * // Expected: false
+ * type CheckFalse = Not<true>;
+ *
+ * // Expected: true
+ * type CheckTrue = Not<true>;
+ */
+export type Not<T extends boolean> = T extends true ? false : true
 
 /**
  * Check if the parameter is a never value
@@ -13,58 +50,6 @@ import type { Even, Odd } from "./types.js"
  * type CheckStr = IsNever<string>;
  */
 export type IsNever<T> = [T] extends [never] ? true : false
-
-/**
- * Check if the number provided is odd or not
- *
- * @param {number} T - The number to check
- * @example
- * // Expected: true
- * type CheckOdd = IsOdd<2023>;
- *
- * // Expected: false
- * type CheckEven = IsOdd<2024>;
- */
-export type IsOdd<T extends number> = `${T}` extends `${string}${Odd}` ? true : false
-
-/**
- * Check if the number provided is even or not
- *
- * @param {number} T - The number to check
- * @example
- * // Expected: true
- * type CheckEven = IsEven<2024>;
- *
- * // Expected: false
- * type CheckOdd = IsEven<2023>;
- */
-export type IsEven<T extends number> = `${T}` extends `${string}${Even}` ? true : false
-
-/**
- * Check if the number provided is negative or not
- *
- * @param {number} T - The number to check
- * @example
- * // Expected: true
- * type CheckNegative = IsNegative<-2024>;
- *
- * // Expected: false
- * type CheckPositive = IsNegative<2024>;
- */
-export type IsNegative<T extends number> = `${T}` extends `-${number}` ? true : false
-
-/**
- * Check if the number provided is positive or not
- *
- * @param {number} T - The number to check
- * @example
- * // Expected: true
- * type CheckPositive = IsPositive<2024>;
- *
- * // Expected: false
- * type CheckNegative = IsPositive<-2024>;
- */
-export type IsPositive<T extends number> = Not<IsNegative<T>>
 
 /**
  * Check if the type provided is any
