@@ -92,6 +92,16 @@ describe("DeepMerge", () => {
             bar: boolean
             foobar: {}
         }>()
+        expectTypeOf<
+            utilities.DeepMerge<
+                { baseUrl: string; routes: string[] },
+                { baseUrl: string[]; routes: Array<{ url: string; name: string }> },
+                true
+            >
+        >().toEqualTypeOf<{
+            baseUrl: string | string[]
+            routes: string[] | Array<{ url: string; name: string }>
+        }>()
         expectTypeOf<utilities.DeepMerge<Case<DeepWithObjectsA>, Case<DeepWithObjectsB>, true>>().toEqualTypeOf<{
             foo: string
             bar: number | boolean
