@@ -59,6 +59,30 @@ export type DeepMerge<
           ? Obj2[Property]
           : never
 }
+
+/**
+ * Create a merge of the union type of the values of the two object. This types implements the
+ * `DeepMerge` type with the third argument `ByUnion` as a true. This type is an abstraction
+ * version of `DeepMerge`
+ *
+ * @param {object} Obj1 - The first object to merge
+ * @param {object} Obj2 - The second object to merge
+ * @example
+ * interface BaseController {
+ *   baseUrl: string
+ *   routes: string[]
+ * }
+ *
+ * interface ConfigBase {
+ *   baseUrl: string[]
+ *   routes: Array<{ url: string, name: string }>
+ * }
+ *
+ * // Expected: { baseUrl: string | string[], routes: string[] | Array<{ url: string, name: string }> }
+ * type Union = DeepUnion<BaseController, ConfigBase>
+ */
+export type DeepUnion<Obj1 extends object, Obj2 extends object> = DeepMerge<Obj1, Obj2, true>
+
 /**
  * @internal
  */
