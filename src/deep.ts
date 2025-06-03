@@ -1,7 +1,7 @@
 import type { Equals } from "./test.js"
 import type { IsObject } from "./guards.js"
 import type { Properties } from "./objects.js"
-import type { FilterNonNullish } from "./arrays.js"
+import type { ArrayToUnion, FilterNonNullish } from "./arrays.js"
 import type { LiteralUnion, Prettify, Nullish } from "./utils.js"
 
 /**
@@ -180,6 +180,12 @@ export type DeepReadonly<Obj extends object> = {
 }
 
 /**
+ * @internal
+ * Used to reduce recursion depth safely
+ */
+type InternalIndexes = [never, 0, 1, 2, 3, 4, 5, 6]
+
+/**
  * Returns the keys of an object of any depth of an object
  *
  * @param {object} Obj - The object to get the keys from
@@ -196,14 +202,15 @@ export type DeepReadonly<Obj extends object> = {
  * // Expected: "name" | "address" | "address.street" | "address.avenue"
  * type UserKeys = DeepKeys<User>
  */
-export type DeepKeys<Obj extends object> = {
-    [Property in keyof Obj]: IsObject<Obj[Property]> extends true
-        ? // @ts-ignore
-          ArrayToUnion<[Property, `${Property & string}.${DeepKeys<Obj[Property]>}`]>
-        : Property extends number
-          ? `${Property & number}`
-          : Property
-}[keyof Obj]
+export type DeepKeys<Obj extends object, Depth extends number = 6> = Depth extends never
+    ? never
+    : {
+          [Property in keyof Obj]: IsObject<Obj[Property]> extends true
+              ? ArrayToUnion<[Property, `${Property & string}.${DeepKeys<Obj[Property] & {}, InternalIndexes[Depth]> & string}`]>
+              : Property extends number
+                ? `${Property & number}`
+                : Property
+      }[keyof Obj]
 
 /**
  * @internal
