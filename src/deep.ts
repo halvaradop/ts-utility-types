@@ -42,28 +42,23 @@ export type DeepMerge<
     PriorityObject extends boolean = true,
 > = {
     [Property in Properties<Obj1, Obj2>]: Property extends keyof Obj1
-        ? Obj1[Property] extends object
-            ? Property extends keyof Obj2
-                ? ByUnion extends true
-                    ? Obj1[Property] | Obj2[Property]
-                    : Obj2[Property] extends object
-                      ? Prettify<DeepMerge<Obj1[Property], Obj2[Property], ByUnion, PriorityObject>>
-                      : Obj1[Property]
-                : Obj1[Property]
-            : Property extends keyof Obj2
-              ? ByUnion extends true
-                  ? Obj1[Property] | Obj2[Property]
-                  : PriorityObject extends true
-                    ? Obj2[Property] extends object
-                        ? Obj2[Property]
-                        : Obj1[Property]
-                    : Obj1[Property]
-              : Obj1[Property]
+        ? Property extends keyof Obj2
+            ? ByUnion extends true
+                ? Obj1[Property] | Obj2[Property]
+                : PriorityObject extends true
+                  ? IsObject<Obj1[Property]> | IsObject<Obj2[Property]> extends true
+                      ? Prettify<DeepMerge<Obj1[Property] & {}, Obj2[Property] & {}>>
+                      : IsObject<Obj1[Property]> extends true
+                        ? Obj1[Property]
+                        : IsObject<Obj2[Property]> extends true
+                          ? Obj2[Property]
+                          : Obj1[Property]
+                  : Obj1[Property]
+            : Obj1[Property]
         : Property extends keyof Obj2
           ? Obj2[Property]
           : never
 }
-
 /**
  * @internal
  */

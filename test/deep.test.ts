@@ -73,6 +73,12 @@ describe("DeepMerge", () => {
                 }
             }
         }>()
+        expectTypeOf<
+            utilities.DeepMerge<
+                Case<DeepWithObjectsA, 3>,
+                { foo: boolean; foobar: { bar: () => void; foobar: { foo: string[] } } }
+            >
+        >().toEqualTypeOf<Case<DeepWithObjectsA, 3>>()
     })
 
     test("Merge two object types with union enabled", () => {
@@ -163,6 +169,91 @@ describe("DeepMerge", () => {
                           }
                       }
                   }
+        }>()
+    })
+    test("Merge two object types with priority object enabled", () => {
+        expectTypeOf<
+            utilities.DeepMerge<
+                Case<DeepWithObjectsA>,
+                {
+                    bar: {
+                        foo: string
+                    }
+                }
+            >
+        >().toEqualTypeOf<{
+            foo: string
+            bar: {
+                foo: string
+            }
+            foobar: {}
+        }>()
+        expectTypeOf<
+            utilities.DeepMerge<
+                Case<DeepWithObjectsA, 2>,
+                {
+                    bar: {
+                        foo: string
+                    }
+                    foobar: {
+                        bar: {
+                            fix: () => boolean[]
+                        }
+                    }
+                }
+            >
+        >().toEqualTypeOf<{
+            foo: string
+            bar: {
+                foo: string
+            }
+            foobar: {
+                foo: boolean
+                bar: {
+                    fix: () => boolean[]
+                }
+                foobar: {}
+            }
+        }>()
+        expectTypeOf<
+            utilities.DeepMerge<
+                Case<DeepWithFunctions>,
+                {
+                    fix: {
+                        fix: () => number
+                    }
+                }
+            >
+        >().toEqualTypeOf<{
+            fix: {
+                fix: () => number
+            }
+            foobar: {}
+        }>()
+        expectTypeOf<
+            utilities.DeepMerge<
+                Case<DeepWithFunctions, 2>,
+                {
+                    fix: {
+                        fix: () => number
+                    }
+                    foobar: {
+                        fix: {
+                            bar: () => string
+                        }
+                    }
+                }
+            >
+        >().toEqualTypeOf<{
+            fix: {
+                fix: () => number
+            }
+            foobar: {
+                fix: {
+                    bar: () => string
+                }
+                foobar: {}
+            }
         }>()
     })
 })
@@ -356,6 +447,35 @@ describe("DeepOmit", () => {
                         foobar: {
                             bar: number
                         }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepOmit<Case<DeepWithFunctions>, "foobar">>().toEqualTypeOf<{ fix: () => number }>()
+        expectTypeOf<utilities.DeepOmit<DeepWithFunctions, "fix" | "foobar.fix" | "foobar.foobar.fix">>().toEqualTypeOf<{
+            foobar: {
+                foobar: {
+                    foobar: {
+                        fix: () => symbol
+                        foobar: {
+                            fix: () => bigint
+                        }
+                    }
+                }
+            }
+        }>()
+        expectTypeOf<utilities.DeepOmit<Case<DeepWithArray>, "buz">>().toEqualTypeOf<{
+            foobar: {}
+        }>()
+        expectTypeOf<
+            utilities.DeepOmit<DeepWithArray, "buz" | "foobar.foobar.buz" | "foobar.foobar.foobar.foobar.buz">
+        >().toEqualTypeOf<{
+            foobar: {
+                buz: number[]
+                foobar: {
+                    foobar: {
+                        buz: symbol[]
+                        foobar: {}
                     }
                 }
             }
