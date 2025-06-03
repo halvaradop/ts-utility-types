@@ -47,7 +47,7 @@ export type DeepMerge<
                 ? Obj1[Property] | Obj2[Property]
                 : PriorityObject extends true
                   ? IsObject<Obj1[Property]> | IsObject<Obj2[Property]> extends true
-                      ? Prettify<DeepMerge<Obj1[Property] & {}, Obj2[Property] & {}>>
+                      ? Prettify<DeepMerge<Obj1[Property] & {}, Obj2[Property] & {}, ByUnion, PriorityObject>>
                       : IsObject<Obj1[Property]> extends true
                         ? Obj1[Property]
                         : IsObject<Obj2[Property]> extends true
