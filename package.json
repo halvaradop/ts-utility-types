@@ -48,20 +48,26 @@
     ".": {
       "types": "./dist/index.d.ts"
     },
+    "./deep": {
+      "types": "./dist/deep.d.ts"
+    },
     "./arrays": {
-      "types": "./dist/array-types.d.ts"
+      "types": "./dist/arrays.d.ts"
     },
     "./objects": {
-      "types": "./dist/object-types.d.ts"
+      "types": "./dist/objects.d.ts"
     },
     "./string-mappers": {
-      "types": "./dist/string-mappers.d.ts"
+      "types": "./dist/string.d.ts"
+    },
+    "./numbers": {
+      "types": "./dist/numbers.d.ts"
     },
     "./test": {
       "types": "./dist/test.d.ts"
     },
     "./type-guards": {
-      "types": "./dist/type-guards.d.ts"
+      "types": "./dist/guards.d.ts"
     },
     "./types": {
       "types": "./dist/types.d.ts"
