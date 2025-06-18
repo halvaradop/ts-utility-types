@@ -1,15 +1,14 @@
-"use client"
 import { Hero } from "@/ui/index/hero"
-import { Power } from "@/ui/index/power"
-import { OurApproach } from "@/ui/index/our-approach"
+import { AboutUs } from "@/ui/index/about-us"
+import { ServiceSection } from "@/ui/index/our-service"
 import { Untyped } from "@/ui/index/untyped"
 
 const IndexPage = () => {
     return (
         <main className="mx-auto">
             <Hero />
-            <Power />
-            <OurApproach />
+            <AboutUs />
+            <ServiceSection />
             <Untyped />
         </main>
     )

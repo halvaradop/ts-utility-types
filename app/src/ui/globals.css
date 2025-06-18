@@ -3,40 +3,36 @@
 @reference "../../node_modules/@halvaradop/tailwindcss-utilities/dist/plugin.css";
 
 @theme {
-    --breakpoint-*: initial;
     --breakpoint-base: 900px;
-    --spacing-semi: 89%;
-    --font-noto-sans: var(---font-noto-sans);
 
-    --color-primary: #000;
-    --color-primary-hover: #0f0f0f;
+    --font-inter: var(---font-inter);
 
-    --color-color-100: #fff;
-    --color-color-200: #000;
-}
+    --rounded: 0.375rem;
+    --opacity-cursor: 80%;
 
-@layer base {
-    body {
-        @apply bg-gradient-to-tr from-purple-100 via-sky-50;
-    }
+    --color-muted: oklch(65% 0.01 260);
+    --color-border: oklch(70% 0.02 260);
+    --color-overlay: oklch(30% 0.02 260 / 0.3);
 
-    .transition-approach {
-        transition:
-            opacity 0.3s ease,
-            display 0.3s ease allow-discrete;
-    }
+    --color-success: oklch(75% 0.18 140);
+    --color-danger: oklch(65% 0.2 25);
 
-    .approach[data-isselected="true"] > p {
-        display: block;
-        opacity: 1;
-        transition:
-            opacity 0.4s ease,
-            display 0.4s ease allow-discrete;
-    }
+    --color-surface: oklch(98% 0 0);
+    --color-on-surface: oklch(20% 0.02 260);
 
-    @starting-style {
-        .approach[data-isselected="true"] > p {
-            opacity: 0;
-        }
-    }
+    --color-primary: oklch(30% 0 270);
+    --color-on-primary: oklch(95% 0 0);
+
+    --color-secondary: oklch(60% 0 270);
+    --color-on-secondary: oklch(10% 0 0);
+
+    --color-ghost: oklch(94% 0.01 260);
+
+    --color-disabled: oklch(92% 0 0);
+    --color-on-disabled: oklch(60% 0.01 260);
+
+    --size-sm: 1.75rem;
+    --size-base: 2.25rem;
+    --size-md: 2.75rem;
+    --size-lg: 3.25rem;
 }
