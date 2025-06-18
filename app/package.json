@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@halvaradop/ui-button": "0.4.0-beta.1",
-    "@halvaradop/ui-core": "^0.5.0",
+    "@halvaradop/ui-button": "1.0.0",
+    "@halvaradop/ui-core": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "next": "15.2.5",
