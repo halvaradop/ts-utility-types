@@ -60,33 +60,6 @@ type Entries = ObjectEntries<User>
         `,
     },
     {
-        title: "Array",
-        paragraph: "Use tuple-based utilities to filter, extract, and transform array-like types with confidence and control.",
-        code: `
-import type { 
-    Flatten,
-    ToUnion,
-    Filter,
-    Includes
-} from "@halvaradop/ts-utility-types/arrays"
-
-
-type Tuple = [string, number, boolean]
-
-// Expected: string | number | boolean
-type Flattened = Flatten<Tuple>
-
-// Expected: string | number | boolean
-type Union = ToUnion<Tuple>
-
-// Expected: [string]
-type Filtered = Filter<Tuple, string>
-
-// Expected: true
-type HasString = Includes<Tuple, string>
-        `,
-    },
-    {
         title: "Guards",
         paragraph: "Validate values with precision — confirm types like `never`, `any`, positive numbers, and more.",
         code: `
@@ -101,7 +74,7 @@ import type {
 // Expected: true
 type IsPositive = IsPositive<5>
 
-// Expected: false
+// Expected: true
 type IsNegative = IsNegative<-3>
 
 // Expected: true
@@ -121,23 +94,30 @@ type IsNeverType = IsNever<never>
         `,
     },
     {
-        title: "Test",
-        paragraph: "Ensure types match your expectations with type-safe testing patterns built for reliability.",
+        title: "Array",
+        paragraph: "Use tuple-based utilities to filter, extract, and transform array-like types with confidence and control.",
         code: `
 import type { 
-    Equals,
-    Expect,
-    Not,
-} from "@halvaradop/ts-utility-types/test"
+    Flatten,
+    ToUnion,
+    Filter,
+    Includes
+} from "@halvaradop/ts-utility-types/arrays"
+
+
+type Tuple = [string, number, boolean]
+
+// Expected: string
+type Flattened = Flatten<string[][]>
+
+// Expected: string | number | boolean
+type Union = ToUnion<Tuple>
+
+// Expected: ["str"]
+type Filtered = Filter<[1, 2, 3, "str"], string>
 
 // Expected: true
-type IsEqual = Expect<Equals<"Hello", "Hello">>
-
-// Expected: false
-type IsNotEqual = Expect<Not<Equals<"Hello", "World">>>
-
-// Expected: true
-type IsEquals = Equals<1, 1>
+type HasString = Includes<Tuple, string>
         `,
     },
     {
@@ -151,19 +131,44 @@ import type {
     Discard, 
     Nullish
 } from "@halvaradop/ts-utility-types/utils" 
-  
-        
+
 // Expected: { a: number; b: string }
 type Pretty = Prettify<{ a: number; b: string }>
 
 // Expected: "foo" | (string & {})
 type Literal = LiteralUnion<"foo", string>
 
-// Expected: { a: number }
-type Discarded = Discard<{ a: number; b: string }, "b">
+// Expected: string
+type Discarded = Discard<string | number, number>
 
-// Expecteda: true
-type NullishType = Nullish<undefined>
+// Expecteda: null | undefined
+type NullishType = Nullish
+        `,
+    },
+    {
+        title: "Test",
+        paragraph: "Ensure types match your expectations with type-safe testing patterns built for reliability.",
+        code: `
+import type { 
+    Equals,
+    Expect,
+    Not,
+} from "@halvaradop/ts-utility-types/test"
+
+// Expected: true
+type IsEqual = Equals<"Hello", "Hello">
+
+// Expected: false
+type IsNotEqual = Not<Equals<"Hello", "World">>
+
+// Expected: true
+type IsEquals = Equals<1, 1>
+
+// Expected: true
+type IsNotEquals = Not<Equals<1, 2>>
+
+// Expected: true
+type IsExpect = Expect<"Hello" extends string ? true : false>
         `,
     },
     {
@@ -184,7 +189,7 @@ type Joined = Join<["a", "b", "c"], "-">
 // Expected: ["foo", "foo"]
 type Found = FindAll<"foo bar foo", "foo">
 
-// Expected: { id: string; section: string }
+// Expected: "id" | "section"
 type Params = ParseUrlParams<"/user/:id/profile/:section">
 
 // Expected: 2
@@ -195,25 +200,24 @@ type Index = IndexOfString<"hello", "l">
         title: "Validate Types",
         paragraph: "Assert and validate that types meet strict constraints — from objects and arrays to booleans and primitives.",
         code: `
-import type { 
+import { 
     isPrimitive,
     isObject,
     isArray,
     isFalsy
 } from "@halvaradop/ts-utility-types/validate"
 
+// Expected: true
+const isPrim = isPrimitive(42)
 
 // Expected: true
-type IsPrim = isPrimitive<42>
+const isObj = isObject({ a: 1 })
 
 // Expected: true
-type IsObj = isObject<{ a: 1 }>
+const isArr = isArray([1, 2, 3])
 
 // Expected: true
-type IsArr = isArray<[1, 2, 3]>
-
-// Expected: true
-type IsFalsyVal = isFalsy<0>
+const isFalsyVal = isFalsy(0)
         `,
     },
 ]

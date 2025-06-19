@@ -38,6 +38,10 @@
 
 @layer base {
     pre {
-        @apply w-0 min-w-full border border-solid border-border rounded-2xl overflow-x-auto scrollbar:h-1.5 track:mx-1 thumb:rounded-md thumb:bg-primary;
+        @apply w-0 min-w-full overflow-x-auto scrollbar:h-1.5 track:mx-1 thumb:rounded-md thumb:bg-primary focus:outline-none;
+
+        .linenumber {
+            @apply !text-muted;
+        }
     }
 }

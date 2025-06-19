@@ -36,3 +36,8 @@ export interface CursorProps {
     BACK_COLOR?: RGB
     TRANSPARENT?: boolean
 }
+
+export interface CodeProps {
+    children: string
+    className?: string
+}

@@ -5,7 +5,7 @@ import { Service } from "./service"
 
 export const ServiceSection = () => {
     return (
-        <section className="w-11/12 mx-auto mt-52 base:w-10/12 xl:max-w-screen-2xl">
+        <section className="w-11/12 mx-auto mt-52 xl:w-10/12 xl:max-w-screen-2xl" id="our-services">
             <motion.div className="py-20 text-center">
                 <motion.div
                     className="flex items-center justify-center gap-4"
@@ -29,7 +29,7 @@ export const ServiceSection = () => {
                     development across a wide range of type patterns.
                 </motion.p>
             </motion.div>
-            <div className="mt-20 grid gap-10 base:grid-cols-2">
+            <div className="min-w-full w-full mt-20 grid gap-6 base:grid-cols-5">
                 {ourServiceContent.map(({ title, paragraph, code }, key) => (
                     <Service index={key} title={title} paragraph={paragraph} code={code} key={key} />
                 ))}

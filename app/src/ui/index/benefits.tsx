@@ -3,7 +3,7 @@ import { motion } from "motion/react"
 
 export const Benefits = () => {
     return (
-        <section className="w-11/12 mx-auto base:w-10/12 xl:max-w-screen-2xl py-20">
+        <section className="w-11/12 mx-auto py-20 xl:w-10/12 xl:max-w-screen-2xl ">
             <motion.div
                 className="text-center max-w-2xl mx-auto"
                 initial={{ opacity: 0, y: 40 }}

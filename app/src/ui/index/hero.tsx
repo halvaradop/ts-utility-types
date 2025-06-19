@@ -8,7 +8,7 @@ export const Hero = () => {
     }
 
     return (
-        <section className="w-11/12 h-[calc(100vh-5rem)] mx-auto content-center text-center relative base:w-10/12 xl:max-w-screen-2xl">
+        <section className="w-11/12 h-[calc(100vh-5rem)] mx-auto content-center text-center relative xl:w-10/12 xl:max-w-screen-2xl">
             <div className="base:w-3/4 base:mx-auto">
                 <motion.h1
                     className="text-on-surface text-fluid-5xl font-bold uppercase sm:text-fluid-6xl"

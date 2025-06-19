@@ -5,7 +5,7 @@ import { Untyped } from "@/ui/index/untyped"
 
 const IndexPage = () => {
     return (
-        <main className="mx-auto">
+        <main>
             <Hero />
             <AboutUs />
             <ServiceSection />

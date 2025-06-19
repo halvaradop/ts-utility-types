@@ -1,14 +1,17 @@
 "use client"
+import Link from "next/link"
 import Image from "next/image"
 import { motion } from "motion/react"
 import { Button } from "@halvaradop/ui-button"
 import { TextReveal } from "@/ui/motion/text-reveal"
 import star from "@/assets/star.svg"
-import Link from "next/link"
 
 export const AboutUs = () => {
     return (
-        <section className="w-11/12 min-h-screen mx-auto content-center text-center relative rounded-md base:w-10/12 xl:max-w-screen-2xl">
+        <section
+            className="w-11/12 min-h-screen mx-auto content-center text-center relative rounded-md xl:w-10/12 xl:max-w-screen-2xl"
+            id="about-us"
+        >
             <motion.div
                 className="flex items-center justify-center gap-4 mb-6"
                 initial={{ opacity: 0, y: 40 }}
