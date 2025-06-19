@@ -13,7 +13,7 @@ export const TextReveal = ({ children, className }: TextRevealProps) => {
     return (
         <div ref={targetRef} className={merge("relative z-0 h-[200vh]", className)}>
             <div className={"sticky top-0 mx-auto flex h-[50%] max-w-4xl items-center"}>
-                <span className={"flex flex-wrap justify-center font-bold text-black/20"}>
+                <span className={"flex flex-wrap justify-center font-bold text-white/20"}>
                     {words.map((word, i) => {
                         const start = i / words.length
                         const end = start + 1 / words.length

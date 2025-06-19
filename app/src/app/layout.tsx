@@ -19,8 +19,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
     return (
-        <html lang="en">
-            <body className={`${inter.className} antialiased scroll-smooth scroll:w-1.5 track:my-1 thumb:rounded thumb:bg-black`}>
+        <html className="scroll-smooth" lang="en">
+            <body
+                className={`${inter.className} antialiased bg-surface text-on-surface overflow-x-hidden scrollbar:w-1.5 track:my-1 thumb:rounded thumb:bg-on-surface`}
+            >
                 <Header />
                 {children}
                 <Footer />

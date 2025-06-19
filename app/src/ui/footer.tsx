@@ -1,28 +1,36 @@
-"use client"
 import Link from "next/link"
-import Image from "next/image"
-import arrowIcon from "@/assets/arrow.svg"
-import { Button } from "@halvaradop/ui-button"
 
 export const Footer = () => {
     return (
-        <footer className="text-white bg-black">
-            <section className="w-11/12 mx-auto py-20 space-y-20 base:w-10/12 base:py-28 lg:py-36 xl:max-w-screen-2xl">
-                <div>
-                    <h2 className="text-fluid-4xl font-bold sm:w-3/4 base:text-fluid-5xl lg:w-1/2">
-                        GET A POWERFUL SET OF UTILITY TYPES
-                    </h2>
-                    <p className="mt-6 text-fluid-base">
-                        Ready to simplify your TypeScript development? Explore our utilities today and transform your workflow.
-                    </p>
-                </div>
-                <div className="w-full flex items-center justify-between">
-                    <span className="text-fluid-4xl font-bold base:text-fluid-5xl">TOP</span>
-                    <Button className="size-11 p-0 rounded-full border border-white" variant="ghost">
-                        <Link href="/">
-                            <Image className="-rotate-90 invert" src={arrowIcon} alt="arrow icion" priority draggable={false} />
+        <footer className=" text-primary">
+            <section className="w-11/12 mx-auto base:w-10/12 base:py-24 lg:py-32 xl:max-w-screen-2xl flex flex-col gap-10">
+                <div className="flex flex-col md:flex-row md:justify-between items-center gap-6">
+                    <div>
+                        <h2 className="text-fluid-lg base:text-fluid-4xl font-extrabold uppercase tracking-wide">
+                            @halvaradop/ts-utility-types
+                        </h2>
+                        <p className="text-muted mt-2 text-sm">Elegant TypeScript utilities for modern development.</p>
+                    </div>
+                    <nav className="flex gap-6 text-sm">
+                        <Link
+                            href="https://github.com/halvaradop/ts-utility-types"
+                            className="hover:text-primary transition-colors"
+                        >
+                            GitHub
                         </Link>
-                    </Button>
+                        <Link
+                            href="https://www.npmjs.com/package/@halvaradop/ts-utility-types"
+                            className="hover:text-primary transition-colors"
+                        >
+                            NPM
+                        </Link>
+                        <Link href="mailto:contact@halvaradop.dev" className="hover:text-primary transition-colors">
+                            Contact
+                        </Link>
+                    </nav>
+                </div>
+                <div className="pt-6 flex flex-col items-center gap-2 text-xs text-muted border-t border-solid border-border md:flex-row md:justify-between ">
+                    <span>&#169; 2025 halvaradop. All Rights Reserved.</span>
                 </div>
             </section>
         </footer>

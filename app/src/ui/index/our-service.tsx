@@ -1,33 +1,37 @@
 "use client"
-import { useRef } from "react"
+import { motion } from "motion/react"
 import { ourServiceContent } from "@/lib/content"
 import { Service } from "./service"
-import { useScroll, useTransform, motion } from "motion/react"
 
 export const ServiceSection = () => {
-    const sectionRef = useRef<HTMLDivElement | null>(null)
-    const { scrollYProgress } = useScroll({ target: sectionRef })
-    const itemCount = ourServiceContent.length
-    const finalStart = (itemCount - 0.5) / itemCount
-    const finalEnd = 1
-    const yHeader = useTransform(scrollYProgress, [finalStart, finalEnd], [0, -120])
-    const opacityHeader = useTransform(scrollYProgress, [finalStart, finalEnd], [1, 0])
-
     return (
-        <section ref={sectionRef} className="w-11/12 mx-auto hidden base:w-10/12 xl:max-w-screen-2xl">
-            <motion.div
-                className="py-20 grid text-center sticky top-0 md:w-11/12 md:mx-auto md:items-center md:grid-cols-2 base:w-10/12 z-10 bg-white"
-                style={{ y: yHeader, opacity: opacityHeader }}
-            >
-                <h2 className="uppercase md:text-left">our service</h2>
-                <p className="mt-6 text-fluid-base md:text-right base:mt-8">
-                    With advance typescript types to handle complex scenarios with ease and precision solutions for solve common
-                    patterns
-                </p>
+        <section className="w-11/12 mx-auto mt-52 base:w-10/12 xl:max-w-screen-2xl">
+            <motion.div className="py-20 text-center">
+                <motion.div
+                    className="flex items-center justify-center gap-4"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                >
+                    <span className="flex-1 h-px bg-border" />
+                    <h2 className="text-fluid-4xl font-bold uppercase">our service</h2>
+                    <span className="flex-1 h-px bg-border" />
+                </motion.div>
+                <motion.p
+                    className="mt-20 text-fluid-xl text-muted"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                >
+                    Explore a suite of advanced TypeScript utilities designed to handle deep logic, boost safety, and streamline
+                    development across a wide range of type patterns.
+                </motion.p>
             </motion.div>
-            <div className="grid grid-rows-8">
-                {ourServiceContent.map(({ title, paragraph }, key) => (
-                    <Service index={key} title={title} paragraph={paragraph} key={key} />
+            <div className="mt-20 grid gap-10 base:grid-cols-2">
+                {ourServiceContent.map(({ title, paragraph, code }, key) => (
+                    <Service index={key} title={title} paragraph={paragraph} code={code} key={key} />
                 ))}
             </div>
         </section>

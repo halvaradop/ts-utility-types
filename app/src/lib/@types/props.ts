@@ -6,6 +6,7 @@ export interface ServiceProps {
     index: number
     title: string
     paragraph: string
+    code: string
     ref?: RefObject<HTMLDivElement | null>
 }
 

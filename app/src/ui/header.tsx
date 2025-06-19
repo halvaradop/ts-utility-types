@@ -1,9 +1,10 @@
+import { Button } from "@halvaradop/ui-button"
 import Link from "next/link"
 
 export const Header = () => {
     return (
         <header>
-            <nav className="w-11/12 h-20 mx-auto flex items-center justify-between base:w-10/12 xl:max-w-screen-2xl">
+            <nav className="w-11/12 h-20 mx-auto flex items-center justify-between font-medium border-b border-solid border-border base:w-10/12 xl:max-w-screen-2xl">
                 <p>
                     <Link className="sm:hidden" href="/">
                         ts-utility-types
@@ -13,17 +14,19 @@ export const Header = () => {
                     </Link>
                 </p>
                 <aside>
-                    <ul className="flex items-center font-medium li:ml-1">
+                    <ul className="flex items-center uppercase gap-x-5 sm:gap-x-8 md:gap-x-10">
                         <li>
                             <Link href="">Home</Link>
                         </li>
-                        <span>,</span>
                         <li>
                             <Link href="">Docs</Link>
                         </li>
-                        <span>,</span>
                         <li>
-                            <Link href="">Github</Link>
+                            <Button variant="secondary" asChild>
+                                <Link href="https://github.com/halvaradop/ts-utility-types" target="_blank">
+                                    Github
+                                </Link>
+                            </Button>
                         </li>
                     </ul>
                 </aside>
