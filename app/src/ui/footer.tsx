@@ -40,6 +40,15 @@ export const Footer = () => {
                             <Link href="#type-control">Type Control</Link>
                         </li>
                     </ul>
+                    <ul>
+                        <li className="text-primary">Docs</li>
+                        <li>
+                            <Link href="/docs#install">Install</Link>
+                        </li>
+                        <li>
+                            <Link href="docs/#types">Types</Link>
+                        </li>
+                    </ul>
                 </nav>
             </div>
             <div className="py-6 flex flex-col items-center gap-2 text-xs text-muted border-t border-solid border-border md:flex-row md:justify-between ">

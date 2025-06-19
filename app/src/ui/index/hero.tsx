@@ -1,6 +1,7 @@
 "use client"
 import { motion } from "motion/react"
 import { Button } from "@halvaradop/ui-button"
+import Link from "next/link"
 
 export const Hero = () => {
     const handleInstallClick = async () => {
@@ -37,8 +38,8 @@ export const Hero = () => {
                 <Button className="" size="md" onClick={handleInstallClick}>
                     Install
                 </Button>
-                <Button variant="secondary" size="md">
-                    Get Started
+                <Button variant="secondary" size="md" asChild>
+                    <Link href="/docs">Get Started</Link>
                 </Button>
             </motion.div>
         </section>

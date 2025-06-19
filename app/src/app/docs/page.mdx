@@ -1,0 +1,64 @@
+import { Code } from "@/ui/code"
+
+# @halvaradop/ts-utility-types
+
+Una librería avanzada de utilidades de tipos para TypeScript, diseñada para resolver patrones complejos, mejorar la seguridad y acelerar el desarrollo en proyectos modernos. Incluye tipos para manipulación profunda de objetos, arrays, validaciones, utilidades de test y más.
+
+## Instalación
+
+```bash
+pnpm install @halvaradop/ts-utility-types
+```
+
+## Entry Points
+
+Puedes importar utilidades específicas según la categoría que necesites:
+
+- `@halvaradop/ts-utility-types/objects` — utilidades para objetos
+- `@halvaradop/ts-utility-types/arrays` — utilidades para arrays
+- `@halvaradop/ts-utility-types/validate` — validadores y type guards
+- `@halvaradop/ts-utility-types/string-mappers` — utilidades para manipulación de strings
+- `@halvaradop/ts-utility-types/test` — utilidades para pruebas de tipos
+- `@halvaradop/ts-utility-types/types` — tipos generales y helpers
+- `@halvaradop/ts-utility-types/utilities` — utilidades varias
+
+## Uso básico
+
+Importa el tipo o utilidad que necesites desde el entry point correspondiente:
+
+```ts
+import { DeepPick, DeepOmit } from "@halvaradop/ts-utility-types/objects"
+import { TupleToUnion } from "@halvaradop/ts-utility-types/arrays"
+import { IsAny } from "@halvaradop/ts-utility-types/validate"
+```
+
+### Ejemplo de uso
+
+```ts
+interface User {
+    name: string
+    address: {
+        street: string
+        city: string
+    }
+}
+
+// Obtener solo la calle de la dirección
+import { DeepPick } from "@halvaradop/ts-utility-types/objects"
+type OnlyStreet = DeepPick<User, "address.street">
+// Resultado: { address: { street: string } }
+```
+
+## Servicios principales
+
+La librería está organizada en módulos que cubren diferentes necesidades de manipulación y validación de tipos en TypeScript. Estos son los principales servicios que ofrece:
+
+- **Deep**: Manipula tipos de objetos profundamente desde cero con los tipos más potentes. Permite seleccionar, omitir, transformar y validar propiedades anidadas de manera segura y flexible.
+- **Object**: Utilidades para trabajar con objetos, como combinación, filtrado, obtención de claves y valores, y transformación de propiedades.
+- **Array**: Tipos para manipulación avanzada de arrays, como conversión a unión, filtrado, chunking, búsqueda y comparación de longitudes.
+- **Guards**: Type guards y validadores para mejorar la seguridad de tipos y detectar patrones comunes en tiempo de compilación.
+- **Numbers**: Utilidades para trabajar con tipos numéricos, rangos y validaciones.
+- **Test**: Tipos y helpers para pruebas de tipos, comparación y validación en entornos de testing.
+- **Utils**: Utilidades generales y helpers para facilitar la composición y reutilización de tipos complejos.
+
+Cada servicio está diseñado para ser modular y fácil de importar según la necesidad de tu proyecto.

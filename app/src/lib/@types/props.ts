@@ -40,4 +40,5 @@ export interface CursorProps {
 export interface CodeProps {
     children: string
     className?: string
+    language?: string
 }

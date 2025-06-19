@@ -30,10 +30,23 @@
     --color-disabled: #eeeeee;
     --color-on-disabled: #9f9f9f;
 
+    --color-vscode: #1e1e1e;
+
     --size-sm: 1.75rem;
     --size-base: 2.25rem;
     --size-md: 2.75rem;
     --size-lg: 3.25rem;
+
+    --color-hljs-background: hsla(0, 0%, 4%, 0.85);
+    --color-hljs-foreground: #f7f8f8;
+    --color-hljs-token-keyword: hsl(335, 80%, 70%);
+    --color-hljs-token-comment: hsl(0, 0%, 47%);
+    --color-hljs-token-string: hsl(145, 45%, 55%);
+    --color-hljs-token-function: hsl(268, 70%, 75%);
+    --color-hljs-token-constant: hsl(200, 100%, 65%);
+    --color-hljs-built_in: hsl(43, 100%, 63%);
+    --color-hljs-token-operator: hsl(260, 100%, 75%);
+    --color-hljs-token-variable: hsl(15, 80%, 70%);
 }
 
 @layer base {
@@ -42,6 +55,51 @@
 
         .linenumber {
             @apply !text-muted;
+        }
+    }
+
+    #layout-docs {
+        pre {
+            @apply w-0 min-w-full my-4 p-4 rounded-md border border-solid border-border overflow-auto bg-hljs-background scrollbar:h-1.5 track:mx-1 thumb:rounded thumb:bg-secondary;
+        }
+
+        code.language-bash {
+            color: var(--color-hljs-token-string);
+        }
+
+        .hljs-keyword {
+            color: var(--color-hljs-token-keyword);
+        }
+
+        .hljs-comment {
+            color: var(--color-hljs-token-comment);
+        }
+
+        .hljs-string,
+        .hljs-name .language-bash {
+            color: var(--color-hljs-token-string);
+        }
+
+        .hljs-title {
+            color: var(--color-hljs-token-function);
+        }
+
+        .hljs-constant,
+        .hljs-number {
+            color: var(--color-hljs-token-constant);
+        }
+
+        .hljs-attr,
+        .hljs-tag {
+            color: var(--color-hljs-foreground);
+        }
+
+        .hljs-built_in {
+            color: var(--color-hljs-built_in);
+        }
+
+        .hljs-tag {
+            color: var(--color-hljs-foreground);
         }
     }
 }

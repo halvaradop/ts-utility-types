@@ -16,10 +16,10 @@ export const Header = () => {
                 <aside>
                     <ul className="flex items-center uppercase gap-x-5 sm:gap-x-8 md:gap-x-10">
                         <li>
-                            <Link href="">Home</Link>
+                            <Link href="/">Home</Link>
                         </li>
                         <li>
-                            <Link href="">Docs</Link>
+                            <Link href="/docs">Docs</Link>
                         </li>
                         <li>
                             <Button variant="secondary" asChild>
