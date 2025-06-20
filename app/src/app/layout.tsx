@@ -3,7 +3,6 @@ import { PropsWithChildren } from "react"
 import { Inter } from "next/font/google"
 import { Header } from "@/ui/header"
 import { Footer } from "@/ui/footer"
-import { Cursor } from "@/ui/motion/cursor"
 import "@/ui/globals.css"
 
 const inter = Inter({
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
                 <Header />
                 {children}
                 <Footer />
-                <Cursor />
             </body>
         </html>
     )
