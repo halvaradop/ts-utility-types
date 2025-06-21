@@ -1,4 +1,3 @@
-import { motion } from "motion/react"
 import { Code } from "@/ui/code"
 import type { ServiceProps } from "@/lib/@types/props"
 
