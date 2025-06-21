@@ -39,16 +39,17 @@
     --size-md: 2.75rem;
     --size-lg: 3.25rem;
 
-    --color-hljs-background: hsla(0, 0%, 4%, 0.85);
-    --color-hljs-foreground: #f7f8f8;
-    --color-hljs-token-keyword: hsl(335, 80%, 70%);
-    --color-hljs-token-comment: hsl(0, 0%, 47%);
-    --color-hljs-token-string: hsl(145, 45%, 55%);
-    --color-hljs-token-function: hsl(268, 70%, 75%);
-    --color-hljs-token-constant: hsl(200, 100%, 65%);
-    --color-hljs-built_in: hsl(43, 100%, 63%);
-    --color-hljs-token-operator: hsl(260, 100%, 75%);
-    --color-hljs-token-variable: hsl(15, 80%, 70%);
+    --color-hljs-title: oklch(0.76 0.12 177.17);
+    --color-hljs-background: #1e1e1e;
+    --color-hljs-foreground: #d4d4d4;
+    --color-hljs-token-keyword: oklch(0.67 0.11 245.55);
+    --color-hljs-token-comment: #6a9955;
+    --color-hljs-token-string: #ce9178;
+    --color-hljs-token-function: #dcdcaa;
+    --color-hljs-token-constant: #b5cea8;
+    --color-hljs-built_in: oklch(0.71 0.08 43.16);
+    --color-hljs-token-operator: #d4d4d4;
+    --color-hljs-token-variable: #9cdcfe;
 }
 
 @layer base {
@@ -97,7 +98,8 @@
             color: var(--color-hljs-token-string);
         }
 
-        .hljs-keyword {
+        .hljs-keyword,
+        .hljs-literal {
             color: var(--color-hljs-token-keyword);
         }
 
@@ -111,6 +113,10 @@
         }
 
         .hljs-title {
+            color: var(--color-hljs-title);
+        }
+
+        .function_ {
             color: var(--color-hljs-token-function);
         }
 
@@ -126,10 +132,6 @@
 
         .hljs-built_in {
             color: var(--color-hljs-built_in);
-        }
-
-        .hljs-tag {
-            color: var(--color-hljs-foreground);
         }
     }
 }

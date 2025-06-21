@@ -9,6 +9,9 @@ import type {
     DeepMerge, 
     DeepMutable 
 } from "@halvaradop/ts-utility-types/deep"
+import * as validate from "@halvaradop/ts-utility-types/validate"
+
+type Test = DeepMergeAll<[Foo, {}, Bar], true>
 
 type User = {
     name: string;
