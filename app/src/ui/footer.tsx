@@ -1,30 +1,59 @@
-"use client"
 import Link from "next/link"
-import Image from "next/image"
-import arrowIcon from "@/assets/arrow.svg"
-import { Button } from "@halvaradop/ui-button"
 
 export const Footer = () => {
     return (
-        <footer className="text-white bg-black">
-            <section className="w-11/12 mx-auto py-20 space-y-20 base:w-10/12 base:py-28 lg:py-36 xl:max-w-screen-2xl">
-                <div>
-                    <h2 className="text-fluid-4xl font-bold sm:w-3/4 base:text-fluid-5xl lg:w-1/2">
-                        GET A POWERFUL SET OF UTILITY TYPES
-                    </h2>
-                    <p className="mt-6 text-fluid-base">
-                        Ready to simplify your TypeScript development? Explore our utilities today and transform your workflow.
-                    </p>
+        <footer className="w-11/12 mx-auto border-t border-solid border-border xl:w-10/12 xl:max-w-screen-2xl">
+            <div className="mt-20 base:mt-0 base:py-20 base:grid base:items-start base:grid-cols-2">
+                <div className="text-center base:text-left">
+                    <h2 className="text-fluid-base font-extrabold uppercase tracking-wide">@halvaradop/ts-utility-types</h2>
+                    <p className="text-muted mt-2 text-sm">Elegant TypeScript utilities for modern development.</p>
                 </div>
-                <div className="w-full flex items-center justify-between">
-                    <span className="text-fluid-4xl font-bold base:text-fluid-5xl">TOP</span>
-                    <Button className="size-11 p-0 rounded-full border border-white" variant="ghost">
-                        <Link href="/">
-                            <Image className="-rotate-90 invert" src={arrowIcon} alt="arrow icion" priority draggable={false} />
-                        </Link>
-                    </Button>
-                </div>
-            </section>
+                <nav className="mt-20 mb-28 flex items-start justify-around gap-6 text-muted ul:space-y-4 ul:li:hover:text-primary base:m-0 base:justify-between">
+                    <ul>
+                        <li className="text-primary">Home</li>
+                        <li>
+                            <Link href="#about-us">About Us</Link>
+                        </li>
+                        <li>
+                            <Link href="#our-services">Our Services</Link>
+                        </li>
+                        <li>
+                            <Link href="#type-control">Type Control</Link>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li className="text-primary">Docs</li>
+                        <li>
+                            <Link href="/docs#install">Install</Link>
+                        </li>
+                        <li>
+                            <Link href="docs/#types">Types</Link>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li className="text-primary">Resources</li>
+                        <li>
+                            <Link
+                                href="https://github.com/halvaradop/ts-utility-types"
+                                className="hover:text-primary transition-colors"
+                            >
+                                GitHub
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="https://www.npmjs.com/package/@halvaradop/ts-utility-types"
+                                className="hover:text-primary transition-colors"
+                            >
+                                NPM
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div className="py-6 flex flex-col items-center gap-2 text-xs text-muted border-t border-solid border-border md:flex-row md:justify-between ">
+                <span>&#169; 2025 halvaradop. All Rights Reserved.</span>
+            </div>
         </footer>
     )
 }

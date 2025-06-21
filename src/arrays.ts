@@ -376,10 +376,10 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
  * @param {unknown} T - The value to get the type of
  * @example
  * // Expected: number
- * type TypeOfValue = TypeOf<123>
+ * type TypeOfValue = ReturnTypeOf<123>
  *
  * // Expected: string
- * type TypeOfValue = TypeOf<"hello">
+ * type TypeOfValue = ReturnTypeOf<"hello">
  */
 export type ReturnTypeOf<T> = T extends string
     ? string
