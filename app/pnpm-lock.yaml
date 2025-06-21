@@ -13,6 +13,9 @@ importers:
       "@halvaradop/ui-core":
         specifier: ^1.0.0
         version: 1.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      "@halvaradop/ui-select":
+        specifier: ^1.0.0
+        version: 1.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       "@mdx-js/loader":
         specifier: ^3.1.0
         version: 3.1.0(acorn@8.14.1)
@@ -57,8 +60,8 @@ importers:
         specifier: ^2.0.13
         version: 2.0.13
       "@types/node":
-        specifier: ^22.14.0
-        version: 22.14.0
+        specifier: ^24.0.3
+        version: 24.0.3
       "@types/react":
         specifier: ^19.1.0
         version: 19.1.0
@@ -158,6 +161,12 @@ packages:
 
   "@halvaradop/ui-core@1.0.0":
     resolution: { integrity: sha512-LOmO+2cv8OMAkcqKo0U9A9N2gnoCQ48gOkDBtspCym7ewnuNHLVmTpdQiOeO3KQL03m35pIOxSbjNcd0hLyiuQ== }
+    peerDependencies:
+      react: ^19.0.0
+      react-dom: ^19.0.0
+
+  "@halvaradop/ui-select@1.0.0":
+    resolution: { integrity: sha512-dKnqz8kqwJGNJfW+jupHlxld4V9YYmSfvAx8NKiR8O2PgGWrNb9FnFpyvLszHgitix3qQ9B+uHGSsbS4SpDqNA== }
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -512,8 +521,8 @@ packages:
   "@types/ms@2.1.0":
     resolution: { integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA== }
 
-  "@types/node@22.14.0":
-    resolution: { integrity: sha512-Kmpl+z84ILoG+3T/zQFyAJsU6EPTmOCj8/2+83fSN6djd6I4o7uOuGIH6vq3PrjY5BGitSbFuMN18j3iknubbA== }
+  "@types/node@24.0.3":
+    resolution: { integrity: sha512-R4I/kzCYAdRLzfiCabn9hxWfbuHS573x+r0dJMkkzThEa7pbrcDWK+9zu3e7aBOouf+rQAciqPFMnxwr0aWgKg== }
 
   "@types/react-dom@19.1.2":
     resolution: { integrity: sha512-XGJkWF41Qq305SKWEILa1O8vzhb3aOo3ogBlSmiqNko/WmRb6QIaweuZCXjKygVDXpzXb5wyxKTSOsmkuqj+Qw== }
@@ -2158,8 +2167,8 @@ packages:
     resolution: { integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw== }
     engines: { node: ">= 0.4" }
 
-  undici-types@6.21.0:
-    resolution: { integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ== }
+  undici-types@7.8.0:
+    resolution: { integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw== }
 
   unified@11.0.5:
     resolution: { integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA== }
@@ -2316,6 +2325,13 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       tailwind-merge: 2.6.0
+
+  "@halvaradop/ui-select@1.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)":
+    dependencies:
+      "@halvaradop/ui-core": 1.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      class-variance-authority: 0.7.0
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   "@halvaradop/ui-slot@1.0.0": {}
 
@@ -2616,9 +2632,9 @@ snapshots:
 
   "@types/ms@2.1.0": {}
 
-  "@types/node@22.14.0":
+  "@types/node@24.0.3":
     dependencies:
-      undici-types: 6.21.0
+      undici-types: 7.8.0
 
   "@types/react-dom@19.1.2(@types/react@19.1.0)":
     dependencies:
@@ -4787,7 +4803,7 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  undici-types@6.21.0: {}
+  undici-types@7.8.0: {}
 
   unified@11.0.5:
     dependencies:

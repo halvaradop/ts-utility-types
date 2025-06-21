@@ -1,8 +1,10 @@
 @import "tailwindcss";
 @source "../../node_modules/@halvaradop/ui-button";
+@source "../../node_modules/@halvaradop/ui-select";
 @reference "../../node_modules/@halvaradop/tailwindcss-utilities/dist/plugin.css";
 
 @theme {
+    --breakpoint-xs: 500px;
     --breakpoint-base: 900px;
 
     --font-inter: var(--font-inter);
@@ -61,6 +63,34 @@
     #layout-docs {
         pre {
             @apply w-0 min-w-full my-4 p-4 rounded-md border border-solid border-border overflow-auto bg-hljs-background scrollbar:h-1.5 track:mx-1 thumb:rounded thumb:bg-secondary;
+        }
+
+        :not(pre) > code {
+            @apply text-on-secondary bg-secondary rounded-md px-1.5 py-0.5 font-mono;
+        }
+
+        h1 {
+            @apply text-fluid-2xl;
+        }
+
+        h3 {
+            @apply mt-14 text-fluid-lg;
+        }
+
+        ul {
+            @apply m-4 list-disc list-inside;
+
+            li {
+                @apply mt-2;
+            }
+        }
+
+        p {
+            @apply mt-3;
+        }
+
+        a {
+            @apply text-primary underline underline-offset-3;
         }
 
         code.language-bash {

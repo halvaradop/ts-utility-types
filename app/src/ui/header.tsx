@@ -6,11 +6,10 @@ export const Header = () => {
         <header>
             <nav className="w-11/12 h-20 mx-auto flex items-center justify-between font-medium border-b border-solid border-border xl:w-10/12 xl:max-w-screen-2xl">
                 <p>
-                    <Link className="sm:hidden" href="/">
-                        ts-utility-types
-                    </Link>
-                    <Link className="hidden sm:block" href="/">
-                        @halvaradop/ts-utility-types
+                    <Link href="/">
+                        <span className="xs:hidden">types</span>
+                        <span className="hidden xs:block sm:hidden">ts-utility-types</span>
+                        <span className="hidden sm:block">@halvaradop/ts-utility-types</span>
                     </Link>
                 </p>
                 <aside>

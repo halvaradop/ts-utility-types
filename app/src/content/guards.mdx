@@ -1,0 +1,113 @@
+# @halvaradop/ts-utility-types/type-guards
+
+Utilities for type checks and validations in TypeScript. These types help compare, validate, and discriminate types at compile time, enabling advanced conditional types and type guards.
+
+<h3 id="equals">`Equals<X, Y>`</h3>
+
+Checks if two types are strictly equal.
+
+```ts
+// Expected: true
+type CheckTrue = Equals<true, true>
+
+// Expected: false
+type CheckFalse = Equals<() => {}, true>
+```
+
+<h3 id="expect">`Expect<T extends true>`</h3>
+
+Ensures the received type is `true`. Useful for type-level tests.
+
+```ts
+// Expected: true
+type CheckTrue = Expect<true>
+
+// Expected: false (type error)
+type CheckFalse = Expect<false>
+```
+
+<h3 id="not">`Not<T extends boolean>`</h3>
+
+Negates a boolean type value.
+
+```ts
+// Expected: false
+type CheckFalse = Not<true>
+
+// Expected: true
+type CheckTrue = Not<false>
+```
+
+<h3 id="is-never">`IsNever<T>`</h3>
+
+Checks if the type is `never`.
+
+```ts
+// Expected: true
+type CheckNever = IsNever<never>
+
+// Expected: false
+type CheckStr = IsNever<string>
+```
+
+<h3 id="is-any">`IsAny<T>`</h3>
+
+Checks if the type is `any`.
+
+```ts
+// Expected: true
+type CheckAny = IsAny<any>
+
+// Expected: false
+type CheckStr = IsAny<string>
+```
+
+<h3 id="any-of">`AnyOf<T extends readonly any[]>`</h3>
+
+Checks if any value in the tuple is truthy.
+
+```ts
+// Expected: true
+type Test1 = AnyOf<[0, "", false, [], {}, undefined, null, true]>
+
+// Expected: false
+type Test2 = AnyOf<[0, "", false, [], {}, undefined, null]>
+```
+
+<h3 id="is-array">`IsArray<T>`</h3>
+
+Checks if the type is an array.
+
+```ts
+// Expected: true
+type Test1 = IsArray<[1, 2, 3]>
+
+// Expected: false
+type Test2 = IsArray<{ key: string }>
+```
+
+<h3 id="is-object">`IsObject<T>`</h3>
+
+Checks if the type is an object (excluding arrays and functions).
+
+```ts
+// Expected: true
+type Test1 = IsObject<{ key: string }>
+
+// Expected: false
+type Test2 = IsObject<[1, 2, 3]>
+```
+
+<h3 id="is-function">`IsFunction<T>`</h3>
+
+Checks if the type is a function.
+
+```ts
+// Expected: true
+type Test1 = IsFunction<() => void>
+
+// Expected: false
+type Test2 = IsFunction<{ key: string }>
+```
+
+> See the documentation for each type for more examples and usage details.

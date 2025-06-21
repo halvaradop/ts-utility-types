@@ -1,0 +1,243 @@
+# @halvaradop/ts-utility-types/objects
+
+Utilities for manipulating, transforming, and composing object types in TypeScript. These types allow you to combine, filter, select, modify, and map object properties in a flexible and type-safe way.
+
+### `Properties<Obj1, Obj2, Common = false>`
+
+Creates a union of the keys of two objects. If `Common` is `true`, returns only the common keys.
+
+```ts
+interface Foo {
+    foo: string
+}
+interface Bar {
+    bar: number
+}
+// Result: "foo" | "bar"
+type PropsFooBar = Properties<Foo, Bar>
+```
+
+### `Intersection<Obj1, Obj2>`
+
+Creates a new object with the keys that are in one but not the other.
+
+```ts
+interface Foo {
+    name: string
+    age: string
+}
+interface Bar {
+    name: string
+    age: string
+    gender: number
+}
+// Result: { gender: number }
+type DiffFoo = Intersection<Foo, Bar>
+```
+
+### `PickByType<Obj, Type>`
+
+Selects the properties of an object that are assignable to a given type.
+
+```ts
+interface User {
+    name: string
+    lastname: string
+    age: number
+}
+// Result: { name: string, lastname: string }
+type UserStr = PickByType<User, string>
+```
+
+### `PartialByKeys<Obj, Keys = keyof Obj>`
+
+Makes the specified keys of an object optional (all keys by default).
+
+```ts
+interface User {
+    name: string
+    lastname: string
+    age: number
+}
+// Result: { name?: string, lastname: string, age: number }
+type UserPartialName = PartialByKeys<User, "name">
+```
+
+### `OmitByType<Obj, Type>`
+
+Omits the properties of an object that are assignable to a given type.
+
+```ts
+interface User {
+    name: string
+    lastname: string
+    age: number
+}
+// Result: { age: number }
+type UserExcludeStrings = OmitByType<User, string>
+```
+
+### `FlattenProperties<Obj, Keys>`
+
+Extracts the value of a key and merges it into the object (experimental).
+
+```ts
+interface User {
+    name: string
+    lastname: string
+    address: { street: string; avenue: string }
+}
+// Result: { name: string, lastname: string, street: string, avenue: string }
+type UserAddress = FlattenProperties<User, "address">
+```
+
+### `ExcludePrivateKeys<Obj>`
+
+Removes properties whose name starts with an underscore (`_`).
+
+```ts
+interface User {
+    _private: string
+    public: number
+}
+// Result: { public: number }
+type PublicUser = ExcludePrivateKeys<User>
+```
+
+### `RequiredByKeys<Obj, Keys = keyof Obj>`
+
+Makes the specified keys of an object required (all keys by default).
+
+```ts
+interface User {
+    name?: string
+    age?: number
+    address?: string
+}
+// Result: { name: string, age?: number, address?: string }
+type UserRequiredName = RequiredByKeys<User, "name">
+```
+
+### `Mutable<Obj>`
+
+Makes the properties of an object mutable (removes `readonly`). Affects only the first level.
+
+```ts
+interface User {
+    readonly name: string
+    readonly lastname: string
+    readonly age: number
+}
+// Result: { name: string, lastname: string, age: number }
+type NonReadonlyUser = Mutable<User>
+```
+
+### `AppendKeyValue<Obj, Property, value>`
+
+Adds a new property to an object.
+
+```ts
+interface User {
+    name: string
+}
+// Result: { name: string, lastname: string }
+type UserAppendLastname = AppendKeyValue<User, "lastname", string>
+```
+
+### `ObjectEntries<Obj>`
+
+Returns a union of the `[key, value]` entries of the object.
+
+```ts
+interface Foo {
+    foo: string
+    bar: number
+    foobar?: boolean
+}
+// Result: ["foo", string] | ["bar", number] | ["foobar", boolean]
+type FooEntries = ObjectEntries<Foo>
+```
+
+### `ReplaceKeys<Obj, Keys, Replace>`
+
+Replaces the types of the specified keys with those defined in `Replace`.
+
+```ts
+interface Foo {
+    foo: string
+    bar: number
+    foobar: boolean
+}
+// Result: { foo: number, bar: number, foobar: number }
+type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number; foobar: number }>
+```
+
+### `MapTypes<Obj, Mapper>`
+
+Maps the types of the properties that match `from` in the `Mapper`, replacing them with `to`.
+
+```ts
+// Result: { foo: string, bar: boolean }
+type ReplaceTypesI = MapTypes<{ foo: string; bar: number }, { from: number; to: boolean }>
+```
+
+### `ToPrimitive<Obj>`
+
+Converts the properties of an object to their primitive types.
+
+```ts
+interface User {
+    name: "Foo"
+    lastname: "Bar"
+    age: 30
+}
+// Result: { name: string, lastname: string, age: number }
+type UserPrimitive = ToPrimitive<User>
+```
+
+### `Get<Obj1, Obj2, Key>`
+
+Returns the value of a key in one of the two objects.
+
+```ts
+interface Foo {
+    foo: string
+}
+interface Bar {
+    bar: number
+}
+// Result: string
+type FooValue = Get<Foo, Bar, "foo">
+// Result: number
+type BarValue = Get<Foo, Bar, "bar">
+```
+
+### `GetRequired<Obj>`
+
+Returns only the required keys of an object.
+
+```ts
+interface User {
+    name: string
+    age?: number
+    address?: string
+}
+// Result: { name: string }
+type UserRequired = GetRequired<User>
+```
+
+### `GetOptional<Obj>`
+
+Returns only the optional keys of an object.
+
+```ts
+interface User {
+    name: string
+    age?: number
+    address?: string
+}
+// Result: { age?: number, address?: string }
+type UserOptional = GetOptional<User>
+```
+
+> See the documentation for each type for more examples and usage details.

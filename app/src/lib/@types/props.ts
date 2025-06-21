@@ -42,3 +42,7 @@ export interface CodeProps {
     className?: string
     language?: string
 }
+
+export interface EntryPointProps {
+    params: Promise<{ slug: string }>
+}

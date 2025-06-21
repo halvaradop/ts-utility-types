@@ -1,0 +1,87 @@
+# @halvaradop/ts-utility-types/numbers
+
+Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+
+<h3 id="is-odd">`IsOdd<T extends number>`</h3>
+
+Checks if a number is odd.
+
+```ts
+// Result: true
+type CheckOdd = IsOdd<2023>
+
+// Result: false
+type CheckEven = IsOdd<2024>
+```
+
+<h3 id="is-even">`IsEven<T extends number>`</h3>
+
+Checks if a number is even.
+
+```ts
+// Result: true
+type CheckEven = IsEven<2024>
+
+// Result: false
+type CheckOdd = IsEven<2023>
+```
+
+<h3 id="is-negative">`IsNegative<T extends number>`</h3>
+
+Checks if a number is negative.
+
+```ts
+// Result: true
+type CheckNegative = IsNegative<-2024>
+
+// Result: false
+type CheckPositive = IsNegative<2024>
+```
+
+<h3 id="is-positive">`IsPositive<T extends number>`</h3>
+
+Checks if a number is positive.
+
+```ts
+// Result: true
+type CheckPositive = IsPositive<2024>
+
+// Result: false
+type CheckNegative = IsPositive<-2024>
+```
+
+<h3 id="absolute">`Absolute<Expression extends number | string | bigint>`</h3>
+
+Returns the absolute value of a number, string, or bigint as a string.
+
+```ts
+// Result: "2024"
+type Positive = Absolute<2024>
+
+// Result: "2024"
+type PositiveString = Absolute<"-2024">
+```
+
+<h3 id="trunc">`Trunc<Math extends string | number | bigint>`</h3>
+
+Truncates a number to its integer part.
+
+```ts
+// Result: 3
+type Truncated = Trunc<3.14>
+
+// Result: -2
+type TruncatedNegative = Trunc<-2.99>
+```
+
+<h3 id="number-range">`NumberRange<Low extends number, High extends number>`</h3>
+
+Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
+
+```ts
+// Result: 1 | 2 | 3 | 4 | 5
+type Range1 = NumberRange<1, 5>
+
+// Result: never
+type Range2 = NumberRange<-1, 5>
+```

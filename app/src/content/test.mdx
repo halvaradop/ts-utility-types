@@ -1,0 +1,38 @@
+# @halvaradop/ts-utility-types/test
+
+Utilities for type-level testing and assertions in TypeScript. These types help compare, validate, and ensure type conditions in testing or advanced development scenarios.
+
+### `Equals<X, Y>`
+
+Checks if two types are strictly equal.
+
+```ts
+// Result: true
+type CheckTrue = Equals<true, true>
+// Result: false
+type CheckFalse = Equals<() => {}, true>
+```
+
+### `Expect<T extends true>`
+
+Ensures the received type is `true`. Useful for type-level tests.
+
+```ts
+// Result: true
+type CheckTrue = Expect<true>
+// Result: false (type error)
+type CheckFalse = Expect<false>
+```
+
+### `Not<T extends boolean>`
+
+Negates a boolean type value.
+
+```ts
+// Result: false
+type CheckFalse = Not<true>
+// Result: true
+type CheckTrue = Not<false>
+```
+
+> See the documentation for each type for more examples and usage details.

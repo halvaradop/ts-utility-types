@@ -6,7 +6,7 @@ import { Cursor } from "@/ui/motion/cursor"
 
 const IndexPage = () => {
     return (
-        <main>
+        <main className="mb-40">
             <Hero />
             <AboutUs />
             <ServiceSection />

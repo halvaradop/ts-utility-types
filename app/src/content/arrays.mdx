@@ -1,0 +1,106 @@
+# @halvaradop/ts-utility-types/arrays
+
+Advanced utilities for manipulating arrays and tuples in TypeScript. These types allow you to transform, filter, convert to union, and perform type-level operations on arrays in a safe and expressive way.
+
+### `ArrayToUnion<Array extends readonly unknown[]>`
+
+Creates a union of the literal values of a constant array.
+
+```ts
+// Result: "a" | "b" | "c"
+type Letters = ArrayToUnion<["a", "b", "c"]>
+```
+
+### `Size<Array extends unknown[]>`
+
+Gets the length (size) of an array as a type.
+
+```ts
+// Result: 3
+type Length = Size<[1, 2, 3]>
+```
+
+### `Filter<Array extends unknown[], Predicate, Includes extends boolean = true>`
+
+Filters the elements of a tuple by a predicate. If `Includes` is `true`, includes matching elements; if `false`, excludes them.
+
+```ts
+// Result: [2]
+type OnlyTwo = Filter<[0, 1, 2], 2>
+// Result: [0, 1]
+type WithoutTwo = Filter<[0, 1, 2], 2, false>
+```
+
+### `Reverse<Array extends unknown[]>`
+
+Reverses the order of elements in a tuple.
+
+```ts
+// Result: [3, 2, 1]
+type Reversed = Reverse<[1, 2, 3]>
+```
+
+### `IndexOf<Array extends unknown[], Match>`
+
+Returns the index of the first occurrence of an element in the tuple. Returns `-1` if not found.
+
+```ts
+// Result: 2
+type Index = IndexOf<["a", "b", "c"], "c">
+```
+
+### `LastIndexOf<Array extends unknown[], Match>`
+
+Returns the index of the last occurrence of an element in the tuple. Returns `-1` if not found.
+
+```ts
+// Result: 1
+type LastIndex = LastIndexOf<["a", "b", "a"], "a">
+```
+
+### `ConstructTuple<Length extends number, Value extends unknown = unknown>`
+
+Creates a tuple of fixed length with a given value.
+
+```ts
+// Result: ["x", "x", "x"]
+type ThreeX = ConstructTuple<3, "x">
+```
+
+### `HasDuplicates<Array extends unknown[]>`
+
+Checks if there are duplicate elements in the tuple.
+
+```ts
+// Result: true
+type Duplicates = HasDuplicates<[1, 2, 1]>
+```
+
+### `AllEquals<Array extends unknown[], Comparator>`
+
+Checks if all elements in the tuple are equal to a given value.
+
+```ts
+// Result: true
+type AllEqual = AllEquals<[2, 2, 2], 2>
+```
+
+### `Chunk<Array extends unknown[], Length extends number>`
+
+Splits a tuple into sub-tuples of fixed length.
+
+```ts
+// Result: [[1,2],[3,4],[5]]
+type Chunks = Chunk<[1, 2, 3, 4, 5], 2>
+```
+
+### `Zip<Array1 extends unknown[], Array2 extends unknown[]>`
+
+Combines two tuples into a tuple of pairs, element by element.
+
+```ts
+// Result: [[1, "a"], [2, "b"]]
+type Zipped = Zip<[1, 2], ["a", "b"]>
+```
+
+> See the documentation for each type for more examples and usage details.

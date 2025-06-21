@@ -1,0 +1,99 @@
+# @halvaradop/ts-utility-types/validate
+
+Helpers and type guards for runtime value validation in TypeScript and JavaScript. These functions check if a value is primitive, nullish, boolean, string, number, object, array, function, or falsy.
+
+### `isPrimitive(value: unknown): value is Primitive`
+
+Checks if a value is a primitive type (`number`, `string`, `boolean`, `bigint`, `symbol`).
+
+```ts
+isPrimitive(42) // true
+isPrimitive("hello") // true
+isPrimitive({}) // false
+```
+
+### `isPrimitiveNullish(value: unknown): value is PrimitiveNullish`
+
+Checks if a value is a primitive or nullish (`null` or `undefined`).
+
+```ts
+isPrimitiveNullish(undefined) // true
+isPrimitiveNullish("hello") // true
+isPrimitiveNullish({}) // false
+```
+
+### `isNullish(value: unknown): value is Nullish`
+
+Checks if a value is `null` or `undefined`.
+
+```ts
+isNullish(null) // true
+isNullish(undefined) // true
+isNullish(0) // false
+```
+
+### `isBoolean(value: unknown): value is boolean`
+
+Checks if a value is boolean.
+
+```ts
+isBoolean(true) // true
+isBoolean("true") // false
+```
+
+### `isString(value: unknown): value is string`
+
+Checks if a value is a string.
+
+```ts
+isString("hello") // true
+isString(123) // false
+```
+
+### `isNumber(value: unknown): value is number`
+
+Checks if a value is numeric (including `NaN`).
+
+```ts
+isNumber(42) // true
+isNumber("42") // false
+```
+
+### `isObject(value: unknown): value is object`
+
+Checks if a value is a plain object (not array, not function, not nullish).
+
+```ts
+isObject({}) // true
+isObject([]) // false
+isObject(null) // false
+```
+
+### `isArray(value: unknown): value is unknown[]`
+
+Checks if a value is an array.
+
+```ts
+isArray([1, 2, 3]) // true
+isArray({}) // false
+```
+
+### `isFunction(value: unknown): value is Function`
+
+Checks if a value is a function.
+
+```ts
+isFunction(() => {}) // true
+isFunction(123) // false
+```
+
+### `isFalsy(value: unknown): boolean`
+
+Checks if a value is falsy (`null`, `undefined`, `false`, `0`, `""`).
+
+```ts
+isFalsy(0) // true
+isFalsy("hello") // false
+```
+
+> Check the documentation of each function for more examples and usage details.

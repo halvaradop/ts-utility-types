@@ -7,7 +7,11 @@ Una librería avanzada de utilidades de tipos para TypeScript, diseñada para re
 ## Instalación
 
 ```bash
-pnpm install @halvaradop/ts-utility-types
+# Instala los tipos unicamente para desarrollo
+pnpm install -D @halvaradop/ts-utility-types@latest
+
+# Si necesitas de /validate entrada
+pnpm install --save @halvaradop/ts-utility-types@latest
 ```
 
 ## Entry Points
@@ -21,8 +25,6 @@ Puedes importar utilidades específicas según la categoría que necesites:
 - `@halvaradop/ts-utility-types/test` — utilidades para pruebas de tipos
 - `@halvaradop/ts-utility-types/types` — tipos generales y helpers
 - `@halvaradop/ts-utility-types/utilities` — utilidades varias
-
-## Uso básico
 
 Importa el tipo o utilidad que necesites desde el entry point correspondiente:
 
