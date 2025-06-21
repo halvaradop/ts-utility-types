@@ -1,0 +1,101 @@
+# @halvaradop/ts-utility-types/numbers
+
+Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+
+```ts
+import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
+```
+
+## Table of Contents
+
+- [IsOdd](#is-odd)
+- [IsEven](#is-even)
+- [IsNegative](#is-negative)
+- [IsPositive](#is-positive)
+- [Absolute](#absolute)
+- [Trunc](#trunc)
+- [NumberRange](#number-range)
+
+<h3 id="is-odd">`IsOdd<T extends number>`</h3>
+
+Checks if a number is odd.
+
+```ts
+// Expected: true
+type CheckOdd = IsOdd<2023>
+
+// Expected: false
+type CheckEven = IsOdd<2024>
+```
+
+<h3 id="is-even">`IsEven<T extends number>`</h3>
+
+Checks if a number is even.
+
+```ts
+// Expected: true
+type CheckEven = IsEven<2024>
+
+// Expected: false
+type CheckOdd = IsEven<2023>
+```
+
+<h3 id="is-negative">`IsNegative<T extends number>`</h3>
+
+Checks if a number is negative.
+
+```ts
+// Expected: true
+type CheckNegative = IsNegative<-2024>
+
+// Expected: false
+type CheckPositive = IsNegative<2024>
+```
+
+<h3 id="is-positive">`IsPositive<T extends number>`</h3>
+
+Checks if a number is positive.
+
+```ts
+// Expected: true
+type CheckPositive = IsPositive<2024>
+
+// Expected: false
+type CheckNegative = IsPositive<-2024>
+```
+
+<h3 id="absolute">`Absolute<Expression extends number | string | bigint>`</h3>
+
+Returns the absolute value of a number, string, or bigint as a string.
+
+```ts
+// Expected: "2024"
+type Positive = Absolute<2024>
+
+// Expected: "2024"
+type PositiveString = Absolute<"-2024">
+```
+
+<h3 id="trunc">`Trunc<Math extends string | number | bigint>`</h3>
+
+Truncates a number to its integer part.
+
+```ts
+// Expected: 3
+type Truncated = Trunc<3.14>
+
+// Expected: -2
+type TruncatedNegative = Trunc<-2.99>
+```
+
+<h3 id="number-range">`NumberRange<Low extends number, High extends number>`</h3>
+
+Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
+
+```ts
+// Expected: 1 | 2 | 3 | 4 | 5
+type Range1 = NumberRange<1, 5>
+
+// Expected: never
+type Range2 = NumberRange<-1, 5>
+```

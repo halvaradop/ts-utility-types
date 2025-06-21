@@ -16,8 +16,11 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@repo/*": ["./src/*", "./app/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src", "app"],
   "exclude": ["node_modules", "dist"]
 }
