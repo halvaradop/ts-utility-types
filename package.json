@@ -104,8 +104,5 @@
         }
       }
     ]
-  },
-  "dependencies": {
-    "rehype-highlight": "^7.0.2"
   }
 }
