@@ -89,7 +89,7 @@
             @apply mt-3;
         }
 
-        a {
+        :not(button) > a {
             @apply text-primary underline underline-offset-3;
         }
 

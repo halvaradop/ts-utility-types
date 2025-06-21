@@ -2,104 +2,124 @@
 
 Utilities for manipulating and analyzing string types in TypeScript. These types allow you to trim, join, search, replace, capitalize, and analyze strings at the type level.
 
-### `TrimLeft<Str extends string>`
+```ts
+import type * as Strings from "@halvaradop/ts-utility-types/strings"
+```
+
+## Table of Contents
+
+- [TrimLeft](#trim-left)
+- [TrimRight](#trim-right)
+- [Trim](#trim)
+- [Capitalize](#capitalize)
+- [Join](#join)
+- [StartsWith](#starts-with)
+- [DropChar](#drop-char)
+- [EndsWith](#ends-with)
+- [LengthOfString](#length-of-string)
+- [IndexOfString](#index-of-string)
+
+<h3 id="trim-left">`TrimLeft<Str extends string>`</h3>
 
 Removes whitespace from the start of a string type.
 
 ```ts
-// Result: "hello world  "
+// Expected: "hello world  "
 type TrimmedLeft = TrimLeft<"  hello world  ">
 ```
 
-### `TrimRight<Str extends string>`
+<h3 id="trim-right">`TrimRight<Str extends string>`</h3>
 
 Removes whitespace from the end of a string type.
 
 ```ts
-// Result: "hello world"
+// Expected: "hello world"
 type TrimmedRight = TrimRight<"hello world  ">
 ```
 
-### `Trim<Str extends string>`
+<h3 id="trim">`Trim<Str extends string>`</h3>
 
 Removes whitespace from both ends of a string type.
 
 ```ts
-// Result: "hello world"
+// Expected: "hello world"
 type Trimmed = Trim<"  hello world  ">
 ```
 
-### `Capitalize<Str extends string, FirstWord = true>`
+<h3 id="capitalize">`Capitalize<Str extends string, FirstWord = true>`</h3>
 
 Capitalizes the first letter of a word and lowercases the rest.
 
 ```ts
-// Result: "Hello world"
+// Expected: "Hello world"
 type Capitalized = Capitalize<"hello world">
 ```
 
-### `Join<Array extends unknown[], Separator extends number | string>`
+<h3 id="join">`Join<Array extends unknown[], Separator extends number | string>`</h3>
 
 Joins the values of a tuple into a string, using the given separator.
 
 ```ts
-// Result: "a-p-p-l-e"
+// Expected: "a-p-p-l-e"
 type Join1 = Join<["a", "p", "p", "l", "e"], "-">
-// Result: "Hello World"
+
+// Expected: "Hello World"
 type Join2 = Join<["Hello", "World"], " ">
 ```
 
-### `StartsWith<Str extends string, Match extends string>`
+<h3 id="starts-with">`StartsWith<Str extends string, Match extends string>`</h3>
 
 Checks if a string type starts with the given value.
 
 ```ts
-// Result: false
+// Expected: false
 type Test1 = StartsWith<"abc", "ac">
-// Result: true
+
+// Expected: true
 type Test2 = StartsWith<"abc", "ab">
 ```
 
-### `DropChar<Str extends string, Match extends string>`
+<h3 id="drop-char">`DropChar<Str extends string, Match extends string>`</h3>
 
 Removes all occurrences of a character from a string type.
 
 ```ts
-// Result: "butterfly!"
+// Expected: "butterfly!"
 type Test2 = DropChar<" b u t t e r f l y ! ", " ">
 ```
 
-### `EndsWith<Str extends string, Match extends string>`
+<h3 id="ends-with">`EndsWith<Str extends string, Match extends string>`</h3>
 
 Checks if a string type ends with the given value.
 
 ```ts
-// Result: true
+// Expected: true
 type Test1 = EndsWith<"abc", "bc">
-// Result: false
+
+// Expected: false
 type Test2 = EndsWith<"abc", "ac">
 ```
 
-### `LengthOfString<Str extends string>`
+<h3 id="length-of-string">`LengthOfString<Str extends string>`</h3>
 
 Returns the length of a string type.
 
 ```ts
-// Result: 3
+// Expected: 3
 type Length2 = LengthOfString<"foo">
-// Result: 6
+
+// Expected: 6
 type Length6 = LengthOfString<"foobar">
 ```
 
-### `IndexOfString<Str extends string, Match extends string>`
+<h3 id="index-of-string">`IndexOfString<Str extends string, Match extends string>`</h3>
 
 Returns the index of the first occurrence of a character in the string. Returns `-1` if not found.
 
 ```ts
-// Result: 2
+// Expected: 2
 type Index = IndexOfString<"foo", "o">
-// Result: -1
+
+// Expected: -1
 type NotFound = IndexOfString<"foo", "z">
 ```
-
-> See the documentation for each type for more examples and usage details.

@@ -2,6 +2,22 @@
 
 Utilities for type checks and validations in TypeScript. These types help compare, validate, and discriminate types at compile time, enabling advanced conditional types and type guards.
 
+```ts
+import type * as Guards from "@halvaradop/ts-utility-types/type-guards"
+```
+
+## Table of Contents
+
+- [Equals](#equals)
+- [Expect](#expect)
+- [Not](#not)
+- [IsNever](#is-never)
+- [IsAny](#is-any)
+- [AnyOf](#any-of)
+- [IsArray](#is-array)
+- [IsObject](#is-object)
+- [IsFunction](#is-function)
+
 <h3 id="equals">`Equals<X, Y>`</h3>
 
 Checks if two types are strictly equal.
@@ -109,5 +125,3 @@ type Test1 = IsFunction<() => void>
 // Expected: false
 type Test2 = IsFunction<{ key: string }>
 ```
-
-> See the documentation for each type for more examples and usage details.

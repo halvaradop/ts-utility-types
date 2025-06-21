@@ -2,98 +2,151 @@
 
 Helpers and type guards for runtime value validation in TypeScript and JavaScript. These functions check if a value is primitive, nullish, boolean, string, number, object, array, function, or falsy.
 
-### `isPrimitive(value: unknown): value is Primitive`
+```ts
+import * as validate from "@halvaradop/ts-utility-types/validate"
+```
+
+## Table of Contents
+
+- [isPrimitive](#is-primitive)
+- [isPrimitiveNullish](#is-primitive-nullish)
+- [isNullish](#is-nullish)
+- [isBoolean](#is-boolean)
+- [isString](#is-strign)
+- [isNumber](#is-number)
+- [isObject](#is-object)
+- [isArray](#is-array)
+- [isFunction](#is-function)
+- [isFalsy](#is-falsy)
+
+<h3 id="is-primitive">`isPrimitive(value: unknown): value is Primitive`</h3>
 
 Checks if a value is a primitive type (`number`, `string`, `boolean`, `bigint`, `symbol`).
 
 ```ts
-isPrimitive(42) // true
-isPrimitive("hello") // true
-isPrimitive({}) // false
+// Expected: true
+isPrimitive(42)
+
+// Expected: true
+isPrimitive("hello")
+
+// Expected: false
+isPrimitive({})
 ```
 
-### `isPrimitiveNullish(value: unknown): value is PrimitiveNullish`
+<h3 id="is-primitive-nullish">`isPrimitiveNullish(value: unknown): value is PrimitiveNullish`</h3>
 
 Checks if a value is a primitive or nullish (`null` or `undefined`).
 
 ```ts
-isPrimitiveNullish(undefined) // true
-isPrimitiveNullish("hello") // true
-isPrimitiveNullish({}) // false
+// Expected: true
+isPrimitiveNullish(undefined)
+
+// Expected: true
+isPrimitiveNullish("hello")
+
+// Expected: false
+isPrimitiveNullish({})
 ```
 
-### `isNullish(value: unknown): value is Nullish`
+<h3 id="is-nullish">`isNullish(value: unknown): value is Nullish`</h3>
 
 Checks if a value is `null` or `undefined`.
 
 ```ts
-isNullish(null) // true
-isNullish(undefined) // true
-isNullish(0) // false
+// Expected: true
+isNullish(null)
+
+// Expected: true
+isNullish(undefined)
+
+// Expected: false
+isNullish(0)
 ```
 
-### `isBoolean(value: unknown): value is boolean`
+<h3 id="is-boolean">`isBoolean(value: unknown): value is boolean`</h3>
 
 Checks if a value is boolean.
 
 ```ts
-isBoolean(true) // true
-isBoolean("true") // false
+// Expected: true
+isBoolean(true)
+
+// Expected: false
+isBoolean("true")
 ```
 
-### `isString(value: unknown): value is string`
+<h3 id="is-strign">`isString(value: unknown): value is string`</h3>
 
 Checks if a value is a string.
 
 ```ts
-isString("hello") // true
-isString(123) // false
+// Expected: true
+isString("hello")
+
+// Expected: false
+isString(123)
 ```
 
-### `isNumber(value: unknown): value is number`
+<h3 id="is-number">`isNumber(value: unknown): value is number`</h3>
 
 Checks if a value is numeric (including `NaN`).
 
 ```ts
-isNumber(42) // true
-isNumber("42") // false
+// Expected: true
+isNumber(42)
+
+// Expected: false
+isNumber("42")
 ```
 
-### `isObject(value: unknown): value is object`
+<h3 id="is-object">`isObject(value: unknown): value is object`</h3>
 
 Checks if a value is a plain object (not array, not function, not nullish).
 
 ```ts
-isObject({}) // true
-isObject([]) // false
-isObject(null) // false
+// Expected: true
+isObject({})
+
+// Expected: false
+isObject([])
+
+// Expected: false
+isObject(null)
 ```
 
-### `isArray(value: unknown): value is unknown[]`
+<h3 id="is-array">`isArray(value: unknown): value is unknown[]`</h3>
 
 Checks if a value is an array.
 
 ```ts
-isArray([1, 2, 3]) // true
-isArray({}) // false
+// Expected: true
+isArray([1, 2, 3])
+
+// Expected: false
+isArray({})
 ```
 
-### `isFunction(value: unknown): value is Function`
+<h3 id="is-function">`isFunction(value: unknown): value is Function`</h3>
 
 Checks if a value is a function.
 
 ```ts
-isFunction(() => {}) // true
-isFunction(123) // false
+// Expected: true
+isFunction(() => {})
+
+// Expected: false
+isFunction(123)
 ```
 
-### `isFalsy(value: unknown): boolean`
+<h3 id="is-falsy">`isFalsy(value: unknown): boolean`</h3>
 
 Checks if a value is falsy (`null`, `undefined`, `false`, `0`, `""`).
 
 ```ts
-isFalsy(0) // true
-isFalsy("hello") // false
-```
+// Expected: true
+isFalsy(0)
 
-> Check the documentation of each function for more examples and usage details.
+// Expected: false
+isFalsy("hello")
+```

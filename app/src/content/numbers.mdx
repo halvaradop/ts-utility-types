@@ -2,15 +2,29 @@
 
 Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
 
+```ts
+import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
+```
+
+## Table of Contents
+
+- [IsOdd](#is-odd)
+- [IsEven](#is-even)
+- [IsNegative](#is-negative)
+- [IsPositive](#is-positive)
+- [Absolute](#absolute)
+- [Trunc](#trunc)
+- [NumberRange](#number-range)
+
 <h3 id="is-odd">`IsOdd<T extends number>`</h3>
 
 Checks if a number is odd.
 
 ```ts
-// Result: true
+// Expected: true
 type CheckOdd = IsOdd<2023>
 
-// Result: false
+// Expected: false
 type CheckEven = IsOdd<2024>
 ```
 
@@ -19,10 +33,10 @@ type CheckEven = IsOdd<2024>
 Checks if a number is even.
 
 ```ts
-// Result: true
+// Expected: true
 type CheckEven = IsEven<2024>
 
-// Result: false
+// Expected: false
 type CheckOdd = IsEven<2023>
 ```
 
@@ -31,10 +45,10 @@ type CheckOdd = IsEven<2023>
 Checks if a number is negative.
 
 ```ts
-// Result: true
+// Expected: true
 type CheckNegative = IsNegative<-2024>
 
-// Result: false
+// Expected: false
 type CheckPositive = IsNegative<2024>
 ```
 
@@ -43,10 +57,10 @@ type CheckPositive = IsNegative<2024>
 Checks if a number is positive.
 
 ```ts
-// Result: true
+// Expected: true
 type CheckPositive = IsPositive<2024>
 
-// Result: false
+// Expected: false
 type CheckNegative = IsPositive<-2024>
 ```
 
@@ -55,10 +69,10 @@ type CheckNegative = IsPositive<-2024>
 Returns the absolute value of a number, string, or bigint as a string.
 
 ```ts
-// Result: "2024"
+// Expected: "2024"
 type Positive = Absolute<2024>
 
-// Result: "2024"
+// Expected: "2024"
 type PositiveString = Absolute<"-2024">
 ```
 
@@ -67,10 +81,10 @@ type PositiveString = Absolute<"-2024">
 Truncates a number to its integer part.
 
 ```ts
-// Result: 3
+// Expected: 3
 type Truncated = Trunc<3.14>
 
-// Result: -2
+// Expected: -2
 type TruncatedNegative = Trunc<-2.99>
 ```
 
@@ -79,9 +93,9 @@ type TruncatedNegative = Trunc<-2.99>
 Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
 
 ```ts
-// Result: 1 | 2 | 3 | 4 | 5
+// Expected: 1 | 2 | 3 | 4 | 5
 type Range1 = NumberRange<1, 5>
 
-// Result: never
+// Expected: never
 type Range2 = NumberRange<-1, 5>
 ```
