@@ -1,5 +1,6 @@
 import type { Not } from "./test.js"
 import type { DropChar } from "./strings.js"
+import type { Size } from "./arrays.js"
 
 /**
  * Check if the number provided is odd or not
@@ -97,13 +98,14 @@ type InternalNumberRange<
     Range extends unknown = never,
     Index extends unknown[] = [],
     LowRange extends boolean = false,
-> = Index["length"] extends Low
-    ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], true>
-    : Index["length"] extends High
-      ? Range | Index["length"]
-      : LowRange extends true
-        ? InternalNumberRange<Low, High, Range | Index["length"], [...Index, 1], LowRange>
-        : InternalNumberRange<Low, High, Range, [...Index, 1], LowRange>
+> =
+    Size<Index> extends Low
+        ? InternalNumberRange<Low, High, Range | Size<Index>, [...Index, 1], true>
+        : Size<Index> extends High
+          ? Range | Size<Index>
+          : LowRange extends true
+            ? InternalNumberRange<Low, High, Range | Size<Index>, [...Index, 1], LowRange>
+            : InternalNumberRange<Low, High, Range, [...Index, 1], LowRange>
 
 /**
  * Creates a range of numbers that starts from `Low` and ends in `High`. The range is inclusive

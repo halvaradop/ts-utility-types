@@ -1,3 +1,4 @@
+import type { Size } from "./arrays.js"
 import type { Equals } from "./test.js"
 import type { WhiteSpaces } from "./utils.js"
 
@@ -135,7 +136,7 @@ export type EndsWith<Str extends string, Match extends string> = Str extends `${
  */
 type InternalLengthOfString<Str extends string, Length extends unknown[] = []> = Str extends `${infer Char}${infer Chars}`
     ? InternalLengthOfString<Chars, [...Length, Char]>
-    : Length["length"]
+    : Size<Length>
 
 /**
  * Returns the length of a string type
@@ -159,7 +160,7 @@ type InternalIndexOfString<
     Index extends unknown[] = [],
 > = Str extends `${infer Char}${infer Chars}`
     ? Equals<Char, Match> extends true
-        ? Index["length"]
+        ? Size<Index>
         : InternalIndexOfString<Chars, Match, [...Index, 1]>
     : -1
 
@@ -235,7 +236,7 @@ type InternalFindAll<
     ? Indexes
     : Str extends `${any}${infer Characters}`
       ? Str extends `${Match}${string}`
-          ? InternalFindAll<Characters, Match, [...Index, 1], [...Indexes, Index["length"]]>
+          ? InternalFindAll<Characters, Match, [...Index, 1], [...Indexes, Size<Index>]>
           : InternalFindAll<Characters, Match, [...Index, 1], Indexes>
       : Indexes
 

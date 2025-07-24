@@ -13,9 +13,7 @@ import type { IsArray, IsFunction, IsObject } from "./guards.js"
  * // Expected: "1" | "2" | "3"
  * type Union = TypleToUnion<["1", "2", "3"]>;
  */
-export type ArrayToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
-    ? Item | ArrayToUnion<Spread>
-    : never
+export type ArrayToUnion<Array extends readonly unknown[]> = Exclude<ToUnion<Array>, []>
 
 /**
  * Gets the length (size) of an array.
@@ -38,12 +36,12 @@ type InternalFilter<
     Comparator = ToUnion<Predicate>,
 > = Array extends [infer Item, ...infer Spread]
     ? Includes extends true
-        ? Item extends Comparator 
-            ? [...InternalFilter<Spread, Predicate, Includes>, Item]
+        ? Item extends Comparator
+            ? [Item, ...InternalFilter<Spread, Predicate, Includes>]
             : InternalFilter<Spread, Predicate, Includes>
-        : Item extends Comparator 
-            ? InternalFilter<Spread, Predicate, Includes>
-            : [...InternalFilter<Spread, Predicate, Includes>, Item]
+        : Item extends Comparator
+          ? InternalFilter<Spread, Predicate, Includes>
+          : [Item, ...InternalFilter<Spread, Predicate, Includes>]
     : []
 
 /**
@@ -94,7 +92,7 @@ export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...inf
  */
 type InternalIndexOf<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
     ? Equals<Item, Match> extends true
-        ? Index["length"]
+        ? Size<Index>
         : InternalIndexOf<Spread, Match, [...Index, Item]>
     : -1
 
@@ -120,6 +118,20 @@ type InternalIndexOf<Array extends unknown[], Match, Index extends unknown[] = [
 export type IndexOf<Array extends unknown[], Match> = InternalIndexOf<Array, Match, []>
 
 /**
+ * @internal
+ */
+type InternalLastIndexOf<
+    Array extends unknown[],
+    Match,
+    Index extends unknown[] = [],
+    IndexOf extends unknown[] = [],
+> = Array extends [infer Item, ...infer Spread]
+    ? InternalLastIndexOf<Spread, Match, [...Index, Item], Equals<Item, Match> extends true ? [...IndexOf, Size<Index>] : IndexOf>
+    : IndexOf extends [...any, infer LastIndex]
+      ? LastIndex
+      : -1
+
+/**
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
  * If the element `Match` does not appear, it returns `-1`.
  *
@@ -138,18 +150,15 @@ export type IndexOf<Array extends unknown[], Match> = InternalIndexOf<Array, Mat
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
-export type LastIndexOf<Array extends unknown[], Match> = IndexOf<Reverse<Array>, Match>
+export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Array, Match>
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
  * @interface
  */
-type InternalConstructTuple<
-    Length extends number,
-    Value extends unknown = unknown,
-    Array extends unknown[] = [],
-> = Array["length"] extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
+type InternalConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> =
+    Size<Array> extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
 
 /**
  * reate a tuple with a defined size, where each element is of a specified type
@@ -177,7 +186,7 @@ export type ConstructTuple<Length extends number, Value extends unknown = unknow
  * // Expected: true
  * type TupleNumber2 = HasDuplicatesTuple<[1, 2, 1]>;
  */
-export type HasDuplicates<Array extends unknown[]> = Array["length"] extends Uniques<Array>["length"] ? false : true
+export type HasDuplicates<Array extends unknown[]> = Size<Array> extends Size<Uniques<Array>> ? false : true
 
 /**
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
@@ -206,7 +215,7 @@ type InternalChunk<
     Build extends unknown[] = [],
     Partition extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
-    ? [...Partition, Item]["length"] extends Length
+    ? Size<[...Partition, Item]> extends Length
         ? InternalChunk<Spread, Length, [...Build, [...Partition, Item]], []>
         : InternalChunk<Spread, Length, Build, [...Partition, Item]>
     : Size<Partition> extends 0
@@ -242,8 +251,8 @@ export type Chunk<Array extends unknown[], Length extends number> = InternalChun
  */
 export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = Array1 extends [infer ItemT, ...infer SpreadT]
     ? Array2 extends [infer ItemU, ...infer SpreadU]
-        ? [[ItemT, ItemU], ...InternalZip<SpreadT, SpreadU>]
-        : InternalZip<SpreadT, SpreadU>
+        ? [[ItemT, ItemU], ...Zip<SpreadT, SpreadU>]
+        : []
     : []
 
 /**
@@ -381,7 +390,7 @@ type InternalTake<
     Array extends unknown[],
     Negative = IsNegative<N>,
     Build extends unknown[] = [],
-> = `${N}` extends `${Build["length"]}` | `-${Build["length"]}`
+> = `${N}` extends `${Size<Build>}` | `-${Size<Build>}`
     ? Build
     : Negative extends true
       ? Array extends [...infer Spread, infer Item]

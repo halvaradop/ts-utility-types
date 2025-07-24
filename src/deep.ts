@@ -1,7 +1,7 @@
 import type { Equals } from "./test.js"
 import type { IsObject } from "./guards.js"
 import type { Properties } from "./objects.js"
-import type { ArrayToUnion, FilterNonNullish } from "./arrays.js"
+import type { ArrayToUnion, FilterNonNullish, Size } from "./arrays.js"
 import type { LiteralUnion, Prettify, Nullish } from "./utils.js"
 
 /**
@@ -289,7 +289,7 @@ export type DeepGet<Obj, Path extends LiteralUnion<DeepKeys<Obj extends object ?
  */
 type DeepTruncateInternal<Obj extends object, Depth extends number, Level extends unknown[]> = {
     [Property in keyof Obj]: IsObject<Obj[Property]> extends true
-        ? [1, ...Level]["length"] extends Depth
+        ? Size<[1, ...Level]> extends Depth
             ? {}
             : Obj[Property] extends object
               ? Prettify<DeepTruncateInternal<Obj[Property], Depth, [1, ...Level]>>
