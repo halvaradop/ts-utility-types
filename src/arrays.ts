@@ -34,14 +34,17 @@ export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["len
 type InternalFilter<
     Array extends readonly unknown[],
     Predicate,
-    Build extends unknown[] = [],
     Includes extends boolean = true,
     Comparator = ToUnion<Predicate>,
 > = Array extends [infer Item, ...infer Spread]
     ? Includes extends true
-        ? InternalFilter<Spread, Predicate, Item extends Comparator ? [...Build, Item] : Build, Includes>
-        : InternalFilter<Spread, Predicate, Item extends Comparator ? Build : [...Build, Item], Includes>
-    : Build
+        ? Item extends Comparator 
+            ? [...InternalFilter<Spread, Predicate, Includes>, Item]
+            : InternalFilter<Spread, Predicate, Includes>
+        : Item extends Comparator 
+            ? InternalFilter<Spread, Predicate, Includes>
+            : [...InternalFilter<Spread, Predicate, Includes>, Item]
+    : []
 
 /**
  * Filter the items of a tuple of elements based in the predicate provided in the
@@ -66,7 +69,6 @@ type InternalFilter<
 export type Filter<Array extends unknown[], Predicate, Includes extends boolean = true> = InternalFilter<
     Array,
     Predicate,
-    [],
     Includes
 >
 
@@ -118,25 +120,6 @@ type InternalIndexOf<Array extends unknown[], Match, Index extends unknown[] = [
 export type IndexOf<Array extends unknown[], Match> = InternalIndexOf<Array, Match, []>
 
 /**
- * @internal
- */
-type InternalLastIndexOf<
-    Array extends unknown[],
-    Match,
-    Index extends unknown[] = [],
-    IndexOf extends unknown[] = [],
-> = Array extends [infer Item, ...infer Spread]
-    ? InternalLastIndexOf<
-          Spread,
-          Match,
-          [...Index, Item],
-          Equals<Item, Match> extends true ? [...IndexOf, Index["length"]] : IndexOf
-      >
-    : IndexOf extends [...any, infer LastIndex]
-      ? LastIndex
-      : -1
-
-/**
  * Returns the last index where the element `Match` appears in the tuple type `Array`.
  * If the element `Match` does not appear, it returns `-1`.
  *
@@ -155,7 +138,7 @@ type InternalLastIndexOf<
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
-export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Array, Match, [], []>
+export type LastIndexOf<Array extends unknown[], Match> = IndexOf<Reverse<Array>, Match>
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
@@ -246,15 +229,6 @@ type InternalChunk<
 export type Chunk<Array extends unknown[], Length extends number> = InternalChunk<Array, Length, [], []>
 
 /**
- * @internal
- */
-type InteralZip<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
-    ? U extends [infer ItemU, ...infer SpreadU]
-        ? InteralZip<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
-        : Build
-    : Build
-
-/**
  * Join the elements of two arrays in a tuple of arrays
  *
  * @param {unknown[]} Array1 - The first array to join
@@ -266,7 +240,11 @@ type InteralZip<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ..
  * // Expected: [[1, "a"], [2, "b"]]
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
-export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = InteralZip<Array1, Array2>
+export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = Array1 extends [infer ItemT, ...infer SpreadT]
+    ? Array2 extends [infer ItemU, ...infer SpreadU]
+        ? [[ItemT, ItemU], ...InternalZip<SpreadT, SpreadU>]
+        : InternalZip<SpreadT, SpreadU>
+    : []
 
 /**
  * Returns the flatten type of an array.
