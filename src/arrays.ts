@@ -2,7 +2,7 @@ import type { Equals } from "./test.js"
 import type { IsNegative } from "./numbers.js"
 import type { DeepNonNullish } from "./deep.js"
 import type { Prettify, Nullish } from "./utils.js"
-import type { IsArray, IsFunction, IsObject } from "./guards.js"
+import type { IsObject } from "./guards.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -13,9 +13,7 @@ import type { IsArray, IsFunction, IsObject } from "./guards.js"
  * // Expected: "1" | "2" | "3"
  * type Union = TypleToUnion<["1", "2", "3"]>;
  */
-export type ArrayToUnion<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
-    ? Item | ArrayToUnion<Spread>
-    : never
+export type ArrayToUnion<Array extends readonly unknown[]> = Exclude<ToUnion<Array>, []>
 
 /**
  * Gets the length (size) of an array.
@@ -34,14 +32,17 @@ export type Size<Array extends unknown[]> = Array extends unknown[] ? Array["len
 type InternalFilter<
     Array extends readonly unknown[],
     Predicate,
-    Build extends unknown[] = [],
     Includes extends boolean = true,
     Comparator = ToUnion<Predicate>,
 > = Array extends [infer Item, ...infer Spread]
     ? Includes extends true
-        ? InternalFilter<Spread, Predicate, Item extends Comparator ? [...Build, Item] : Build, Includes>
-        : InternalFilter<Spread, Predicate, Item extends Comparator ? Build : [...Build, Item], Includes>
-    : Build
+        ? Item extends Comparator
+            ? [Item, ...InternalFilter<Spread, Predicate, Includes>]
+            : InternalFilter<Spread, Predicate, Includes>
+        : Item extends Comparator
+          ? InternalFilter<Spread, Predicate, Includes>
+          : [Item, ...InternalFilter<Spread, Predicate, Includes>]
+    : []
 
 /**
  * Filter the items of a tuple of elements based in the predicate provided in the
@@ -66,7 +67,6 @@ type InternalFilter<
 export type Filter<Array extends unknown[], Predicate, Includes extends boolean = true> = InternalFilter<
     Array,
     Predicate,
-    [],
     Includes
 >
 
@@ -92,7 +92,7 @@ export type Reverse<Array extends unknown[]> = Array extends [infer Item, ...inf
  */
 type InternalIndexOf<Array extends unknown[], Match, Index extends unknown[] = []> = Array extends [infer Item, ...infer Spread]
     ? Equals<Item, Match> extends true
-        ? Index["length"]
+        ? Size<Index>
         : InternalIndexOf<Spread, Match, [...Index, Item]>
     : -1
 
@@ -126,12 +126,7 @@ type InternalLastIndexOf<
     Index extends unknown[] = [],
     IndexOf extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
-    ? InternalLastIndexOf<
-          Spread,
-          Match,
-          [...Index, Item],
-          Equals<Item, Match> extends true ? [...IndexOf, Index["length"]] : IndexOf
-      >
+    ? InternalLastIndexOf<Spread, Match, [...Index, Item], Equals<Item, Match> extends true ? [...IndexOf, Size<Index>] : IndexOf>
     : IndexOf extends [...any, infer LastIndex]
       ? LastIndex
       : -1
@@ -155,18 +150,15 @@ type InternalLastIndexOf<
  * // Expected: 5
  * type LastIndexOf4 = LastIndexOf<[string, any, 1, number, "a", any, 1], any>;
  */
-export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Array, Match, [], []>
+export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Array, Match>
 
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
  * @interface
  */
-type InternalConstructTuple<
-    Length extends number,
-    Value extends unknown = unknown,
-    Array extends unknown[] = [],
-> = Array["length"] extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
+type InternalConstructTuple<Length extends number, Value = unknown, Array extends unknown[] = []> =
+    Size<Array> extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
 
 /**
  * reate a tuple with a defined size, where each element is of a specified type
@@ -181,7 +173,7 @@ type InternalConstructTuple<
  * // Expected: ["", ""]
  * type TupleSize3 = ConstructTuple<2, "">;
  */
-export type ConstructTuple<Length extends number, Value extends unknown = unknown> = InternalConstructTuple<Length, Value, []>
+export type ConstructTuple<Length extends number, Value = unknown> = InternalConstructTuple<Length, Value, []>
 
 /**
  * Check if there are duplidated elements inside the tuple
@@ -194,7 +186,7 @@ export type ConstructTuple<Length extends number, Value extends unknown = unknow
  * // Expected: true
  * type TupleNumber2 = HasDuplicatesTuple<[1, 2, 1]>;
  */
-export type HasDuplicates<Array extends unknown[]> = Array["length"] extends Uniques<Array>["length"] ? false : true
+export type HasDuplicates<Array extends unknown[]> = Size<Array> extends Size<Uniques<Array>> ? false : true
 
 /**
  * Returns true if all elements within the tuple are equal to `Comparator` otherwise, returns false
@@ -223,7 +215,7 @@ type InternalChunk<
     Build extends unknown[] = [],
     Partition extends unknown[] = [],
 > = Array extends [infer Item, ...infer Spread]
-    ? [...Partition, Item]["length"] extends Length
+    ? Size<[...Partition, Item]> extends Length
         ? InternalChunk<Spread, Length, [...Build, [...Partition, Item]], []>
         : InternalChunk<Spread, Length, Build, [...Partition, Item]>
     : Size<Partition> extends 0
@@ -246,15 +238,6 @@ type InternalChunk<
 export type Chunk<Array extends unknown[], Length extends number> = InternalChunk<Array, Length, [], []>
 
 /**
- * @internal
- */
-type InteralZip<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ...infer SpreadT]
-    ? U extends [infer ItemU, ...infer SpreadU]
-        ? InteralZip<SpreadT, SpreadU, [...Build, [ItemT, ItemU]]>
-        : Build
-    : Build
-
-/**
  * Join the elements of two arrays in a tuple of arrays
  *
  * @param {unknown[]} Array1 - The first array to join
@@ -266,7 +249,11 @@ type InteralZip<T, U, Build extends unknown[] = []> = T extends [infer ItemT, ..
  * // Expected: [[1, "a"], [2, "b"]]
  * type Zip2 = Zip<[1, 2, 3], ["a", "b"]>;
  */
-export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = InteralZip<Array1, Array2>
+export type Zip<Array1 extends unknown[], Array2 extends unknown[]> = Array1 extends [infer ItemT, ...infer SpreadT]
+    ? Array2 extends [infer ItemU, ...infer SpreadU]
+        ? [[ItemT, ItemU], ...Zip<SpreadT, SpreadU>]
+        : []
+    : []
 
 /**
  * Returns the flatten type of an array.
@@ -308,7 +295,7 @@ export type CompareArrayLength<T extends any[], U extends any[]> = T extends [an
 /**
  * @internal
  */
-type InternalUniques<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
+type InternalUniques<Array extends unknown[], Uniques = never, Set extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
@@ -369,33 +356,6 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
     : false
 
 /**
- * TODO: is it the correct location for this type?
- *
- * Determines the primitive type corresponding to the provided value.
- *
- * @param {unknown} T - The value to get the type of
- * @example
- * // Expected: number
- * type TypeOfValue = ReturnTypeOf<123>
- *
- * // Expected: string
- * type TypeOfValue = ReturnTypeOf<"hello">
- */
-export type ReturnTypeOf<T> = T extends string
-    ? string
-    : T extends number
-      ? number
-      : T extends boolean
-        ? boolean
-        : IsObject<T> extends true
-          ? object
-          : IsFunction<T> extends true
-            ? Function
-            : IsArray<T> extends true
-              ? T
-              : T
-
-/**
  * @internal
  */
 type InternalTake<
@@ -403,7 +363,7 @@ type InternalTake<
     Array extends unknown[],
     Negative = IsNegative<N>,
     Build extends unknown[] = [],
-> = `${N}` extends `${Build["length"]}` | `-${Build["length"]}`
+> = `${N}` extends `${Size<Build>}` | `-${Size<Build>}`
     ? Build
     : Negative extends true
       ? Array extends [...infer Spread, infer Item]

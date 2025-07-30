@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Changed
+
+- `ReturnTypeOf` type relocated from the `array.ts` file to `utils.ts` for improved organization and clarity. [#183](https://github.com/halvaradop/ts-utility-types/pull/183)
+
+---
+
 ## [0.20.0] - 2025-06-03
 
 ### Added
