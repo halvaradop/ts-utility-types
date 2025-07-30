@@ -1,7 +1,6 @@
 import type { Equals } from "./test.js"
 import type { IsObject } from "./guards.js"
-import type { ReturnTypeOf } from "./arrays.js"
-import type { Prettify, LiteralUnion, Discard } from "./utils.js"
+import type { Prettify, LiteralUnion, Discard, ReturnTypeOf } from "./utils.js"
 import type { DeepMerge as Merge, DeepMergeAll as MergeAll } from "./deep.js"
 
 /**
