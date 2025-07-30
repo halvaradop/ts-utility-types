@@ -1,4 +1,4 @@
-import type { IsNever } from "./guards.js"
+import type { IsArray, IsFunction, IsNever, IsObject } from "./guards.js"
 
 /**
  * Utility type that transforms an object to have each property on a new line
@@ -124,3 +124,28 @@ export type WhiteSpaces =
  * Represents the empty values
  */
 export type Falsy = Nullish | 0 | false | ""
+
+/**
+ * Determines the primitive type corresponding to the provided value.
+ *
+ * @param {unknown} T - The value to get the type of
+ * @example
+ * // Expected: number
+ * type TypeOfValue = ReturnTypeOf<123>
+ *
+ * // Expected: string
+ * type TypeOfValue = ReturnTypeOf<"hello">
+ */
+export type ReturnTypeOf<T> = T extends string
+    ? string
+    : T extends number
+      ? number
+      : T extends boolean
+        ? boolean
+        : IsObject<T> extends true
+          ? object
+          : IsFunction<T> extends true
+            ? Function
+            : IsArray<T> extends true
+              ? T
+              : T

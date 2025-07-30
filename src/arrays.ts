@@ -2,7 +2,7 @@ import type { Equals } from "./test.js"
 import type { IsNegative } from "./numbers.js"
 import type { DeepNonNullish } from "./deep.js"
 import type { Prettify, Nullish } from "./utils.js"
-import type { IsArray, IsFunction, IsObject } from "./guards.js"
+import type { IsObject } from "./guards.js"
 
 /**
  * Creates a union type from the literal values of a constant string or number array.
@@ -157,7 +157,7 @@ export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Ar
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
  * @interface
  */
-type InternalConstructTuple<Length extends number, Value extends unknown = unknown, Array extends unknown[] = []> =
+type InternalConstructTuple<Length extends number, Value = unknown, Array extends unknown[] = []> =
     Size<Array> extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
 
 /**
@@ -173,7 +173,7 @@ type InternalConstructTuple<Length extends number, Value extends unknown = unkno
  * // Expected: ["", ""]
  * type TupleSize3 = ConstructTuple<2, "">;
  */
-export type ConstructTuple<Length extends number, Value extends unknown = unknown> = InternalConstructTuple<Length, Value, []>
+export type ConstructTuple<Length extends number, Value = unknown> = InternalConstructTuple<Length, Value, []>
 
 /**
  * Check if there are duplidated elements inside the tuple
@@ -295,7 +295,7 @@ export type CompareArrayLength<T extends any[], U extends any[]> = T extends [an
 /**
  * @internal
  */
-type InternalUniques<Array extends unknown[], Uniques extends unknown = never, Set extends unknown[] = []> = Array extends [
+type InternalUniques<Array extends unknown[], Uniques = never, Set extends unknown[] = []> = Array extends [
     infer Item,
     ...infer Spread,
 ]
@@ -354,33 +354,6 @@ export type Includes<Array extends unknown[], Match> = Array extends [infer Comp
         ? true
         : Includes<Spread, Match>
     : false
-
-/**
- * TODO: is it the correct location for this type?
- *
- * Determines the primitive type corresponding to the provided value.
- *
- * @param {unknown} T - The value to get the type of
- * @example
- * // Expected: number
- * type TypeOfValue = ReturnTypeOf<123>
- *
- * // Expected: string
- * type TypeOfValue = ReturnTypeOf<"hello">
- */
-export type ReturnTypeOf<T> = T extends string
-    ? string
-    : T extends number
-      ? number
-      : T extends boolean
-        ? boolean
-        : IsObject<T> extends true
-          ? object
-          : IsFunction<T> extends true
-            ? Function
-            : IsArray<T> extends true
-              ? T
-              : T
 
 /**
  * @internal
