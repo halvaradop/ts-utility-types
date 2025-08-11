@@ -1,17 +1,9 @@
 import type { NextConfig } from "next"
-import createMDX from "@next/mdx"
-import repyheHighlight from "rehype-highlight"
+import { createMDX } from "fumadocs-mdx/next"
+const withMDX = createMDX()
 
-const nextConfig: NextConfig = {
-    pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
+const config: NextConfig = {
+    reactStrictMode: true,
 }
 
-const withMDX = createMDX({
-    extension: /\.mdx?$/,
-    options: {
-        remarkPlugins: [],
-        rehypePlugins: [repyheHighlight],
-    },
-})
-
-export default withMDX(nextConfig)
+export default withMDX(config)

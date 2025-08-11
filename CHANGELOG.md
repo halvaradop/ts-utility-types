@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Non-Nullish Utilities: Added `DeepNonNullish` for object types and `FilterNonNullish` for array types. These utilities recursively remove `null` and `undefined` values from deeply nested structures. [#169](https://github.com/halvaradop/ts-utility-types/pull/169)
 
 - New Entry Points: Introduced new module-specific entry points for better access and organization:
-
   - `deep`: Contains `Deep-` prefixed utility types for object manipulation.
   - `numbers`: Contains utility types for number types.
     [#171](https://github.com/halvaradop/ts-utility-types/pull/171)
