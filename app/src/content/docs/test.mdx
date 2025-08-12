@@ -1,0 +1,71 @@
+---
+title: Type-Level Testing
+description: Utilities for type-level testing and assertions in TypeScript. These types help compare, validate, and ensure type conditions in testing or advanced development scenarios.
+icon: TestTube
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Tab, Tabs } from "fumadocs-ui/components/tabs"
+
+# Type-Level Testing
+
+Utilities for type-level testing and assertions in TypeScript. These types help compare, validate, and ensure type conditions in testing or advanced development scenarios.
+
+<Callout type="info" title="Testing Types">
+    These utilities are designed for compile-time type testing and assertions. They help ensure your utility types work correctly.
+</Callout>
+
+## Installation & Usage
+
+<Tabs items={['Named Import', 'All Import']}>
+  <Tab value="Named Import">
+    ```ts
+    import type { Equals, Expect, Not } from "@halvaradop/ts-utility-types/test"
+    ```
+  </Tab>
+  <Tab value="All Import">
+    ```ts
+    import type * as Test from "@halvaradop/ts-utility-types/test"
+    
+    type Result = Test.Equals<true, true>
+    ```
+  </Tab>
+</Tabs>
+
+## Testing Utilities
+
+### `Equals<X, Y>`
+
+Checks if two types are strictly equal.
+
+```ts
+// Expected: true
+type CheckTrue = Equals<true, true>
+
+// Expected: false
+type CheckFalse = Equals<() => {}, true>
+```
+
+### `Expect<T extends true>`
+
+Ensures the received type is `true`. Useful for type-level tests.
+
+```ts
+// Expected: true
+type CheckTrue = Expect<true>
+
+// Expected: false (type error)
+type CheckFalse = Expect<false>
+```
+
+### `Not<T extends boolean>`
+
+Negates a boolean type value.
+
+```ts
+// Expected: false
+type CheckFalse = Not<true>
+
+// Expected: true
+type CheckTrue = Not<false>
+```

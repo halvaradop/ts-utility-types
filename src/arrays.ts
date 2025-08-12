@@ -4,6 +4,16 @@ import type { DeepNonNullish } from "./deep.js"
 import type { Prettify, Nullish } from "./utils.js"
 import type { IsObject } from "./guards.js"
 
+export interface Test<T> {
+    message: T
+}
+
+export type N = number
+
+export interface Name extends N {
+    strict: boolean
+}
+
 /**
  * Creates a union type from the literal values of a constant string or number array.
  * This is useful for representing a set of allowed values based on the array elements

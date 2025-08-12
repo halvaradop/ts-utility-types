@@ -1,52 +1,69 @@
-# @halvaradop/ts-utility-types/deep
+---
+title: Deep Utilities
+description: Advanced utilities for deep manipulation of objects and nested types in TypeScript. These types allow you to merge, transform, filter, select, omit, and modify properties at any depth in a type-safe and expressive way.
+icon: GitMerge
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Tab, Tabs } from "fumadocs-ui/components/tabs"
+
+# Deep Utilities
 
 Advanced utilities for deep manipulation of objects and nested types in TypeScript. These types allow you to merge, transform, filter, select, omit, and modify properties at any depth in a type-safe and expressive way.
 
-```ts
-import type * as Deep from "@halvaradop/ts-utility-types/deep"
-```
+<Callout type="warn" title="Performance Note">
+    Deep utilities work with recursive types and may have performance implications with deeply nested structures. Most operations
+    are limited to reasonable depths (typically 10-20 levels).
+</Callout>
 
-## Table of Contents
+## Installation & Usage
 
-- [DeepMerge](#deep-merge)
-- [DeepUnion](#deep-union)
-- [DeepMergeAll](#deep-merge-all)
-- [DeepMutable](#deep-mutable)
-- [DeepReadonly](#deep-readonly)
-- [DeepKeys](#deep-keys)
-- [DeepOmit](#deep-omit)
-- [DeepGet](#deep-get)
-- [DeepTruncate](#deep-truncate)
-- [DeepPartial](#deep-partial)
-- [DeepRequired](#deep-required)
-- [DeepPick](#deep-pick)
-- [DeepNullable](#deep-nullable)
-- [DeepNonNullable](#deep-non-nullable)
-- [DeepFilter](#deep-filter)
-- [DeepReplace](#deep-replace)
-- [DeepSet](#deep-set)
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+    ```ts
+    import type { DeepMerge, DeepPartial, DeepReadonly } from "@halvaradop/ts-utility-types/deep"
+    ```
+  </Tab>
+  <Tab value="Namespace Import">
+    ```ts
+    import type * as Deep from "@halvaradop/ts-utility-types/deep"
+    
+    type Result = Deep.DeepMerge<Config, UserConfig>
+    ```
+  </Tab>
+</Tabs>
 
-<h3 id="deep-merge">`DeepMerge<Obj1, Obj2, ByUnion = false, PriorityObject = true>`</h3>
+## Merging Operations
+
+### `DeepMerge<Obj1, Obj2, ByUnion = false, PriorityObject = true>`
 
 Recursively merges two objects. If a property exists in both, the one from `Obj1` takes priority (unless otherwise specified). You can merge as a union (`ByUnion`) or prioritize objects (`PriorityObject`).
 
-```ts
+```ts twoslash
+type DeepMerge<Obj1, Obj2> = Obj1 & Obj2
+
 interface Config {
-    storePaths: string[]
-    hooks: unknown[]
+    api: { timeout: number }
+    features: { darkMode: boolean }
 }
 
-interface AppStore {
-    path: string
-    hooks: ArgsFunction[]
-    storePath: { path: string }
+interface UserConfig {
+    api: { retries: number }
+    features: { analytics: boolean }
 }
 
-// Expected: { storePaths: string[], path: string, hooks: ArgsFunction[] }
-type MergeConfig = DeepMerge<Config, AppStore>
+// Deep merge configuration objects
+type AppConfig = DeepMerge<Config, UserConfig>
+//   ^?
+
+// The result contains all properties from both objects
+const config: AppConfig = {
+    api: { timeout: 5000, retries: 3 },
+    features: { darkMode: true, analytics: false },
+}
 ```
 
-<h3 id="deep-union">`DeepUnion<Obj1, Obj2>`</h3>
+### `DeepUnion<Obj1, Obj2>`
 
 Deeply merges two objects, but conflicting properties are combined as a union of types.
 
@@ -65,7 +82,7 @@ interface ConfigBase {
 type Union = DeepUnion<BaseController, ConfigBase>
 ```
 
-<h3 id="deep-merge-all">`DeepMergeAll<Array, ByUnion = false, PriorityObject = true>`</h3>
+### `DeepMergeAll<Array, ByUnion = false, PriorityObject = true>`
 
 Merges a tuple of object types into one, applying the rules of `DeepMerge`.
 
@@ -88,7 +105,7 @@ interface FooBar {
 type Merge = DeepMergeAll<[Foo, Bar, FooBar], true>
 ```
 
-<h3 id="deep-mutable">`DeepMutable<Obj>`</h3>
+### `DeepMutable<Obj>`
 
 Makes all properties of an object (and its nested objects) mutable (removes `readonly`).
 
@@ -101,7 +118,7 @@ interface Foo {
 type NonReadonlyFoo = DeepMutable<Foo>
 ```
 
-<h3 id="deep-readonly">`DeepReadonly<Obj>`</h3>
+### `DeepReadonly<Obj>`
 
 Makes all properties of an object (and its nested objects) `readonly`.
 
@@ -115,7 +132,7 @@ interface User {
 type ReadonlyUser = DeepReadonly<User>
 ```
 
-<h3 id="deep-keys">`DeepKeys<Obj, Depth = 6>`</h3>
+### `DeepKeys<Obj, Depth = 6>`
 
 Returns all possible keys (paths) of an object, including nested ones, as dot-separated strings.
 
@@ -129,7 +146,7 @@ interface User {
 type UserKeys = DeepKeys<User>
 ```
 
-<h3 id="deep-omit">`DeepOmit<Obj, Path>`</h3>
+### `DeepOmit<Obj, Path>`
 
 Omits a property at a given path from an object type, deeply.
 
@@ -143,7 +160,7 @@ interface User {
 type WithoutStreet = DeepOmit<User, "address.street">
 ```
 
-<h3 id="deep-get">`DeepGet<Obj, Path>`</h3>
+### `DeepGet<Obj, Path>`
 
 Gets the value type at a given dot-separated path in an object, at any depth.
 
@@ -160,7 +177,7 @@ type UserName = DeepGet<User, "name">
 type UserStreet = DeepGet<User, "address.street">
 ```
 
-<h3 id="deep-truncate">`DeepTruncate<Obj, Depth>`</h3>
+### `DeepTruncate<Obj, Depth>`
 
 Truncates an object type at the specified depth, replacing deeper properties with empty objects.
 
@@ -181,7 +198,7 @@ interface Foo {
 type TruncatedFoo = DeepTruncate<Foo, 1>
 ```
 
-<h3 id="deep-partial">`DeepPartial<Obj>`</h3>
+### `DeepPartial<Obj>`
 
 Makes all properties of an object type optional, recursively at all levels.
 
@@ -195,7 +212,7 @@ interface User {
 type UserOptional = DeepPartial<User>
 ```
 
-<h3 id="deep-required">`DeepRequired<Obj>`</h3>
+### `DeepRequired<Obj>`
 
 Makes all properties of an object type required, recursively at all levels.
 
@@ -209,7 +226,7 @@ interface User {
 type UserRequired = DeepRequired<User>
 ```
 
-<h3 id="deep-pick">`DeepPick<Obj, Path>`</h3>
+### `DeepPick<Obj, Path>`
 
 Picks the property at a given dot-separated path from an object type, at any depth.
 
@@ -223,7 +240,7 @@ interface User {
 type UserPick = DeepPick<User, "address.street">
 ```
 
-<h3 id="deep-nullable">`DeepNullable<Obj>`</h3>
+### `DeepNullable<Obj>`
 
 Appends `null` to all properties of an object type, recursively at all levels.
 
@@ -237,7 +254,7 @@ interface User {
 type UserNullable = DeepNullable<User>
 ```
 
-<h3 id="deep-non-nullable">`DeepNonNullable<Obj>`</h3>
+### `DeepNonNullable<Obj>`
 
 Removes `null` from all properties of an object type, recursively at all levels.
 
@@ -251,7 +268,7 @@ interface User {
 type UserNonNullable = DeepNonNullable<User>
 ```
 
-<h3 id="deep-filter">`DeepFilter<Obj, Predicate>`</h3>
+### `DeepFilter<Obj, Predicate>`
 
 Filters the properties of an object type at any depth, keeping only those that match the given predicate type.
 
@@ -265,7 +282,7 @@ interface User {
 type Filtered = DeepFilter<User, string>
 ```
 
-<h3 id="deep-replace">`DeepReplace<Obj, From, To>`</h3>
+### `DeepReplace<Obj, From, To>`
 
 Replaces all properties of type `From` with type `To` at any depth in an object type.
 
@@ -279,7 +296,7 @@ interface User {
 type Replaced = DeepReplace<User, string, number>
 ```
 
-<h3 id="deep-set">`DeepSet<Obj, Path, Value>`</h3>
+### `DeepSet<Obj, Path, Value>`
 
 Sets the value type at a given dot-separated path in an object type, at any depth.
 

@@ -1,3 +1,8 @@
+---
+title: General Utils
+description: General utilities and helpers for composing, manipulating, and validating types in TypeScript. Includes helpers for improving readability, creating literal unions, excluding types, working with primitive values, and more.
+---
+
 # @halvaradop/ts-utility-types/utils
 
 General utilities and helpers for composing, manipulating, and validating types in TypeScript. Includes helpers for improving readability, creating literal unions, excluding types, working with primitive values, and more.
@@ -6,19 +11,7 @@ General utilities and helpers for composing, manipulating, and validating types 
 import type * as Utils from "@halvaradop/ts-utility-types/utils"
 ```
 
-## Table of Contents
-
-- [Prettify](#prettify)
-- [LiteralUnion](#literal-union)
-- [Discard](#discard)
-- [ArgsFunction](#args-function)
-- [Nullish](#nullish)
-- [PrimitiveNullish](#primitive-nullish)
-- [Primitive](#primitive)
-- [WhiteSpaces](#white-spaces)
-- [Falsy](#falsy)
-
-<h3 id="prettify">`Prettify<Obj extends object>`</h3>
+### `Prettify<Obj extends object>`
 
 Improves the readability of an object type by expanding its properties on separate lines. Does not modify the original type.
 
@@ -27,7 +20,7 @@ Improves the readability of an object type by expanding its properties on separa
 type Pretty = Prettify<{ foo: string; bar: number }>
 ```
 
-<h3 id="literal-union">`LiteralUnion<T extends U, U = string>`</h3>
+### `LiteralUnion<T extends U, U = string>`
 
 Extends the values of a literal type with a broader type (defaults to `string`).
 
@@ -36,7 +29,7 @@ Extends the values of a literal type with a broader type (defaults to `string`).
 type ExtendedFoo = LiteralUnion<"foo" | "bar">
 ```
 
-<h3 id="discard">`Discard<Type, Extends, Value = never, Reverse = false>`</h3>
+### `Discard<Type, Extends, Value = never, Reverse = false>`
 
 Includes or excludes types based on assignability to another type. If `Reverse` is `true`, includes matching types; if `false`, excludes them.
 
@@ -48,7 +41,7 @@ type A = Discard<string | number, string>
 type B = Discard<string | number, boolean>
 ```
 
-<h3 id="args-function">`ArgsFunction`</h3>
+### `ArgsFunction`
 
 Represents a function that accepts any number of arguments of any type.
 
@@ -56,7 +49,7 @@ Represents a function that accepts any number of arguments of any type.
 const fn: ArgsFunction = (...args) => {}
 ```
 
-<h3 id="nullish">`Nullish`</h3>
+### `Nullish`
 
 Represents the absence of value: `null` or `undefined`.
 
@@ -64,7 +57,7 @@ Represents the absence of value: `null` or `undefined`.
 type CanBeNull = string | Nullish
 ```
 
-<h3 id="primitive-nullish">`PrimitiveNullish`</h3>
+### `PrimitiveNullish`
 
 A primitive type that can also be `null` or `undefined`.
 
@@ -72,7 +65,7 @@ A primitive type that can also be `null` or `undefined`.
 type PrimitiveOrNull = PrimitiveNullish
 ```
 
-<h3 id="primitive">`Primitive`</h3>
+### `Primitive`
 
 A primitive type: `number`, `string`, `boolean`, `bigint`, or `symbol` (excludes nullish).
 
@@ -80,7 +73,7 @@ A primitive type: `number`, `string`, `boolean`, `bigint`, or `symbol` (excludes
 type Primitive = Primitive
 ```
 
-<h3 id="white-spaces">`WhiteSpaces`</h3>
+### `WhiteSpaces`
 
 Represents whitespace characters recognized by TypeScript.
 
@@ -88,7 +81,7 @@ Represents whitespace characters recognized by TypeScript.
 type Spaces = WhiteSpaces
 ```
 
-<h3 id="falsy">`Falsy`</h3>
+### `Falsy`
 
 Represents falsy values: `null`, `undefined`, `0`, `false`, or `""`.
 

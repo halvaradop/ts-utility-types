@@ -1,0 +1,48 @@
+---
+title: Deprecated - Types Entry Point
+description: The /types entry point is deprecated and will be removed in the next major version. Please use the default export from @halvaradop/ts-utility-types or import specific types from the appropriate entry point.
+icon: AlertTriangle
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Card, Cards } from "fumadocs-ui/components/card"
+
+# Deprecated - Types Entry Point
+
+<Callout type="error" title="DEPRECATED">
+    The `/types` entry point is deprecated and will be removed in the next major version.
+</Callout>
+
+This entry point does not export any types or utilities. Instead, please use the specific module entry points for better tree-shaking and organization.
+
+## Migration Guide
+
+### Instead of using `/types`, use specific modules:
+
+<Cards>
+    <Card title="Deep Operations" description="Advanced deep object manipulations" href="/docs/deep" />
+    <Card title="Array Utilities" description="Array and tuple manipulations" href="/docs/arrays" />
+    <Card title="Object Utilities" description="Object type transformations" href="/docs/objects" />
+    <Card title="String Utilities" description="String type operations" href="/docs/strings" />
+    <Card title="Number Utilities" description="Numeric type utilities" href="/docs/numbers" />
+    <Card title="Type Guards" description="Type checking utilities" href="/docs/guards" />
+    <Card title="Validation" description="Runtime type validation" href="/docs/validate" />
+    <Card title="Testing" description="Type-level testing utilities" href="/docs/test" />
+    <Card title="General Utils" description="General utility types" href="/docs/utils" />
+</Cards>
+
+### Migration Example
+
+```ts
+// ❌ Deprecated - Don't use this
+// import type { SomeType } from "@halvaradop/ts-utility-types/types"
+
+// ✅ Use specific module imports instead
+import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
+import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
+import type { PickByType } from "@halvaradop/ts-utility-types/objects"
+```
+
+<Callout type="info" title="Need Help?">
+    Visit the main documentation or our [Community & Support](/docs/community) page for migration assistance.
+</Callout>

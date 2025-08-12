@@ -1,24 +1,15 @@
-# @halvaradop/ts-utility-types/type-guards
+---
+title: Type Guards
+description: Utilities for type checks and validations in TypeScript. These types help compare, validate, and discriminate types at compile time, enabling advanced conditional types and type guards.
+---
 
-Utilities for type checks and validations in TypeScript. These types help compare, validate, and discriminate types at compile time, enabling advanced conditional types and type guards.
+# @halvaradop/ts-utility-types/type-guards
 
 ```ts
 import type * as Guards from "@halvaradop/ts-utility-types/type-guards"
 ```
 
-## Table of Contents
-
-- [Equals](#equals)
-- [Expect](#expect)
-- [Not](#not)
-- [IsNever](#is-never)
-- [IsAny](#is-any)
-- [AnyOf](#any-of)
-- [IsArray](#is-array)
-- [IsObject](#is-object)
-- [IsFunction](#is-function)
-
-<h3 id="equals">`Equals<X, Y>`</h3>
+### `Equals<X, Y>`
 
 Checks if two types are strictly equal.
 
@@ -30,7 +21,7 @@ type CheckTrue = Equals<true, true>
 type CheckFalse = Equals<() => {}, true>
 ```
 
-<h3 id="expect">`Expect<T extends true>`</h3>
+### `Expect<T extends true>`
 
 Ensures the received type is `true`. Useful for type-level tests.
 
@@ -42,7 +33,7 @@ type CheckTrue = Expect<true>
 type CheckFalse = Expect<false>
 ```
 
-<h3 id="not">`Not<T extends boolean>`</h3>
+### `Not<T extends boolean>`
 
 Negates a boolean type value.
 
@@ -54,7 +45,7 @@ type CheckFalse = Not<true>
 type CheckTrue = Not<false>
 ```
 
-<h3 id="is-never">`IsNever<T>`</h3>
+### `IsNever<T>`
 
 Checks if the type is `never`.
 
@@ -66,7 +57,7 @@ type CheckNever = IsNever<never>
 type CheckStr = IsNever<string>
 ```
 
-<h3 id="is-any">`IsAny<T>`</h3>
+### `IsAny<T>`
 
 Checks if the type is `any`.
 
@@ -78,7 +69,7 @@ type CheckAny = IsAny<any>
 type CheckStr = IsAny<string>
 ```
 
-<h3 id="any-of">`AnyOf<T extends readonly any[]>`</h3>
+### `AnyOf<T extends readonly any[]>`
 
 Checks if any value in the tuple is truthy.
 
@@ -90,7 +81,7 @@ type Test1 = AnyOf<[0, "", false, [], {}, undefined, null, true]>
 type Test2 = AnyOf<[0, "", false, [], {}, undefined, null]>
 ```
 
-<h3 id="is-array">`IsArray<T>`</h3>
+### `IsArray<T>`
 
 Checks if the type is an array.
 
@@ -102,7 +93,7 @@ type Test1 = IsArray<[1, 2, 3]>
 type Test2 = IsArray<{ key: string }>
 ```
 
-<h3 id="is-object">`IsObject<T>`</h3>
+### `IsObject<T>`
 
 Checks if the type is an object (excluding arrays and functions).
 
@@ -114,7 +105,7 @@ type Test1 = IsObject<{ key: string }>
 type Test2 = IsObject<[1, 2, 3]>
 ```
 
-<h3 id="is-function">`IsFunction<T>`</h3>
+### `IsFunction<T>`
 
 Checks if the type is a function.
 

@@ -1,0 +1,119 @@
+---
+title: Number Utilities
+description: Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+icon: Hash
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Tab, Tabs } from "fumadocs-ui/components/tabs"
+
+# Number Utilities
+
+Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+
+## Installation & Usage
+
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+    ```ts
+    import type { IsOdd, IsEven, Absolute } from "@halvaradop/ts-utility-types/numbers"
+    ```
+  </Tab>
+  <Tab value="Namespace Import">
+    ```ts
+    import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
+    
+    type Result = Numbers.IsOdd<2023>
+    ```
+  </Tab>
+</Tabs>
+
+<Callout type="warn" title="Compile-Time Operations">
+    These utilities work with literal numeric types at compile-time. They don't perform runtime operations.
+</Callout>
+
+## Parity Checking
+
+### `IsOdd<T extends number>`
+
+Checks if a number is odd.
+
+```ts
+// Expected: true
+type CheckOdd = IsOdd<2023>
+
+// Expected: false
+type CheckEven = IsOdd<2024>
+```
+
+### `IsEven<T extends number>`
+
+Checks if a number is even.
+
+```ts
+// Expected: true
+type CheckEven = IsEven<2024>
+
+// Expected: false
+type CheckOdd = IsEven<2023>
+```
+
+### `IsNegative<T extends number>`
+
+Checks if a number is negative.
+
+```ts
+// Expected: true
+type CheckNegative = IsNegative<-2024>
+
+// Expected: false
+type CheckPositive = IsNegative<2024>
+```
+
+### `IsPositive<T extends number>`
+
+Checks if a number is positive.
+
+```ts
+// Expected: true
+type CheckPositive = IsPositive<2024>
+
+// Expected: false
+type CheckNegative = IsPositive<-2024>
+```
+
+### `Absolute<Expression extends number | string | bigint>`
+
+Returns the absolute value of a number, string, or bigint as a string.
+
+```ts
+// Expected: "2024"
+type Positive = Absolute<2024>
+
+// Expected: "2024"
+type PositiveString = Absolute<"-2024">
+```
+
+### `Trunc<Math extends string | number | bigint>`
+
+Truncates a number to its integer part.
+
+```ts
+// Expected: 3
+type Truncated = Trunc<3.14>
+
+// Expected: -2
+type TruncatedNegative = Trunc<-2.99>
+```
+
+### `NumberRange<Low extends number, High extends number>`
+
+Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
+
+```ts
+// Expected: 1 | 2 | 3 | 4 | 5
+type Range1 = NumberRange<1, 5>
+
+// Expected: never
+type Range2 = NumberRange<-1, 5>
+```

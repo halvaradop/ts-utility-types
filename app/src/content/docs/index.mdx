@@ -1,0 +1,143 @@
+---
+title: TypeScript Utility Types
+description: A comprehensive collection of utility types to enhance productivity and improve code readability in TypeScript projects.
+icon: Blocks
+---
+
+# TypeScript Utility Types
+
+A powerful collection of utility types designed to enhance your TypeScript development experience. This package provides type-level operations for arrays, objects, strings, numbers, validation, and advanced deep manipulations, all built from scratch without relying on TypeScript's built-in utility types.
+
+<Callout type="info">
+    All utility types are **zero-runtime** and provide excellent IntelliSense support with comprehensive type checking.
+</Callout>
+
+## Features
+
+- 🔧 **Comprehensive Type Operations**: Over 100+ utility types for common and advanced use cases
+- 🎯 **Type-Safe**: All utilities are fully type-safe with excellent IntelliSense support
+- 📦 **Modular**: Import only what you need with tree-shakable exports
+- 🚀 **Zero Runtime**: Pure TypeScript types with no runtime overhead
+- 🧪 **Well-Tested**: Extensively tested with type-level assertions
+- 📚 **Excellent DX**: Comprehensive documentation with practical examples
+
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Quick Start
+
+<Steps>
+  <Step>
+    **Install the package** as a development dependency in your TypeScript project.
+  </Step>
+  
+  <Step>
+    **Import the types** you need from the appropriate module:
+    
+    ```ts
+    import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
+    import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
+    import type { Capitalize } from "@halvaradop/ts-utility-types/strings"
+    ```
+  </Step>
+  
+  <Step>
+    **Use the types** in your TypeScript code:
+    
+    ```ts
+    // Deep merge two object types
+    interface Config {
+      api: { timeout: number }
+      features: { darkMode: boolean }
+    }
+    
+    interface UserConfig {
+      api: { retries: number }
+      features: { analytics: boolean }
+    }
+    
+    type AppConfig = DeepMerge<Config, UserConfig>
+    // Result: {
+    //   api: { timeout: number; retries: number }
+    //   features: { darkMode: boolean; analytics: boolean }
+    // }
+    ```
+  </Step>
+</Steps>
+
+## Available Modules
+
+<Cards>
+    <Card title="Arrays" description="Array and tuple manipulations with type-safe operations" href="/docs/arrays" icon="📊" />
+    <Card title="Objects" description="Object type transformations and property manipulations" href="/docs/objects" icon="🏗️" />
+    <Card title="Strings" description="String type operations and template literal utilities" href="/docs/strings" icon="📝" />
+    <Card title="Numbers" description="Numeric type utilities and mathematical operations" href="/docs/numbers" icon="🔢" />
+    <Card title="Deep" description="Advanced deep object manipulations and nested operations" href="/docs/deep" icon="🔄" />
+    <Card title="Type Guards" description="Type checking utilities and conditional type helpers" href="/docs/guards" icon="🛡️" />
+    <Card title="Validation" description="Runtime type validation with type guards" href="/docs/validate" icon="✅" />
+    <Card title="Testing" description="Type-level testing utilities for type assertions" href="/docs/test" icon="🧪" />
+    <Card title="Utils" description="General utilities and helper types" href="/docs/utils" icon="🔧" />
+</Cards>
+
+## Common Usage Patterns
+
+### Conditional Types
+
+```ts
+import type { IsArray, IsObject } from "@halvaradop/ts-utility-types/type-guards"
+
+type ProcessData<T> = T extends any[]
+    ? T[number] // Extract array element type
+    : T extends object
+      ? keyof T // Extract object keys
+      : T // Return as-is for primitives
+```
+
+### Advanced Object Manipulation
+
+```ts
+import type { DeepPartial, DeepRequired, DeepReadonly } from "@halvaradop/ts-utility-types/deep"
+
+interface ApiResponse {
+    user: {
+        profile: { name: string; email: string }
+        settings: { theme: string; notifications: boolean }
+    }
+}
+
+// Make all properties optional at any depth
+type PartialApiResponse = DeepPartial<ApiResponse>
+
+// Make all properties required at any depth
+type RequiredApiResponse = DeepRequired<PartialApiResponse>
+
+// Make all properties readonly at any depth
+type ImmutableApiResponse = DeepReadonly<ApiResponse>
+```
+
+<Callout type="warn" title="Performance Note">
+    All utility types are designed to be efficient at compile-time with recursive depth limits and tail recursion optimization
+    where possible.
+</Callout>
+
+## TypeScript Compatibility
+
+- **TypeScript 4.5+**: Core functionality
+- **TypeScript 4.8+**: Improved template literal types
+- **TypeScript 5.0+**: Enhanced recursive type handling
+
+## Need Help?
+
+Visit our [Community & Support](/docs/community) page to:
+
+- 🐛 Report bugs or request features
+- 💬 Join community discussions
+- 🤝 Learn how to contribute
+- 📚 Find additional resources
+
+---
+
+**Ready to get started?** Choose a module from the navigation or explore the [Arrays](/docs/arrays) section for practical examples.

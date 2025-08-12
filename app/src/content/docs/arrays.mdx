@@ -1,51 +1,79 @@
-# @halvaradop/ts-utility-types/arrays
+---
+title: Array Utilities
+description: Advanced utilities for manipulating arrays and tuples in TypeScript. These types allow you to transform, filter, convert to union, and perform type-level operations on arrays in a safe and expressive way.
+icon: List
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Tab, Tabs } from "fumadocs-ui/components/tabs"
+import { TypeTable } from "fumadocs-typescript/ui"
+
+# Array Utilities
 
 Advanced utilities for manipulating arrays and tuples in TypeScript. These types allow you to transform, filter, convert to union, and perform type-level operations on arrays in a safe and expressive way.
 
-```ts
-import type * as Arrays from "@halvaradop/ts-utility-types/arrays"
-```
+## Installation & Usage
 
-## Table of Contents
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+    ```ts
+    import type { ArrayToUnion, Filter, Reverse } from "@halvaradop/ts-utility-types/arrays"
+    ```
+  </Tab>
+  <Tab value="Namespace Import">
+    ```ts
+    import type * as Arrays from "@halvaradop/ts-utility-types/arrays"
+    
+    type Result = Arrays.ArrayToUnion<["a", "b", "c"]>
+    ```
+  </Tab>
+</Tabs>
 
-- [ArrayToUnion](#array-to-union)
-- [Size](#size)
-- [Filter](#filter)
-- [Reverse](#reverse)
-- [IndexOf](#index-of)
-- [LastIndexOf](#last-index-of)
-- [ConstructTuple](#construct-tuple)
-- [HasDuplicates](#has-duplicates)
-- [AllEquals](#all-equals)
-- [Chunk](#chunk)
-- [Zip](#zip)
-- [Flatten](#flatten)
-- [CompareArrayLength](#compare-array-length)
-- [Uniques](#uniques)
-- [ToUnion](#to-union)
-- [ReturnTypeOf](#deep-replace)
-- [Take](#take)
-- [FilterNonNullish](#filter-non-nullish)
-
-<h3 id="array-to-union">`ArrayToUnion<Array extends readonly unknown[]>`</h3>
+### `ArrayToUnion<Array extends readonly unknown[]>`
 
 Creates a union of the literal values of a constant array.
 
-```ts
-// Expected: "a" | "b" | "c"
+```ts twoslash
+type ArrayToUnion<Array extends readonly unknown[]> = Array[number]
+
+// Create union from string array
 type Letters = ArrayToUnion<["a", "b", "c"]>
+//   ^?
+
+// Create union from number array
+type Numbers = ArrayToUnion<[1, 2, 3, 4, 5]>
+//   ^?
+
+// Works with mixed types
+type Mixed = ArrayToUnion<["hello", 42, true]>
+//   ^?
 ```
 
-<h3 id="size">`Size<Array extends unknown[]>`</h3>
+### `Size<Array extends unknown[]>`
 
 Gets the length (size) of an array as a type.
 
-```ts
-// Expected: 3
+```ts twoslash
+type Size<Array extends unknown[]> = Array["length"]
+
+// Get length of tuple
 type Length = Size<[1, 2, 3]>
+//   ^?
+
+// Works with different types
+type StringArrayLength = Size<["a", "b", "c", "d"]>
+//   ^?
+
+// Empty array
+type EmptyLength = Size<[]>
+//   ^?
 ```
 
-<h3 id="filter">`Filter<Array extends unknown[], Predicate, Includes extends boolean = true>`</h3>
+<Callout type="info" title="Type Safety">
+    Array utilities work with both tuples and arrays, but provide the most precise types when used with tuples.
+</Callout>
+
+### `Filter<Array extends unknown[], Predicate, Includes extends boolean = true>`
 
 Filters the elements of a tuple by a predicate. If `Includes` is `true`, includes matching elements; if `false`, excludes them.
 
@@ -57,7 +85,7 @@ type OnlyTwo = Filter<[0, 1, 2], 2>
 type WithoutTwo = Filter<[0, 1, 2], 2, false>
 ```
 
-<h3 id="reverse">`Reverse<Array extends unknown[]>`</h3>
+### `Reverse<Array extends unknown[]>`
 
 Reverses the order of elements in a tuple.
 
@@ -66,7 +94,7 @@ Reverses the order of elements in a tuple.
 type Reversed = Reverse<[1, 2, 3]>
 ```
 
-<h3 id="index-of">`IndexOf<Array extends unknown[], Match>`</h3>
+### `IndexOf<Array extends unknown[], Match>`
 
 Returns the index of the first occurrence of an element in the tuple. Returns `-1` if not found.
 
@@ -75,7 +103,7 @@ Returns the index of the first occurrence of an element in the tuple. Returns `-
 type Index = IndexOf<["a", "b", "c"], "c">
 ```
 
-<h3 id="last-index-of">`LastIndexOf<Array extends unknown[], Match>`</h3>
+### `LastIndexOf<Array extends unknown[], Match>`
 
 Returns the index of the last occurrence of an element in the tuple. Returns `-1` if not found.
 
@@ -84,7 +112,7 @@ Returns the index of the last occurrence of an element in the tuple. Returns `-1
 type LastIndex = LastIndexOf<["a", "b", "a"], "a">
 ```
 
-<h3 id="construct-tuple">`ConstructTuple<Length extends number, Value extends unknown = unknown>`</h3>
+### `ConstructTuple<Length extends number, Value extends unknown = unknown>`
 
 Creates a tuple of fixed length with a given value.
 
@@ -93,7 +121,7 @@ Creates a tuple of fixed length with a given value.
 type ThreeX = ConstructTuple<3, "x">
 ```
 
-<h3 id="has-duplicates">`HasDuplicates<Array extends unknown[]>`</h3>
+### `HasDuplicates<Array extends unknown[]>`
 
 Checks if there are duplicate elements in the tuple.
 
@@ -102,7 +130,7 @@ Checks if there are duplicate elements in the tuple.
 type Duplicates = HasDuplicates<[1, 2, 1]>
 ```
 
-<h3 id="all-equals">`AllEquals<Array extends unknown[], Comparator>`</h3>
+### `AllEquals<Array extends unknown[], Comparator>`
 
 Checks if all elements in the tuple are equal to a given value.
 
@@ -111,7 +139,7 @@ Checks if all elements in the tuple are equal to a given value.
 type AllEqual = AllEquals<[2, 2, 2], 2>
 ```
 
-<h3 id="chunk">`Chunk<Array extends unknown[], Length extends number>`</h3>
+### `Chunk<Array extends unknown[], Length extends number>`
 
 Splits a tuple into sub-tuples of fixed length.
 
@@ -120,7 +148,7 @@ Splits a tuple into sub-tuples of fixed length.
 type Chunks = Chunk<[1, 2, 3, 4, 5], 2>
 ```
 
-<h3 id="zip">`Zip<Array1 extends unknown[], Array2 extends unknown[]>`</h3>
+### `Zip<Array1 extends unknown[], Array2 extends unknown[]>`
 
 Combines two tuples into a tuple of pairs, element by element.
 
@@ -129,7 +157,7 @@ Combines two tuples into a tuple of pairs, element by element.
 type Zipped = Zip<[1, 2], ["a", "b"]>
 ```
 
-<h3 id="flatten">`Flatten<Array>`</h3>
+### `Flatten<Array>`
 
 Returns the flattened type of a nested array, recursively extracting the innermost element type.
 
@@ -141,7 +169,7 @@ type Flattened = Flatten<number[][]>
 type FlattenedString = Flatten<string[][][]>
 ```
 
-<h3 id="compare-array-length">`CompareArrayLength<T extends any[], U extends any[]>`</h3>
+### `CompareArrayLength<T extends any[], U extends any[]>`
 
 Compares the length of two arrays, returning `1` if the first is longer, `-1` if the second is longer, and `0` if they are equal.
 
@@ -156,7 +184,7 @@ type Compare2 = CompareArrayLength<[1, 2], [1, 2, 3]>
 type Compare3 = CompareArrayLength<[1, 2, 3], [1, 2, 3]>
 ```
 
-<h3 id="uniques">`Uniques<Array extends unknown[]>`</h3>
+### `Uniques<Array extends unknown[]>`
 
 Returns a tuple containing only the unique values from the input array.
 
@@ -168,7 +196,7 @@ type UniqueNumbers = Uniques<[1, 2, 3, 3, 4, 4, 5]>
 type UniqueStrings = Uniques<["a", "b", "c", "a", "b"]>
 ```
 
-<h3 id="to-union">`ToUnion<T>`</h3>
+### `ToUnion<T>`
 
 Creates a union type from the literal values of a tuple or a single value.
 
@@ -183,7 +211,7 @@ type TupleString = ToUnion<"foo">
 type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
 ```
 
-<h3 id="return-type-of">`ReturnTypeOf<T>`</h3>
+### `ReturnTypeOf<T>`
 
 Determines the primitive type corresponding to the provided value.
 
@@ -195,7 +223,7 @@ type TypeOfValue = ReturnTypeOf<123>
 type TypeOfValueString = ReturnTypeOf<"hello">
 ```
 
-<h3 id="take">`Take<N extends number, Array extends unknown[]>`</h3>
+### `Take<N extends number, Array extends unknown[]>`
 
 Extracts the first `N` elements from an array. If `N` is negative, extracts the last `N` elements.
 
@@ -207,7 +235,7 @@ type TakeFirst = Take<2, [1, 2, 3, 4]>
 type TakeLast = Take<-2, [1, 2, 3, 4]>
 ```
 
-<h3 id="filter-non-nullish">`FilterNonNullish<Array extends unknown[]>`</h3>
+### `FilterNonNullish<Array extends unknown[]>`
 
 Removes all nullish values (`null` or `undefined`) from the provided array, deeply filtering nested objects as well.
 

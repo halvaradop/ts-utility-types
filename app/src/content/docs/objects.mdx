@@ -1,32 +1,40 @@
-# @halvaradop/ts-utility-types/objects
+---
+title: Object Utilities
+description: Utilities for manipulating, transforming, and composing object types in TypeScript. These types allow you to combine, filter, select, modify, and map object properties in a flexible and type-safe way.
+icon: Layers
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Tab, Tabs } from "fumadocs-ui/components/tabs"
+
+# Object Utilities
 
 Utilities for manipulating, transforming, and composing object types in TypeScript. These types allow you to combine, filter, select, modify, and map object properties in a flexible and type-safe way.
 
-```ts
-import type * as Objects from "@halvaradop/ts-utility-types/objects"
-```
+## Installation & Usage
 
-## Table of Contents
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+    ```ts
+    import type { PickByType, OmitByType, PartialByKeys } from "@halvaradop/ts-utility-types/objects"
+    ```
+  </Tab>
+  <Tab value="Namespace Import">
+    ```ts
+    import type * as Objects from "@halvaradop/ts-utility-types/objects"
+    
+    type Result = Objects.PickByType<User, string>
+    ```
+  </Tab>
+</Tabs>
 
-- [Properties](#properties)
-- [Intersection](#intersection)
-- [PickByType](#pick-by-type)
-- [PartialByKeys](#partial-by-key)
-- [OmitByType](#omit-by-type)
-- [FlattenProperties](#flatten-properties)
-- [ExcludePrivateKeys](#exclude-private-keys)
-- [RequiredByKeys](#required-by-keys)
-- [Mutable](#mutable)
-- [AppendKeyValue](#append-key-value)
-- [ObjectEntries](#object-entries)
-- [ReplaceKeys](#replace-keys)
-- [MapTypes](#map-types)
-- [ToPrimitive](#to-primitive)
-- [Get](#get)
-- [GetRequired](#get-required)
-- [GetOptional](#get-optional)
+<Callout type="info" title="Object Manipulation">
+    These utilities work with both interfaces and type aliases, providing flexible object type transformations.
+</Callout>
 
-<h3 id="properties">`Properties<Obj1, Obj2, Common = false>`</h3>
+## Property Operations
+
+### `Properties<Obj1, Obj2, Common = false>`
 
 Creates a union of the keys of two objects. If `Common` is `true`, returns only the common keys.
 
@@ -43,7 +51,7 @@ interface Bar {
 type PropsFooBar = Properties<Foo, Bar>
 ```
 
-<h3 id="intersection">`Intersection<Obj1, Obj2>`</h3>
+### `Intersection<Obj1, Obj2>`
 
 Creates a new object with the keys that are in one but not the other.
 
@@ -63,22 +71,34 @@ interface Bar {
 type DiffFoo = Intersection<Foo, Bar>
 ```
 
-<h3 id="pick-by-type">`PickByType<Obj, Type>`</h3>
+### `PickByType<Obj, Type>`
 
 Selects the properties of an object that are assignable to a given type.
 
-```ts
+```ts twoslash
+type PickByType<Obj, Type> = Pick<Obj, { [K in keyof Obj]: Obj[K] extends Type ? K : never }[keyof Obj]>
+
 interface User {
     name: string
     lastname: string
     age: number
+    isActive: boolean
 }
 
-// Expected: { name: string, lastname: string }
-type UserStr = PickByType<User, string>
+// Pick all string properties
+type UserStrings = PickByType<User, string>
+//   ^?
+
+// Pick all number properties
+type UserNumbers = PickByType<User, number>
+//   ^?
+
+// Pick all boolean properties
+type UserBooleans = PickByType<User, boolean>
+//   ^?
 ```
 
-<h3 id="partial-by-keys">`PartialByKeys<Obj, Keys = keyof Obj>`</h3>
+### `PartialByKeys<Obj, Keys = keyof Obj>`
 
 Makes the specified keys of an object optional (all keys by default).
 
@@ -93,7 +113,7 @@ interface User {
 type UserPartialName = PartialByKeys<User, "name">
 ```
 
-<h3 id="omit-by-type">`OmitByType<Obj, Type>`</h3>
+### `OmitByType<Obj, Type>`
 
 Omits the properties of an object that are assignable to a given type.
 
@@ -108,7 +128,7 @@ interface User {
 type UserExcludeStrings = OmitByType<User, string>
 ```
 
-<h3 id="flatten-properties">`FlattenProperties<Obj, Keys>`</h3>
+### `FlattenProperties<Obj, Keys>`
 
 Extracts the value of a key and merges it into the object (experimental).
 
@@ -123,7 +143,7 @@ interface User {
 type UserAddress = FlattenProperties<User, "address">
 ```
 
-<h3 id="">`ExcludePrivateKeys<Obj>`</h3>
+### `ExcludePrivateKeys<Obj>`
 
 Removes properties whose name starts with an underscore (`_`).
 
@@ -137,7 +157,7 @@ interface User {
 type PublicUser = ExcludePrivateKeys<User>
 ```
 
-<h3 id="required-by-keys">`RequiredByKeys<Obj, Keys = keyof Obj>`</h3>
+### `RequiredByKeys<Obj, Keys = keyof Obj>`
 
 Makes the specified keys of an object required (all keys by default).
 
@@ -152,7 +172,7 @@ interface User {
 type UserRequiredName = RequiredByKeys<User, "name">
 ```
 
-<h3 id="mutable">`Mutable<Obj>`</h3>
+### `Mutable<Obj>`
 
 Makes the properties of an object mutable (removes `readonly`). Affects only the first level.
 
@@ -167,7 +187,7 @@ interface User {
 type NonReadonlyUser = Mutable<User>
 ```
 
-<h3 id="append-key-value">`AppendKeyValue<Obj, Property, value>`</h3>
+### `AppendKeyValue<Obj, Property, value>`
 
 Adds a new property to an object.
 
@@ -180,7 +200,7 @@ interface User {
 type UserAppendLastname = AppendKeyValue<User, "lastname", string>
 ```
 
-<h3 id="object-entries">`ObjectEntries<Obj>`</h3>
+### `ObjectEntries<Obj>`
 
 Returns a union of the `[key, value]` entries of the object.
 
@@ -195,7 +215,7 @@ interface Foo {
 type FooEntries = ObjectEntries<Foo>
 ```
 
-<h3 id="replace-keys">`ReplaceKeys<Obj, Keys, Replace>`</h3>
+### `ReplaceKeys<Obj, Keys, Replace>`
 
 Replaces the types of the specified keys with those defined in `Replace`.
 
@@ -210,7 +230,7 @@ interface Foo {
 type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number; foobar: number }>
 ```
 
-<h3 id="map-types">`MapTypes<Obj, Mapper>`</h3>
+### `MapTypes<Obj, Mapper>`
 
 Maps the types of the properties that match `from` in the `Mapper`, replacing them with `to`.
 
@@ -219,7 +239,7 @@ Maps the types of the properties that match `from` in the `Mapper`, replacing th
 type ReplaceTypesI = MapTypes<{ foo: string; bar: number }, { from: number; to: boolean }>
 ```
 
-<h3 id="to-primitive">`ToPrimitive<Obj>`</h3>
+### `ToPrimitive<Obj>`
 
 Converts the properties of an object to their primitive types.
 
@@ -234,7 +254,7 @@ interface User {
 type UserPrimitive = ToPrimitive<User>
 ```
 
-<h3 id="get">`Get<Obj1, Obj2, Key>`</h3>
+### `Get<Obj1, Obj2, Key>`
 
 Returns the value of a key in one of the two objects.
 
@@ -254,7 +274,7 @@ type FooValue = Get<Foo, Bar, "foo">
 type BarValue = Get<Foo, Bar, "bar">
 ```
 
-<h3 id="get-required">`GetRequired<Obj>`</h3>
+### `GetRequired<Obj>`
 
 Returns only the required keys of an object.
 
@@ -269,7 +289,7 @@ interface User {
 type UserRequired = GetRequired<User>
 ```
 
-<h3 id="get-optional">`GetOptional<Obj>`</h3>
+### `GetOptional<Obj>`
 
 Returns only the optional keys of an object.
 

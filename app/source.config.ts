@@ -1,4 +1,7 @@
 import { defineDocs, defineConfig, frontmatterSchema } from "fumadocs-mdx/config"
+import { remarkAutoTypeTable, createGenerator } from "fumadocs-typescript"
+import { transformerTwoslash } from "fumadocs-twoslash"
+import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins"
 
 export const docs = defineDocs({
     dir: "src/content/docs",
@@ -7,4 +10,17 @@ export const docs = defineDocs({
     },
 })
 
-export default defineConfig()
+const generator = createGenerator()
+
+export default defineConfig({
+    mdxOptions: {
+        remarkPlugins: [[remarkAutoTypeTable, { generator }]],
+        rehypeCodeOptions: {
+            themes: {
+                light: "github-light",
+                dark: "github-dark",
+            },
+            transformers: [...(rehypeCodeDefaultOptions.transformers ?? []), transformerTwoslash()],
+        },
+    },
+})

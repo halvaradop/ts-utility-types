@@ -18,16 +18,19 @@
     "@next/mdx": "^15.3.4",
     "fumadocs-core": "^15.6.9",
     "fumadocs-mdx": "^11.7.4",
+    "fumadocs-typescript": "^4.0.6",
     "fumadocs-ui": "^15.6.9",
     "motion": "^12.18.1",
     "next": "15.4.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "twoslash": "^0.3.4"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@halvaradop/tailwindcss-animations": "^1.0.0",
     "@halvaradop/tailwindcss-utilities": "^1.0.0",
+    "@shikijs/twoslash": "^3.9.2",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.0.3",
@@ -35,6 +38,7 @@
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.29.0",
     "eslint-config-next": "15.3.4",
+    "fumadocs-twoslash": "^3.1.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3"
