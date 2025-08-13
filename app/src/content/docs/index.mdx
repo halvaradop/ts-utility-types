@@ -1,7 +1,6 @@
 ---
 title: TypeScript Utility Types
 description: A comprehensive collection of utility types to enhance productivity and improve code readability in TypeScript projects.
-icon: Blocks
 ---
 
 # TypeScript Utility Types
@@ -41,30 +40,36 @@ npm i -D @halvaradop/ts-utility-types
     import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
     import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
     import type { Capitalize } from "@halvaradop/ts-utility-types/strings"
+    import { isObject, isArray } from "@halvaradop/ts-utility-types/validate"
     ```
+
   </Step>
   
   <Step>
     **Use the types** in your TypeScript code:
-    
-    ```ts
+
+    ```ts twoslash
+    import type { DeepMerge } from "@halvaradop/ts-utility-types"
+
     // Deep merge two object types
     interface Config {
-      api: { timeout: number }
-      features: { darkMode: boolean }
+      api: {
+        timeout: number
+      }
+      features: {
+        darkMode: boolean
+      }
     }
-    
+
     interface UserConfig {
       api: { retries: number }
       features: { analytics: boolean }
     }
-    
+
     type AppConfig = DeepMerge<Config, UserConfig>
-    // Result: {
-    //   api: { timeout: number; retries: number }
-    //   features: { darkMode: boolean; analytics: boolean }
-    // }
+    //   ^?
     ```
+
   </Step>
 </Steps>
 
@@ -89,16 +94,17 @@ npm i -D @halvaradop/ts-utility-types
 ```ts
 import type { IsArray, IsObject } from "@halvaradop/ts-utility-types/type-guards"
 
-type ProcessData<T> = T extends any[]
-    ? T[number] // Extract array element type
-    : T extends object
-      ? keyof T // Extract object keys
-      : T // Return as-is for primitives
+type ProcessData<T> =
+    IsArray<T> extends true
+        ? T[number] // Extract array element type
+        : IsObject<T> extends true
+          ? keyof T // Extract object keys
+          : T // Return as-is for primitives
 ```
 
 ### Advanced Object Manipulation
 
-```ts
+```ts twoslash
 import type { DeepPartial, DeepRequired, DeepReadonly } from "@halvaradop/ts-utility-types/deep"
 
 interface ApiResponse {
@@ -110,12 +116,15 @@ interface ApiResponse {
 
 // Make all properties optional at any depth
 type PartialApiResponse = DeepPartial<ApiResponse>
+//   ^?
 
 // Make all properties required at any depth
 type RequiredApiResponse = DeepRequired<PartialApiResponse>
+//   ^?
 
 // Make all properties readonly at any depth
 type ImmutableApiResponse = DeepReadonly<ApiResponse>
+//   ^?
 ```
 
 <Callout type="warn" title="Performance Note">

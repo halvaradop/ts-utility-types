@@ -4,40 +4,56 @@ description: Advanced utilities for manipulating arrays and tuples in TypeScript
 icon: List
 ---
 
-import { Callout } from "fumadocs-ui/components/callout"
-import { Tab, Tabs } from "fumadocs-ui/components/tabs"
-import { TypeTable } from "fumadocs-typescript/ui"
-
 # Array Utilities
 
 Advanced utilities for manipulating arrays and tuples in TypeScript. These types allow you to transform, filter, convert to union, and perform type-level operations on arrays in a safe and expressive way.
 
-## Installation & Usage
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
 
 <Tabs items={['Named Import', 'Namespace Import']}>
   <Tab value="Named Import">
-    ```ts
+    ```ts twoslash
     import type { ArrayToUnion, Filter, Reverse } from "@halvaradop/ts-utility-types/arrays"
     ```
   </Tab>
   <Tab value="Namespace Import">
-    ```ts
+    ```ts twoslash
     import type * as Arrays from "@halvaradop/ts-utility-types/arrays"
     
-    type Result = Arrays.ArrayToUnion<["a", "b", "c"]>
+    type Result = Arrays.ArrayToUnion<["foo", "bar", "foobar"]>
     ```
   </Tab>
 </Tabs>
 
-### `ArrayToUnion<Array extends readonly unknown[]>`
+### `ArrayToUnion<Array extends readonly unknown[]>` [#array-to-union]
 
-Creates a union of the literal values of a constant array.
+Creates a union type from the literal values of a constant string or number array. This is especially useful for representing a set of allowed values based on the array elements, such as enums, option lists, or discriminated unions.
+
+| Argument | Type        | Description                                             |
+| -------- | ----------- | ------------------------------------------------------- |
+| `Array`  | `unknown[]` | The tuple or readonly array to convert to a union type. |
+
+**Behavior:**
+
+- Produces a union of all values in the array, excluding empty arrays (`[]`).
+- Changing the array changes the resulting union.
+
+- Use with `as const` arrays for maximum type safety.
+- Combine with other utility types to restrict function parameters or object keys.
+
+**Related:** [`ToUnion`](#to-union)
 
 ```ts twoslash
-type ArrayToUnion<Array extends readonly unknown[]> = Array[number]
+import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
 
 // Create union from string array
-type Letters = ArrayToUnion<["a", "b", "c"]>
+type Letters = ArrayToUnion<["foo", "bar", "foobar"]>
 //   ^?
 
 // Create union from number array
@@ -49,12 +65,21 @@ type Mixed = ArrayToUnion<["hello", 42, true]>
 //   ^?
 ```
 
-### `Size<Array extends unknown[]>`
+### `Size<Array extends unknown[]>` [#size]
 
-Gets the length (size) of an array as a type.
+Gets the length (size) of an array or tuple as a type. Returns the number of elements as a numeric literal type, or 0 if not an array.
+
+| Argument | Type        | Description                              |
+| -------- | ----------- | ---------------------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to get the length of. |
+
+**Behavior:**
+
+- Returns a numeric literal type representing the length.
+- Changing the array changes the result.
 
 ```ts twoslash
-type Size<Array extends unknown[]> = Array["length"]
+import type { Size } from "@halvaradop/ts-utility-types/arrays"
 
 // Get length of tuple
 type Length = Size<[1, 2, 3]>
@@ -73,173 +98,345 @@ type EmptyLength = Size<[]>
     Array utilities work with both tuples and arrays, but provide the most precise types when used with tuples.
 </Callout>
 
-### `Filter<Array extends unknown[], Predicate, Includes extends boolean = true>`
+### `Filter<Array extends unknown[], Predicate, Includes extends boolean = true>` [#filter]
 
-Filters the elements of a tuple by a predicate. If `Includes` is `true`, includes matching elements; if `false`, excludes them.
+Filters the items of a tuple or array based on the provided predicate type. This is a powerful tool for extracting or removing specific values from a tuple at the type level.
 
-```ts
-// Expected: [2]
-type OnlyTwo = Filter<[0, 1, 2], 2>
+| Argument    | Type        | Description                                                                 |
+| ----------- | ----------- | --------------------------------------------------------------------------- |
+| `Array`     | `unknown[]` | The array to filter.                                                        |
+| `Predicate` | `unknown`   | The value(s) to filter by. Can be a single value or a union.                |
+| `Includes`  | `boolean`   | If `true` (default), includes matching elements; if `false`, excludes them. |
 
-// Expected: [0, 1]
+**Behavior:**
+
+- If `Includes` is `true`, only elements assignable to `Predicate` are included.
+- If `Includes` is `false`, elements assignable to `Predicate` are excluded.
+
+```ts twoslash
+import type { Filter } from "@halvaradop/ts-utility-types/arrays"
+
+type OnlyTwo = Filter<[1, 2, 3, 4, 5], [4, 5]>
+//   ^?
+
 type WithoutTwo = Filter<[0, 1, 2], 2, false>
+//   ^?
+
+type WithoutFoo = Filter<["foo", "bar", "foobar", 1, 2], "foo" | 2, false>
+//   ^?
+
+type WithoutObj = Filter<[{ foo: string }, { bar: number }, { foobar: boolean }], { bar: number }, false>
+//   ^?
 ```
 
-### `Reverse<Array extends unknown[]>`
+### `Reverse<Array extends unknown[]>` [#reverse]
 
-Reverses the order of elements in a tuple.
+Reverses the order of elements in a tuple type. The resulting tuple has the same elements as the input, but in reverse order.
 
-```ts
-// Expected: [3, 2, 1]
+| Argument | Type        | Description                    |
+| -------- | ----------- | ------------------------------ |
+| `Array`  | `unknown[]` | The array or tuple to reverse. |
+
+```ts twoslash
+import type { Reverse } from "@halvaradop/ts-utility-types/arrays"
+
 type Reversed = Reverse<[1, 2, 3]>
+//   ^?
+
+type ReversedAll = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>
+//   ^?
 ```
 
-### `IndexOf<Array extends unknown[], Match>`
+### `IndexOf<Array extends unknown[], Match>` [#index-of]
 
-Returns the index of the first occurrence of an element in the tuple. Returns `-1` if not found.
+Returns the first index where the element `Match` appears in the tuple type `Array`. Returns `-1` if not found. This is a type-level equivalent of JavaScript's `Array.prototype.indexOf`.
 
-```ts
-// Expected: 2
-type Index = IndexOf<["a", "b", "c"], "c">
+| Argument | Type        | Description                   |
+| -------- | ----------- | ----------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to search. |
+| `Match`  | `unknown`   | The element to search for.    |
+
+```ts twoslash
+import type { IndexOf } from "@halvaradop/ts-utility-types/arrays"
+
+type IndexNumber = IndexOf<[string, 1, number, "a"], number>
+//   ^?
+
+type IndexAny = IndexOf<[string, 1, number, "a", any], any>
+//   ^?
 ```
 
-### `LastIndexOf<Array extends unknown[], Match>`
+### `LastIndexOf<Array extends unknown[], Match>` [#last-index-of]
 
-Returns the index of the last occurrence of an element in the tuple. Returns `-1` if not found.
+Returns the last index where the element `Match` appears in the tuple type `Array`. Returns `-1` if not found. This is a type-level equivalent of JavaScript's `Array.prototype.lastIndexOf`.
 
-```ts
-// Expected: 1
-type LastIndex = LastIndexOf<["a", "b", "a"], "a">
+| Argument | Type        | Description                   |
+| -------- | ----------- | ----------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to search. |
+| `Match`  | `unknown`   | The element to search for.    |
+
+```ts twoslash
+import type { LastIndexOf } from "@halvaradop/ts-utility-types/arrays"
+
+type LastIndexNumber = LastIndexOf<[2, 6, 3, 8, 4, 1, 7, 3, 9], 3>
+//   ^?
+
+type LastIndexType = LastIndexOf<[string, 2, number, "a", number, 1], number>
+//   ^?
 ```
 
-### `ConstructTuple<Length extends number, Value extends unknown = unknown>`
+### `ConstructTuple<Length extends number, Value extends unknown = unknown>` [#constructtuple]
 
-Creates a tuple of fixed length with a given value.
+Creates a tuple with a defined size, where each element is of a specified type or value. Avoids TypeScript's deep instantiation errors for large tuples.
 
-```ts
-// Expected: ["x", "x", "x"]
+| Argument | Type                          | Description                               |
+| -------- | ----------------------------- | ----------------------------------------- |
+| `Length` | `number`                      | The length of the tuple to create.        |
+| `Value`  | `unknown` (default `unknown`) | The value or type to fill the tuple with. |
+
+```ts twoslash
+import type { ConstructTuple } from "@halvaradop/ts-utility-types/arrays"
+
 type ThreeX = ConstructTuple<3, "x">
+//   ^?
+
+type Strings = ConstructTuple<5, string>
+//   ^?
+
+type Fill = ConstructTuple<5, 1>
+//   ^?
 ```
 
-### `HasDuplicates<Array extends unknown[]>`
+### `HasDuplicates<Array extends unknown[]>` [#has-duplicates]
 
-Checks if there are duplicate elements in the tuple.
+Checks if there are duplicated elements inside the tuple. Returns `true` if any value appears more than once, otherwise `false`.
 
-```ts
-// Expected: true
-type Duplicates = HasDuplicates<[1, 2, 1]>
+| Argument | Type        | Description                                 |
+| -------- | ----------- | ------------------------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to check for duplicates. |
+
+```ts twoslash
+import type { HasDuplicates } from "@halvaradop/ts-utility-types/arrays"
+
+type Duplicates = HasDuplicates<[{ foo: string }, { foo: string }]>
+//   ^?
+
+type DuplicatesWithFunctions = HasDuplicates<[() => void, () => void]>
+//   ^?
 ```
 
-### `AllEquals<Array extends unknown[], Comparator>`
+### `AllEquals<Array extends unknown[], Comparator>` [#all-equals]
 
-Checks if all elements in the tuple are equal to a given value.
+Returns `true` if all elements within the tuple are equal to the provided `Comparator` type, otherwise returns `false`.
 
-```ts
-// Expected: true
+| Argument     | Type        | Description                                        |
+| ------------ | ----------- | -------------------------------------------------- |
+| `Array`      | `unknown[]` | The array or tuple to check.                       |
+| `Comparator` | `unknown`   | The value or type to compare all elements against. |
+
+```ts twoslash
+import type { AllEquals } from "@halvaradop/ts-utility-types/arrays"
+
 type AllEqual = AllEquals<[2, 2, 2], 2>
+//   ^?
+
+type NonAllEquals = AllEquals<[0, 0, 1, 0], 1>
+//   ^?
+
+type WithUnion = AllEquals<[1, 1, 2], 1 | 2>
+//   ^?
 ```
 
-### `Chunk<Array extends unknown[], Length extends number>`
+### `Chunk<Array extends unknown[], Length extends number>` [#chunk]
 
-Splits a tuple into sub-tuples of fixed length.
+Splits a tuple into sub-tuples (chunks) of a specific length. If the last chunk is smaller than the specified length, it contains the remaining elements.
 
-```ts
-// Expected: [[1,2],[3,4],[5]]
-type Chunks = Chunk<[1, 2, 3, 4, 5], 2>
+| Argument | Type        | Description                  |
+| -------- | ----------- | ---------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to split. |
+| `Length` | `number`    | The length of each chunk.    |
+
+```ts twoslash
+import type { Chunk } from "@halvaradop/ts-utility-types/arrays"
+
+type ChunksByTwo = Chunk<[1, 2, 3, 4, 5], 2>
+//   ^?
+
+type ChunksByFour = Chunk<[1, 2, 3, 4, 5], 4>
+//   ^?
 ```
 
-### `Zip<Array1 extends unknown[], Array2 extends unknown[]>`
+### `Zip<Array1 extends unknown[], Array2 extends unknown[]>` [#zip]
 
-Combines two tuples into a tuple of pairs, element by element.
+Combines two tuples into a tuple of pairs, element by element. The resulting tuple has the length of the shorter input tuple.
 
-```ts
-// Expected: [[1, "a"], [2, "b"]]
+| Argument | Type        | Description                |
+| -------- | ----------- | -------------------------- |
+| `Array1` | `unknown[]` | The first array or tuple.  |
+| `Array2` | `unknown[]` | The second array or tuple. |
+
+```ts twoslash
+import type { Zip } from "@halvaradop/ts-utility-types/arrays"
+
 type Zipped = Zip<[1, 2], ["a", "b"]>
+//   ^?
+
+type ZippedStrsWithNumbers = Zip<[1, "bar", 3], ["foo", 2]>
+//   ^?
+
+type ZippedWithObjs = Zip<[{ foo: string }, { bar: string }], ["foo", "bar"]>
+//   ^?
 ```
 
-### `Flatten<Array>`
+### `Flatten<Array>` [#flatten]
 
-Returns the flattened type of a nested array, recursively extracting the innermost element type.
+Returns the innermost element type of a nested array, recursively flattening all levels. If the input is not an array, returns the input type.
 
-```ts
-// Expected: number
+| Argument | Type        | Description                           |
+| -------- | ----------- | ------------------------------------- |
+| `Array`  | `unknown[]` | The array or nested array to flatten. |
+
+```ts twoslash
+import type { Flatten } from "@halvaradop/ts-utility-types/arrays"
+
 type Flattened = Flatten<number[][]>
+//   ^?
 
-// Expected: string
 type FlattenedString = Flatten<string[][][]>
+//   ^?
 ```
 
-### `CompareArrayLength<T extends any[], U extends any[]>`
+### `CompareArrayLength<T extends any[], U extends any[]>` [#compare-array-length]
 
-Compares the length of two arrays, returning `1` if the first is longer, `-1` if the second is longer, and `0` if they are equal.
+Compares the length of two arrays or tuples. Returns `1` if the first is longer, `-1` if the second is longer, and `0` if they are equal.
 
-```ts
-// Expected: 1
+| Argument | Type    | Description                |
+| -------- | ------- | -------------------------- |
+| `T`      | `any[]` | The first array or tuple.  |
+| `U`      | `any[]` | The second array or tuple. |
+
+```ts twoslash
+import type { CompareArrayLength } from "@halvaradop/ts-utility-types/arrays"
+
 type Compare1 = CompareArrayLength<[1, 2, 3], [1, 2]>
+//   ^?
 
-// Expected: -1
 type Compare2 = CompareArrayLength<[1, 2], [1, 2, 3]>
+//   ^?
 
-// Expected: 0
 type Compare3 = CompareArrayLength<[1, 2, 3], [1, 2, 3]>
+//   ^?
 ```
 
-### `Uniques<Array extends unknown[]>`
+### `Uniques<Array extends unknown[]>` [#uniques]
 
-Returns a tuple containing only the unique values from the input array.
+Returns a tuple containing only the unique values from the input array, preserving the order of first appearance.
 
-```ts
-// Expected: [1, 2, 3, 4, 5]
+| Argument | Type        | Description                        |
+| -------- | ----------- | ---------------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to deduplicate. |
+
+```ts twoslash
+import type { Uniques } from "@halvaradop/ts-utility-types/arrays"
+
 type UniqueNumbers = Uniques<[1, 2, 3, 3, 4, 4, 5]>
+//   ^? // [1, 2, 3, 4, 5]
 
-// Expected: ["a", "b", "c"]
 type UniqueStrings = Uniques<["a", "b", "c", "a", "b"]>
+//   ^? // ["a", "b", "c"]
+
+type AllDupes = Uniques<[1, 1, 1, 1]>
+//   ^? // [1]
+
+type EmptyUnique = Uniques<[]>
+//   ^? // []
 ```
 
-### `ToUnion<T>`
+### `ToUnion<T>` [#to-union]
 
-Creates a union type from the literal values of a tuple or a single value.
+Creates a union type from the literal values of a tuple or a single value. Accepts any type, not just arrays. This is a more general version of `ArrayToUnion`.
 
-```ts
-// Expected: 1
+| Argument | Type      | Description                                    |
+| -------- | --------- | ---------------------------------------------- |
+| `T`      | `unknown` | The tuple or value to convert to a union type. |
+
+```ts twoslash
+import type { ToUnion } from "@halvaradop/ts-utility-types/arrays"
+// Single number
 type TupleNumber = ToUnion<1>
+//   ^? // 1
 
-// Expected: "foo"
+// Single string
 type TupleString = ToUnion<"foo">
+//   ^? // "foo"
 
-// Expected: 1 | ["foo" | "bar"]
+// Tuple of union
 type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
+//   ^? // 1 | ["foo" | "bar"]
+
+// Array to union
+type ArrayToUnionTest = ToUnion<["a", "b", "c"]>
+//   ^? // "a" | "b" | "c"
 ```
 
-### `ReturnTypeOf<T>`
+### `Take<N extends number, Array extends unknown[]>` [#take]
 
-Determines the primitive type corresponding to the provided value.
+Extracts the first `N` elements from an array. If `N` is negative, extracts the last `N` elements. Handles out-of-bounds and empty arrays gracefully.
 
-```ts
-// Expected: number
-type TypeOfValue = ReturnTypeOf<123>
+| Argument | Type        | Description                                                            |
+| -------- | ----------- | ---------------------------------------------------------------------- |
+| `N`      | `number`    | The number of elements to extract. If negative, extracts from the end. |
+| `Array`  | `unknown[]` | The array or tuple to extract from.                                    |
 
-// Expected: string
-type TypeOfValueString = ReturnTypeOf<"hello">
-```
-
-### `Take<N extends number, Array extends unknown[]>`
-
-Extracts the first `N` elements from an array. If `N` is negative, extracts the last `N` elements.
-
-```ts
-// Expected: [1, 2]
+```ts twoslash
+import type { Take } from "@halvaradop/ts-utility-types/arrays"
+// Take first 2
 type TakeFirst = Take<2, [1, 2, 3, 4]>
+//   ^? // [1, 2]
 
-// Expected: [3, 4]
+// Take last 2
 type TakeLast = Take<-2, [1, 2, 3, 4]>
+//   ^? // [3, 4]
+
+// Take more than length
+type TakeAll = Take<10, [1, 2]>
+//   ^? // [1, 2]
+
+// Take from empty
+type TakeEmpty = Take<2, []>
+//   ^? // []
 ```
 
-### `FilterNonNullish<Array extends unknown[]>`
+### `FilterNonNullish<Array extends unknown[]>` [#filter-non-nullish]
 
-Removes all nullish values (`null` or `undefined`) from the provided array, deeply filtering nested objects as well.
+Removes all nullish values (`null` or `undefined`) from the provided array. Also deeply filters nested objects using `DeepNonNullish` to ensure all nested properties are non-nullish.
 
-```ts
-// Expected: [1, 2, 3]
+| Argument | Type        | Description                   |
+| -------- | ----------- | ----------------------------- |
+| `Array`  | `unknown[]` | The array or tuple to filter. |
+
+```ts twoslash
+import type { FilterNonNullish } from "@halvaradop/ts-utility-types/arrays"
+// Remove nullish
 type Cleaned = FilterNonNullish<[1, null, 2, undefined, 3]>
+//   ^?
+
+// Nested nullish
+type NestedCleaned = FilterNonNullish<[[1, null], [undefined, 2], 3]>
+//   ^?
+
+// All nullish
+type AllNullish = FilterNonNullish<[null, undefined]>
+//   ^?
+
+// No nullish
+type NoNullish = FilterNonNullish<
+    //   ^?
+    [{ foo: string; bar: [null, undefined, { foobar: [null, undefined, { barbar: [null, undefined] }] }] }]
+>
+
+type NonNullishWithObjs = FilterNonNullish<
+    //   ^?
+    [null, undefined, { foo: string; bar: undefined }, { bar: null; foo: { foobar: undefined } }]
+>
 ```

@@ -30,6 +30,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@halvaradop/tailwindcss-animations": "^1.0.0",
     "@halvaradop/tailwindcss-utilities": "^1.0.0",
+    "@halvaradop/ts-utility-types": "workspace:*",
     "@shikijs/twoslash": "^3.9.2",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/mdx": "^2.0.13",

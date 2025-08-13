@@ -77,6 +77,9 @@ importers:
       "@halvaradop/tailwindcss-utilities":
         specifier: ^1.0.0
         version: 1.0.0
+      "@halvaradop/ts-utility-types":
+        specifier: workspace:*
+        version: link:..
       "@shikijs/twoslash":
         specifier: ^3.9.2
         version: 3.9.2(typescript@5.9.2)

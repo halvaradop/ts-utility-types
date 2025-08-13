@@ -88,3 +88,27 @@ Represents falsy values: `null`, `undefined`, `0`, `false`, or `""`.
 ```ts
 type FalsyValue = Falsy
 ```
+
+### `ReturnTypeOf<T>`
+
+Determines the primitive type corresponding to the provided value.
+
+```ts twoslash
+type ReturnTypeOf<T> = T
+//import type { ReturnTypeOf } from "@halvaradop/ts-utility-types/arrays"
+// Number
+type TypeOfValue = ReturnTypeOf<123>
+//   ^? // number
+
+// String
+type TypeOfValueString = ReturnTypeOf<"hello">
+//   ^? // string
+
+// Boolean
+type TypeOfValueBool = ReturnTypeOf<true>
+//   ^? // boolean
+
+// Array
+type TypeOfValueArr = ReturnTypeOf<[1, 2, 3]>
+//   ^? // number[]
+```
