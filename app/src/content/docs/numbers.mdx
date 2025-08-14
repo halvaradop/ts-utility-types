@@ -4,23 +4,26 @@ description: Utilities for manipulating and validating numeric types in TypeScri
 icon: Hash
 ---
 
-import { Callout } from "fumadocs-ui/components/callout"
-import { Tab, Tabs } from "fumadocs-ui/components/tabs"
-
 # Number Utilities
 
 Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
 
-## Installation & Usage
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
 
 <Tabs items={['Named Import', 'Namespace Import']}>
   <Tab value="Named Import">
-    ```ts
+    ```ts twoslash
     import type { IsOdd, IsEven, Absolute } from "@halvaradop/ts-utility-types/numbers"
     ```
   </Tab>
   <Tab value="Namespace Import">
-    ```ts
+    ```ts twoslash
     import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
     
     type Result = Numbers.IsOdd<2023>
@@ -28,92 +31,169 @@ Utilities for manipulating and validating numeric types in TypeScript. These typ
   </Tab>
 </Tabs>
 
+### `IsOdd<T>` [#is-odd]
+
+Checks if a number is odd. Returns `true` if the number is odd, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsEven`](#is-even)
+
+```ts twoslash
+import type { IsOdd } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckOdd = IsOdd<2023>
+//   ^?
+
+type CheckEven = IsOdd<2024>
+//   ^?
+
+type CheckOne = IsOdd<1>
+//   ^?
+```
+
+### `IsEven<T>` [#is-even]
+
+Checks if a number is even. Returns `true` if the number is even, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsOdd`](#is-odd)
+
+```ts twoslash
+import type { IsEven } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckEven = IsEven<2024>
+//   ^?
+
+type CheckOdd = IsEven<2023>
+//   ^?
+
+type CheckZero = IsEven<0>
+//   ^?
+```
+
+### `IsNegative<T>` [#is-negative]
+
+Checks if a number is negative. Returns `true` if the number is less than zero, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsPositive`](#is-positive)
+
+```ts twoslash
+import type { IsNegative } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckNegative = IsNegative<-2024>
+//   ^?
+
+type CheckPositive = IsNegative<2024>
+//   ^?
+
+type CheckZero = IsNegative<0>
+//   ^?
+```
+
+### `IsPositive<T>` [#is-positive]
+
+Checks if a number is positive. Returns `true` if the number is greater than zero, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsNegative`](#is-negative)
+
+```ts twoslash
+import type { IsPositive } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckPositive = IsPositive<2024>
+//   ^?
+
+type CheckNegative = IsPositive<-2024>
+//   ^?
+
+type CheckZero = IsPositive<0>
+//   ^?
+```
+
 <Callout type="warn" title="Compile-Time Operations">
     These utilities work with literal numeric types at compile-time. They don't perform runtime operations.
 </Callout>
 
-## Parity Checking
-
-### `IsOdd<T extends number>`
-
-Checks if a number is odd.
-
-```ts
-// Expected: true
-type CheckOdd = IsOdd<2023>
-
-// Expected: false
-type CheckEven = IsOdd<2024>
-```
-
-### `IsEven<T extends number>`
-
-Checks if a number is even.
-
-```ts
-// Expected: true
-type CheckEven = IsEven<2024>
-
-// Expected: false
-type CheckOdd = IsEven<2023>
-```
-
-### `IsNegative<T extends number>`
-
-Checks if a number is negative.
-
-```ts
-// Expected: true
-type CheckNegative = IsNegative<-2024>
-
-// Expected: false
-type CheckPositive = IsNegative<2024>
-```
-
-### `IsPositive<T extends number>`
-
-Checks if a number is positive.
-
-```ts
-// Expected: true
-type CheckPositive = IsPositive<2024>
-
-// Expected: false
-type CheckNegative = IsPositive<-2024>
-```
-
-### `Absolute<Expression extends number | string | bigint>`
+### `Absolute<Expression>` [#absolute]
 
 Returns the absolute value of a number, string, or bigint as a string.
 
-```ts
-// Expected: "2024"
-type Positive = Absolute<2024>
+| Argument     | Type                             | Description                             |
+| ------------ | -------------------------------- | --------------------------------------- |
+| `Expression` | `number` \| `string` \| `bigint` | The value to get the absolute value of. |
 
-// Expected: "2024"
+```ts twoslash
+import type { Absolute } from "@halvaradop/ts-utility-types/numbers"
+
+type PositiveNumber = Absolute<2024>
+//   ^?
+
 type PositiveString = Absolute<"-2024">
+//   ^?
+
+type PositiveBigint = Absolute<-123n>
+//   ^?
 ```
 
-### `Trunc<Math extends string | number | bigint>`
+### `Trunc<Math>` [#trunc]
 
-Truncates a number to its integer part.
+Truncates a number to its integer part, removing any decimal portion.
 
-```ts
-// Expected: 3
+| Argument | Type                             | Description             |
+| -------- | -------------------------------- | ----------------------- |
+| `Math`   | `string` \| `number` \| `bigint` | The number to truncate. |
+
+```ts twoslash
+import type { Trunc } from "@halvaradop/ts-utility-types/numbers"
+
 type Truncated = Trunc<3.14>
+//   ^?
 
-// Expected: -2
 type TruncatedNegative = Trunc<-2.99>
+//   ^?
+
+type TruncatedString = Trunc<"5.67">
+//   ^?
 ```
 
-### `NumberRange<Low extends number, High extends number>`
+### `NumberRange<Low, High>` [#number-range]
 
 Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
 
-```ts
-// Expected: 1 | 2 | 3 | 4 | 5
-type Range1 = NumberRange<1, 5>
+| Argument | Type     | Description                                   |
+| -------- | -------- | --------------------------------------------- |
+| `Low`    | `number` | The starting number of the range (inclusive). |
+| `High`   | `number` | The ending number of the range (inclusive).   |
 
-// Expected: never
-type Range2 = NumberRange<-1, 5>
+**Behavior:**
+
+- Only accepts positive numbers for both `Low` and `High`.
+- Returns `never` if negative numbers are provided.
+- Generates a union of all numbers in the specified range.
+
+```ts twoslash
+import type { NumberRange } from "@halvaradop/ts-utility-types/numbers"
+
+type Range1to5 = NumberRange<1, 5>
+//   ^?
+
+type Range3to7 = NumberRange<3, 7>
+//   ^?
+
+// Returns never for negative ranges
+type InvalidRange = NumberRange<-1, 5>
+//   ^?
 ```

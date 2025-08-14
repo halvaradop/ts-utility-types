@@ -15,23 +15,9 @@ import { Card, Cards } from "fumadocs-ui/components/card"
 
 This entry point does not export any types or utilities. Instead, please use the specific module entry points for better tree-shaking and organization.
 
-## Migration Guide
+## Quick Migration
 
-### Instead of using `/types`, use specific modules:
-
-<Cards>
-    <Card title="Deep Operations" description="Advanced deep object manipulations" href="/docs/deep" />
-    <Card title="Array Utilities" description="Array and tuple manipulations" href="/docs/arrays" />
-    <Card title="Object Utilities" description="Object type transformations" href="/docs/objects" />
-    <Card title="String Utilities" description="String type operations" href="/docs/strings" />
-    <Card title="Number Utilities" description="Numeric type utilities" href="/docs/numbers" />
-    <Card title="Type Guards" description="Type checking utilities" href="/docs/guards" />
-    <Card title="Validation" description="Runtime type validation" href="/docs/validate" />
-    <Card title="Testing" description="Type-level testing utilities" href="/docs/test" />
-    <Card title="General Utils" description="General utility types" href="/docs/utils" />
-</Cards>
-
-### Migration Example
+Replace the deprecated import with specific module imports:
 
 ```ts
 // ❌ Deprecated - Don't use this
@@ -43,6 +29,16 @@ import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
 import type { PickByType } from "@halvaradop/ts-utility-types/objects"
 ```
 
-<Callout type="info" title="Need Help?">
-    Visit the main documentation or our [Community & Support](/docs/community) page for migration assistance.
-</Callout>
+**Available Modules:**
+
+- [Deep Operations](/docs/deep) - `@halvaradop/ts-utility-types/deep`
+- [Array Utilities](/docs/arrays) - `@halvaradop/ts-utility-types/arrays`
+- [Object Utilities](/docs/objects) - `@halvaradop/ts-utility-types/objects`
+- [String Utilities](/docs/strings) - `@halvaradop/ts-utility-types/strings`
+- [Number Utilities](/docs/numbers) - `@halvaradop/ts-utility-types/numbers`
+- [Type Guards](/docs/guards) - `@halvaradop/ts-utility-types/type-guards`
+- [Validation](/docs/validate) - `@halvaradop/ts-utility-types/validate`
+- [Testing](/docs/test) - `@halvaradop/ts-utility-types/test`
+- [General Utils](/docs/utils) - `@halvaradop/ts-utility-types/utils`
+
+<Callout type="info">Need help with migration? Check our [Community & Support](/docs/community) page.</Callout>

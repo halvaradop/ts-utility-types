@@ -4,36 +4,45 @@ description: Helpers and type guards for runtime value validation in TypeScript 
 icon: Shield
 ---
 
-import { Callout } from "fumadocs-ui/components/callout"
-import { Tab, Tabs } from "fumadocs-ui/components/tabs"
-
 # Runtime Validation
 
 Helpers and type guards for runtime value validation in TypeScript and JavaScript. These functions check if a value is primitive, nullish, boolean, string, number, object, array, function, or falsy.
 
 <Callout type="info" title="Runtime Functions">
     Unlike other modules, these are **runtime functions** that can be used in JavaScript and TypeScript for actual value
-    validation with proper type guards.
+    validation with proper type guards. This package should be installed as a production package for access to the validators in
+    the build and final app
 </Callout>
 
-## Installation & Usage
+## Installation
+
+```npm
+npm i @halvaradop/ts-utility-types
+```
+
+## Usage
 
 <Tabs items={["Named Import", "Namespace Import"]}>
-    <Tab value="Named Import">
-        ```ts import {(isPrimitive, isNullish, isArray)} from "@halvaradop/ts-utility-types/validate" ```
-    </Tab>
-    <Tab value="Namespace Import">
-        ```ts import * as validate from "@halvaradop/ts-utility-types/validate" if (validate.isPrimitive(value)){" "}
-        {
-            // value is now typed as Primitive
-        }
-        ```
-    </Tab>
+  <Tab value="Named Import">
+    ```ts twoslash
+    import { isPrimitive, isNullish, isArray } from "@halvaradop/ts-utility-types/validate"  
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+    ```ts twoslash 
+    import * as validate from "@halvaradop/ts-utility-types/validate"
+    
+    // @noErrors
+    validate.
+    //       ^|
+    ```
+  </Tab>
 </Tabs>
 
 ## Type Guards
 
-### `isPrimitive(value: unknown): value is Primitive`
+### `isPrimitive(value: unknown): value is Primitive` [#is-Primitive]
 
 Checks if a value is a primitive type (`number`, `string`, `boolean`, `bigint`, `symbol`).
 
@@ -48,7 +57,7 @@ isPrimitive("hello")
 isPrimitive({})
 ```
 
-### `isPrimitiveNullish(value: unknown): value is PrimitiveNullish`
+### `isPrimitiveNullish(value: unknown): value is PrimitiveNullish` [#is-Primitive-Nullish]
 
 Checks if a value is a primitive or nullish (`null` or `undefined`).
 
@@ -63,7 +72,7 @@ isPrimitiveNullish("hello")
 isPrimitiveNullish({})
 ```
 
-### `isNullish(value: unknown): value is Nullish`
+### `isNullish(value: unknown): value is Nullish` [#is-Nullish]
 
 Checks if a value is `null` or `undefined`.
 
@@ -78,7 +87,7 @@ isNullish(undefined)
 isNullish(0)
 ```
 
-### `isBoolean(value: unknown): value is boolean`
+### `isBoolean(value: unknown): value is boolean` [#is-Boolean]
 
 Checks if a value is boolean.
 
@@ -90,7 +99,7 @@ isBoolean(true)
 isBoolean("true")
 ```
 
-### `isString(value: unknown): value is string`
+### `isString(value: unknown): value is string` [#is-String]
 
 Checks if a value is a string.
 
@@ -102,7 +111,7 @@ isString("hello")
 isString(123)
 ```
 
-### `isNumber(value: unknown): value is number`
+### `isNumber(value: unknown): value is number` [#is-Number]
 
 Checks if a value is numeric (including `NaN`).
 
@@ -114,7 +123,7 @@ isNumber(42)
 isNumber("42")
 ```
 
-### `isObject(value: unknown): value is object`
+### `isObject(value: unknown): value is object` [#is-Object]
 
 Checks if a value is a plain object (not array, not function, not nullish).
 
@@ -129,7 +138,7 @@ isObject([])
 isObject(null)
 ```
 
-### `isArray(value: unknown): value is unknown[]`
+### `isArray(value: unknown): value is unknown[]` [#is-Array]
 
 Checks if a value is an array.
 
@@ -141,7 +150,7 @@ isArray([1, 2, 3])
 isArray({})
 ```
 
-### `isFunction(value: unknown): value is Function`
+### `isFunction(value: unknown): value is Function` [#is-Function]
 
 Checks if a value is a function.
 
@@ -153,7 +162,7 @@ isFunction(() => {})
 isFunction(123)
 ```
 
-### `isFalsy(value: unknown): boolean`
+### `isFalsy(value: unknown): boolean` [#is-Falsy]
 
 Checks if a value is falsy (`null`, `undefined`, `false`, `0`, `""`).
 

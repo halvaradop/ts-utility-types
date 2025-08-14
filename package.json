@@ -79,6 +79,9 @@
       "types": "./dist/utils/validate-types.d.ts",
       "import": "./dist/utils/validate-types.js",
       "require": "./dist/utils/validate-types.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts"
     }
   },
   "files": [

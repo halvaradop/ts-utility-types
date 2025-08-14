@@ -31,7 +31,7 @@ npm i -D @halvaradop/ts-utility-types
   </Tab>
 </Tabs>
 
-### `ArrayToUnion<Array extends readonly unknown[]>` [#array-to-union]
+### `ArrayToUnion<Array>` [#array-to-union]
 
 Creates a union type from the literal values of a constant string or number array. This is especially useful for representing a set of allowed values based on the array elements, such as enums, option lists, or discriminated unions.
 
@@ -65,7 +65,7 @@ type Mixed = ArrayToUnion<["hello", 42, true]>
 //   ^?
 ```
 
-### `Size<Array extends unknown[]>` [#size]
+### `Size<Array>` [#size]
 
 Gets the length (size) of an array or tuple as a type. Returns the number of elements as a numeric literal type, or 0 if not an array.
 
@@ -98,7 +98,7 @@ type EmptyLength = Size<[]>
     Array utilities work with both tuples and arrays, but provide the most precise types when used with tuples.
 </Callout>
 
-### `Filter<Array extends unknown[], Predicate, Includes extends boolean = true>` [#filter]
+### `Filter<Array, Predicate, Includes>` [#filter]
 
 Filters the items of a tuple or array based on the provided predicate type. This is a powerful tool for extracting or removing specific values from a tuple at the type level.
 
@@ -129,7 +129,7 @@ type WithoutObj = Filter<[{ foo: string }, { bar: number }, { foobar: boolean }]
 //   ^?
 ```
 
-### `Reverse<Array extends unknown[]>` [#reverse]
+### `Reverse<Array>` [#reverse]
 
 Reverses the order of elements in a tuple type. The resulting tuple has the same elements as the input, but in reverse order.
 
@@ -147,7 +147,7 @@ type ReversedAll = Reverse<[1, "foo", 2, "bar", { foo: number }, () => void]>
 //   ^?
 ```
 
-### `IndexOf<Array extends unknown[], Match>` [#index-of]
+### `IndexOf<Array, Match>` [#index-of]
 
 Returns the first index where the element `Match` appears in the tuple type `Array`. Returns `-1` if not found. This is a type-level equivalent of JavaScript's `Array.prototype.indexOf`.
 
@@ -166,7 +166,7 @@ type IndexAny = IndexOf<[string, 1, number, "a", any], any>
 //   ^?
 ```
 
-### `LastIndexOf<Array extends unknown[], Match>` [#last-index-of]
+### `LastIndexOf<Array, Match>` [#last-index-of]
 
 Returns the last index where the element `Match` appears in the tuple type `Array`. Returns `-1` if not found. This is a type-level equivalent of JavaScript's `Array.prototype.lastIndexOf`.
 
@@ -185,7 +185,7 @@ type LastIndexType = LastIndexOf<[string, 2, number, "a", number, 1], number>
 //   ^?
 ```
 
-### `ConstructTuple<Length extends number, Value extends unknown = unknown>` [#constructtuple]
+### `ConstructTuple<Length, Value>` [#constructtuple]
 
 Creates a tuple with a defined size, where each element is of a specified type or value. Avoids TypeScript's deep instantiation errors for large tuples.
 
@@ -207,7 +207,7 @@ type Fill = ConstructTuple<5, 1>
 //   ^?
 ```
 
-### `HasDuplicates<Array extends unknown[]>` [#has-duplicates]
+### `HasDuplicates<Array>` [#has-duplicates]
 
 Checks if there are duplicated elements inside the tuple. Returns `true` if any value appears more than once, otherwise `false`.
 
@@ -225,7 +225,7 @@ type DuplicatesWithFunctions = HasDuplicates<[() => void, () => void]>
 //   ^?
 ```
 
-### `AllEquals<Array extends unknown[], Comparator>` [#all-equals]
+### `AllEquals<Array, Comparator>` [#all-equals]
 
 Returns `true` if all elements within the tuple are equal to the provided `Comparator` type, otherwise returns `false`.
 
@@ -247,7 +247,7 @@ type WithUnion = AllEquals<[1, 1, 2], 1 | 2>
 //   ^?
 ```
 
-### `Chunk<Array extends unknown[], Length extends number>` [#chunk]
+### `Chunk<Array, Length>` [#chunk]
 
 Splits a tuple into sub-tuples (chunks) of a specific length. If the last chunk is smaller than the specified length, it contains the remaining elements.
 
@@ -266,7 +266,7 @@ type ChunksByFour = Chunk<[1, 2, 3, 4, 5], 4>
 //   ^?
 ```
 
-### `Zip<Array1 extends unknown[], Array2 extends unknown[]>` [#zip]
+### `Zip<Array1, Array2>` [#zip]
 
 Combines two tuples into a tuple of pairs, element by element. The resulting tuple has the length of the shorter input tuple.
 
@@ -306,7 +306,7 @@ type FlattenedString = Flatten<string[][][]>
 //   ^?
 ```
 
-### `CompareArrayLength<T extends any[], U extends any[]>` [#compare-array-length]
+### `CompareArrayLength<T, U>` [#compare-array-length]
 
 Compares the length of two arrays or tuples. Returns `1` if the first is longer, `-1` if the second is longer, and `0` if they are equal.
 
@@ -328,7 +328,7 @@ type Compare3 = CompareArrayLength<[1, 2, 3], [1, 2, 3]>
 //   ^?
 ```
 
-### `Uniques<Array extends unknown[]>` [#uniques]
+### `Uniques<Array>` [#uniques]
 
 Returns a tuple containing only the unique values from the input array, preserving the order of first appearance.
 
@@ -379,7 +379,7 @@ type ArrayToUnionTest = ToUnion<["a", "b", "c"]>
 //   ^? // "a" | "b" | "c"
 ```
 
-### `Take<N extends number, Array extends unknown[]>` [#take]
+### `Take<N, Array>` [#take]
 
 Extracts the first `N` elements from an array. If `N` is negative, extracts the last `N` elements. Handles out-of-bounds and empty arrays gracefully.
 
@@ -407,7 +407,7 @@ type TakeEmpty = Take<2, []>
 //   ^? // []
 ```
 
-### `FilterNonNullish<Array extends unknown[]>` [#filter-non-nullish]
+### `FilterNonNullish<Array>` [#filter-non-nullish]
 
 Removes all nullish values (`null` or `undefined`) from the provided array. Also deeply filters nested objects using `DeepNonNullish` to ensure all nested properties are non-nullish.
 

@@ -159,7 +159,7 @@ export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Ar
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
- * @interface
+ * @internal
  */
 type InternalConstructTuple<Length extends number, Value = unknown, Array extends unknown[] = []> =
     Size<Array> extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>

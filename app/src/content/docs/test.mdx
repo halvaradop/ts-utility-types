@@ -36,36 +36,54 @@ Utilities for type-level testing and assertions in TypeScript. These types help 
 
 ### `Equals<X, Y>`
 
+| Argument | Type | Description                 |
+| -------- | ---- | --------------------------- |
+| `X`      | any  | The first type to compare.  |
+| `Y`      | any  | The second type to compare. |
+
 Checks if two types are strictly equal.
 
-```ts
-// Expected: true
-type CheckTrue = Equals<true, true>
+```ts twoslash
+import type { Equals } from "@halvaradop/ts-utility-types/test"
 
-// Expected: false
+type CheckTrue = Equals<true, true>
+//   ^?
+
 type CheckFalse = Equals<() => {}, true>
+//   ^?
 ```
 
-### `Expect<T extends true>`
+### `Expect<T, true>`
+
+| Argument | Type | Description                 |
+| -------- | ---- | --------------------------- |
+| `T`      | true | The type to assert as true. |
 
 Ensures the received type is `true`. Useful for type-level tests.
 
-```ts
-// Expected: true
+```ts twoslash
+import type { Expect } from "@halvaradop/ts-utility-types/test"
+
 type CheckTrue = Expect<true>
 
-// Expected: false (type error)
+// @errors: 2344
 type CheckFalse = Expect<false>
 ```
 
-### `Not<T extends boolean>`
+### `Not<T, boolean>`
+
+| Argument | Type    | Description                 |
+| -------- | ------- | --------------------------- |
+| `T`      | boolean | The boolean type to negate. |
 
 Negates a boolean type value.
 
-```ts
-// Expected: false
-type CheckFalse = Not<true>
+```ts twoslash
+import type { Not } from "@halvaradop/ts-utility-types/test"
 
-// Expected: true
+type CheckFalse = Not<true>
+//   ^?
+
 type CheckTrue = Not<false>
+//   ^?
 ```
