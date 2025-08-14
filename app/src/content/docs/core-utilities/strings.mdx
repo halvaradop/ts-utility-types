@@ -18,16 +18,22 @@ npm i -D @halvaradop/ts-utility-types
 
 <Tabs items={['Named Import', 'Namespace Import']}>
   <Tab value="Named Import">
+
     ```ts twoslash
     import type { Trim, Capitalize, Join } from "@halvaradop/ts-utility-types"
     ```
+
   </Tab>
   <Tab value="Namespace Import">
+
     ```ts twoslash
     import type * as Strings from "@halvaradop/ts-utility-types"
-    
-    type Result = Strings.Capitalize<"hello world">
+
+    // @noErrors
+    type Utilities = Strings.
+    //                       ^|
     ```
+
   </Tab>
 </Tabs>
 
@@ -96,7 +102,7 @@ type LeadingSpaces = Trim<"  leading only">
 ```
 
 <Callout type="info" title="Template Literal Types">
-    String utilities leverage TypeScript's template literal types for compile-time string manipulation.
+  String utilities leverage TypeScript's template literal types for compile-time string manipulation.
 </Callout>
 
 ### `Capitalize<Str, string, FirstWord, boolean = true>` [#capitalize]

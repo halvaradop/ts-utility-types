@@ -1,19 +1,16 @@
 ---
-title: Deprecated - Types Entry Point
-description: The /types entry point is deprecated and will be removed in the next major version. Please use the default export from @halvaradop/ts-utility-types or import specific types from the appropriate entry point.
+title: Deprecated - Utilities Entry Point
+description: The /utilities entry point is deprecated and will be removed in the next major version. Please use the default export from @halvaradop/ts-utility-types or import specific types from the appropriate entry point.
 icon: AlertTriangle
 ---
 
-import { Callout } from "fumadocs-ui/components/callout"
-import { Card, Cards } from "fumadocs-ui/components/card"
-
-# Deprecated - Types Entry Point
+# Deprecated - Utilities Entry Point
 
 <Callout type="error" title="DEPRECATED">
-    The `/types` entry point is deprecated and will be removed in the next major version.
+  The `/utilities` entry point is deprecated and will be removed in the next major version.
 </Callout>
 
-This entry point does not export any types or utilities. Instead, please use the specific module entry points for better tree-shaking and organization.
+This entry point does not export any types or utilities. Please migrate to specific module entry points for better organization and tree-shaking.
 
 ## Quick Migration
 
@@ -21,11 +18,11 @@ Replace the deprecated import with specific module imports:
 
 ```ts
 // ❌ Deprecated - Don't use this
-// import type { SomeType } from "@halvaradop/ts-utility-types/types"
+// import type { SomeUtility } from "@halvaradop/ts-utility-types/utilities"
 
 // ✅ Use specific module imports instead
 import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
-import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
+import type { Prettify } from "@halvaradop/ts-utility-types/utils"
 import type { PickByType } from "@halvaradop/ts-utility-types/objects"
 ```
 

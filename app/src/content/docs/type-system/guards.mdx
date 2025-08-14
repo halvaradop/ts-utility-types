@@ -18,16 +18,22 @@ npm i -D @halvaradop/ts-utility-types
 
 <Tabs items={['Named Import', 'Namespace Import']}>
   <Tab value="Named Import">
+    
     ```ts twoslash
     import type { Equals, IsNever, IsAny } from "@halvaradop/ts-utility-types/type-guards"
     ```
+
   </Tab>
   <Tab value="Namespace Import">
+    
     ```ts twoslash
     import type * as Guards from "@halvaradop/ts-utility-types/type-guards"
     
-    type Result = Guards.Equals<string, string>
+    // @noErrors
+    type Utilities = Guards.
+    //                      ^|
     ```
+
   </Tab>
 </Tabs>
 
@@ -142,11 +148,11 @@ type Test2 = AnyOf<[0, "", false, [], {}, undefined, null]>
 
 ### `IsArray<T>` [#is-array]
 
+Checks if the type is an array.
+
 | Argument | Type      | Description                           |
 | -------- | --------- | ------------------------------------- |
 | `T`      | `unknown` | The type to check for being an array. |
-
-Checks if the type is an array.
 
 ```ts twoslash
 import type { IsArray } from "@halvaradop/ts-utility-types/type-guards"
@@ -160,11 +166,11 @@ type Test2 = IsArray<{ key: string }>
 
 ### `IsObject<T>` [#is-object]
 
+Checks if the type is an object (excluding arrays and functions).
+
 | Argument | Type      | Description                            |
 | -------- | --------- | -------------------------------------- |
 | `T`      | `unknown` | The type to check for being an object. |
-
-Checks if the type is an object (excluding arrays and functions).
 
 ```ts twoslash
 import type { IsObject } from "@halvaradop/ts-utility-types/type-guards"
@@ -178,11 +184,11 @@ type Test2 = IsObject<[1, 2, 3]>
 
 ### `IsFunction<T>` [#is-function]
 
+Checks if the type is a function.
+
 | Argument | Type      | Description                             |
 | -------- | --------- | --------------------------------------- |
 | `T`      | `unknown` | The type to check for being a function. |
-
-Checks if the type is a function.
 
 ```ts twoslash
 import type { IsFunction } from "@halvaradop/ts-utility-types/type-guards"

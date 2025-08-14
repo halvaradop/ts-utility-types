@@ -16,18 +16,25 @@ npm i -D @halvaradop/ts-utility-types
 
 ## Usage
 
-<Tabs items={['Named Import', 'Namespace Import']}>
+<Tabs items={["Named Import", "Namespace Import"]}>
   <Tab value="Named Import">
-    ```ts twoslash
-    import type { DeepMerge, DeepPartial, DeepReadonly } from "@halvaradop/ts-utility-types/deep"
+    
+    ```ts twoslash 
+    import type { DeepMerge, DeepPartial, DeepReadonly } from "@halvaradop/ts-utility-types/deep" 
     ```
+
   </Tab>
   <Tab value="Namespace Import">
+
     ```ts twoslash
     import type * as Deep from "@halvaradop/ts-utility-types/deep"
-    
-    type Result = Deep.DeepMerge<{a: string}, {b: number}>
+
+    // @noErrors
+    type Utilities = Deep.
+    //                    ^|
+
     ```
+
   </Tab>
 </Tabs>
 
@@ -45,31 +52,43 @@ Recursively merges two objects. If a property exists in both, the one from `Obj1
 **Related:** [`DeepMergeAll`](#deep-merge-all), [`DeepUnion`](#deep-union)
 
 <Callout type="warn" title="Performance Note">
-    Deep utilities work with recursive types and may have performance implications with deeply nested structures. Most operations
-    are limited to reasonable depths (typically 10-20 levels).
+  Deep utilities work with recursive types and may have performance implications with deeply nested structures. Most operations
+  are limited to reasonable depths (typically 10-20 levels).
 </Callout>
 
 ```ts twoslash
 import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
 
 interface Config {
-    api: { timeout: number }
-    features: { darkMode: boolean }
+  api: {
+    timeout: number
+  }
+  features: {
+    darkMode: boolean
+  }
 }
 
 interface UserConfig {
-    api: { retries: number }
-    features: { analytics: boolean }
+  api: {
+    retries: number
+  }
+  features: {
+    analytics: boolean
+  }
 }
 
-// Deep merge configuration objects
 type AppConfig = DeepMerge<Config, UserConfig>
 //   ^?
 
-// The result contains all properties from both objects
 const config: AppConfig = {
-    api: { timeout: 5000, retries: 3 },
-    features: { darkMode: true, analytics: false },
+  api: {
+    timeout: 5000,
+    retries: 3,
+  },
+  features: {
+    darkMode: true,
+    analytics: false,
+  },
 }
 ```
 
@@ -84,13 +103,13 @@ const config: AppConfig = {
 import type { DeepUnion } from "@halvaradop/ts-utility-types/deep"
 
 interface BaseController {
-    baseUrl: string
-    routes: string[]
+  baseUrl: string
+  routes: string[]
 }
 
 interface ConfigBase {
-    baseUrl: string[]
-    routes: Array<{ url: string; name: string }>
+  baseUrl: string[]
+  routes: Array<{ url: string; name: string }>
 }
 
 type Union = DeepUnion<BaseController, ConfigBase>
@@ -109,17 +128,17 @@ type Union = DeepUnion<BaseController, ConfigBase>
 import type { DeepMergeAll } from "@halvaradop/ts-utility-types/deep"
 
 interface Foo {
-    foo: string
+  foo: string
 }
 
 interface Bar {
-    bar: string
+  bar: string
 }
 
 interface FooBar {
-    bar: number
-    foo: boolean
-    foobar: string
+  bar: number
+  foo: boolean
+  foobar: string
 }
 
 type Merge = DeepMergeAll<[Foo, Bar, FooBar], true>
@@ -136,7 +155,7 @@ type Merge = DeepMergeAll<[Foo, Bar, FooBar], true>
 import type { DeepMutable } from "@halvaradop/ts-utility-types/deep"
 
 interface Foo {
-    readonly foo: { readonly bar: { readonly foobar: number } }
+  readonly foo: { readonly bar: { readonly foobar: number } }
 }
 
 type NonReadonlyFoo = DeepMutable<Foo>
@@ -153,8 +172,8 @@ type NonReadonlyFoo = DeepMutable<Foo>
 import type { DeepReadonly } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type ReadonlyUser = DeepReadonly<User>
@@ -172,8 +191,8 @@ type ReadonlyUser = DeepReadonly<User>
 import type { DeepKeys } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type UserKeys = DeepKeys<User>
@@ -191,11 +210,10 @@ type UserKeys = DeepKeys<User>
 import type { DeepOmit } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
-// Expected: { name: string, address: { avenue: string } }
 type WithoutStreet = DeepOmit<User, "address.street">
 //   ^?
 ```
@@ -211,15 +229,13 @@ type WithoutStreet = DeepOmit<User, "address.street">
 import type { DeepGet } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
-// Expected: string
 type UserName = DeepGet<User, "name">
 //   ^?
 
-// Expected: string
 type UserStreet = DeepGet<User, "address.street">
 //   ^?
 ```
@@ -235,15 +251,15 @@ type UserStreet = DeepGet<User, "address.street">
 import type { DeepTruncate } from "@halvaradop/ts-utility-types/deep"
 
 interface Foo {
-    foo: string
-    bar: number
+  foo: string
+  bar: number
+  foobar: {
+    foo: boolean
+    bar: string
     foobar: {
-        foo: boolean
-        bar: string
-        foobar: {
-            foo: number
-        }
+      foo: number
     }
+  }
 }
 
 type TruncatedFoo = DeepTruncate<Foo, 1>
@@ -260,8 +276,8 @@ type TruncatedFoo = DeepTruncate<Foo, 1>
 import type { DeepPartial } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type UserOptional = DeepPartial<User>
@@ -278,8 +294,11 @@ type UserOptional = DeepPartial<User>
 import type { DeepRequired } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name?: string
-    address?: { street?: string; avenue?: string }
+  name?: string
+  address?: {
+    street?: string
+    avenue?: string
+  }
 }
 
 type UserRequired = DeepRequired<User>
@@ -297,8 +316,8 @@ type UserRequired = DeepRequired<User>
 import type { DeepPick } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type UserPick = DeepPick<User, "address.street">
@@ -315,8 +334,8 @@ type UserPick = DeepPick<User, "address.street">
 import type { DeepNullable } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type UserNullable = DeepNullable<User>
@@ -333,8 +352,11 @@ type UserNullable = DeepNullable<User>
 import type { DeepNonNullable } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string | null
-    address: { street: string | null; avenue: string | null } | null
+  name: string | null
+  address: {
+    street: string | null
+    avenue: string | null
+  } | null
 }
 
 type UserNonNullable = DeepNonNullable<User>
@@ -352,9 +374,9 @@ type UserNonNullable = DeepNonNullable<User>
 import type { DeepFilter } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    age: number
-    address: { street: string; avenue: string }
+  name: string
+  age: number
+  address: { street: string; avenue: string }
 }
 
 type Filtered = DeepFilter<User, string>
@@ -373,9 +395,9 @@ type Filtered = DeepFilter<User, string>
 import type { DeepReplace } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    age: number
-    address: { street: string; avenue: string }
+  name: string
+  age: number
+  address: { street: string; avenue: string }
 }
 
 type Replaced = DeepReplace<User, string, number>
@@ -394,8 +416,8 @@ type Replaced = DeepReplace<User, string, number>
 import type { DeepSet } from "@halvaradop/ts-utility-types/deep"
 
 interface User {
-    name: string
-    address: { street: string; avenue: string }
+  name: string
+  address: { street: string; avenue: string }
 }
 
 type Updated = DeepSet<User, "address.street", number>

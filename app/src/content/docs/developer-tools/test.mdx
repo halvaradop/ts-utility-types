@@ -12,23 +12,29 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs"
 Utilities for type-level testing and assertions in TypeScript. These types help compare, validate, and ensure type conditions in testing or advanced development scenarios.
 
 <Callout type="info" title="Testing Types">
-    These utilities are designed for compile-time type testing and assertions. They help ensure your utility types work correctly.
+  These utilities are designed for compile-time type testing and assertions. They help ensure your utility types work correctly.
 </Callout>
 
 ## Installation & Usage
 
 <Tabs items={['Named Import', 'All Import']}>
   <Tab value="Named Import">
+
     ```ts
     import type { Equals, Expect, Not } from "@halvaradop/ts-utility-types/test"
     ```
+
   </Tab>
   <Tab value="All Import">
-    ```ts
+
+    ```ts twoslash
     import type * as Test from "@halvaradop/ts-utility-types/test"
-    
-    type Result = Test.Equals<true, true>
+
+    // @noErrors
+    type Utilities = Test.
+    //                    ^|
     ```
+
   </Tab>
 </Tabs>
 
@@ -36,12 +42,12 @@ Utilities for type-level testing and assertions in TypeScript. These types help 
 
 ### `Equals<X, Y>`
 
+Checks if two types are strictly equal.
+
 | Argument | Type | Description                 |
 | -------- | ---- | --------------------------- |
 | `X`      | any  | The first type to compare.  |
 | `Y`      | any  | The second type to compare. |
-
-Checks if two types are strictly equal.
 
 ```ts twoslash
 import type { Equals } from "@halvaradop/ts-utility-types/test"
@@ -55,11 +61,11 @@ type CheckFalse = Equals<() => {}, true>
 
 ### `Expect<T, true>`
 
+Ensures the received type is `true`. Useful for type-level tests.
+
 | Argument | Type | Description                 |
 | -------- | ---- | --------------------------- |
 | `T`      | true | The type to assert as true. |
-
-Ensures the received type is `true`. Useful for type-level tests.
 
 ```ts twoslash
 import type { Expect } from "@halvaradop/ts-utility-types/test"
@@ -72,11 +78,11 @@ type CheckFalse = Expect<false>
 
 ### `Not<T, boolean>`
 
+Negates a boolean type value.
+
 | Argument | Type    | Description                 |
 | -------- | ------- | --------------------------- |
 | `T`      | boolean | The boolean type to negate. |
-
-Negates a boolean type value.
 
 ```ts twoslash
 import type { Not } from "@halvaradop/ts-utility-types/test"

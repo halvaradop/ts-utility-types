@@ -1,13 +1,13 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Geist } from "next/font/google"
 import { PropsWithChildren } from "react"
 import { RootProvider } from "fumadocs-ui/provider"
 import "@/src/ui/globals.css"
 
-const inter = Inter({
+const geist = Geist({
     weight: ["400", "500", "600", "700", "800"],
     subsets: ["latin"],
-    variable: "--font-inter",
+    variable: "--font-geist",
 })
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<Required<PropsWithChildren>>) {
     return (
         <html className="scroll-smooth" lang="en" suppressHydrationWarning>
-            <body className={`${inter.variable} min-h-dvh flex flex-col`}>
+            <body className={`${geist.variable} min-h-dvh flex flex-col`}>
                 <RootProvider>{children}</RootProvider>
             </body>
         </html>

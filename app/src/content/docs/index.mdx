@@ -8,7 +8,7 @@ description: A comprehensive collection of utility types to enhance productivity
 A powerful collection of utility types designed to enhance your TypeScript development experience. This package provides type-level operations for arrays, objects, strings, numbers, validation, and advanced deep manipulations, all built from scratch without relying on TypeScript's built-in utility types.
 
 <Callout type="info">
-    All utility types are **zero-runtime** and provide excellent IntelliSense support with comprehensive type checking.
+  All utility types are **zero-runtime** and provide excellent IntelliSense support with comprehensive type checking.
 </Callout>
 
 ## Features
@@ -51,7 +51,6 @@ npm i -D @halvaradop/ts-utility-types
     ```ts twoslash
     import type { DeepMerge } from "@halvaradop/ts-utility-types"
 
-    // Deep merge two object types
     interface Config {
       api: {
         timeout: number
@@ -62,8 +61,12 @@ npm i -D @halvaradop/ts-utility-types
     }
 
     interface UserConfig {
-      api: { retries: number }
-      features: { analytics: boolean }
+      api: {
+        retries: number
+      }
+      features: {
+        analytics: boolean
+      }
     }
 
     type AppConfig = DeepMerge<Config, UserConfig>
@@ -76,15 +79,15 @@ npm i -D @halvaradop/ts-utility-types
 ## Available Modules
 
 <Cards>
-    <Card title="Arrays" description="Array and tuple manipulations with type-safe operations" href="/docs/arrays" icon="📊" />
-    <Card title="Objects" description="Object type transformations and property manipulations" href="/docs/objects" icon="🏗️" />
-    <Card title="Strings" description="String type operations and template literal utilities" href="/docs/strings" icon="📝" />
-    <Card title="Numbers" description="Numeric type utilities and mathematical operations" href="/docs/numbers" icon="🔢" />
-    <Card title="Deep" description="Advanced deep object manipulations and nested operations" href="/docs/deep" icon="🔄" />
-    <Card title="Type Guards" description="Type checking utilities and conditional type helpers" href="/docs/guards" icon="🛡️" />
-    <Card title="Validation" description="Runtime type validation with type guards" href="/docs/validate" icon="✅" />
-    <Card title="Testing" description="Type-level testing utilities for type assertions" href="/docs/test" icon="🧪" />
-    <Card title="Utils" description="General utilities and helper types" href="/docs/utils" icon="🔧" />
+  <Card title="Arrays" description="Array and tuple manipulations with type-safe operations" href="/docs/arrays" icon="📊" />
+  <Card title="Objects" description="Object type transformations and property manipulations" href="/docs/objects" icon="🏗️" />
+  <Card title="Strings" description="String type operations and template literal utilities" href="/docs/strings" icon="📝" />
+  <Card title="Numbers" description="Numeric type utilities and mathematical operations" href="/docs/numbers" icon="🔢" />
+  <Card title="Deep" description="Advanced deep object manipulations and nested operations" href="/docs/deep" icon="🔄" />
+  <Card title="Type Guards" description="Type checking utilities and conditional type helpers" href="/docs/guards" icon="🛡️" />
+  <Card title="Validation" description="Runtime type validation with type guards" href="/docs/validate" icon="✅" />
+  <Card title="Testing" description="Type-level testing utilities for type assertions" href="/docs/test" icon="🧪" />
+  <Card title="Utils" description="General utilities and helper types" href="/docs/utils" icon="🔧" />
 </Cards>
 
 ## Common Usage Patterns
@@ -95,11 +98,11 @@ npm i -D @halvaradop/ts-utility-types
 import type { IsArray, IsObject } from "@halvaradop/ts-utility-types/type-guards"
 
 type ProcessData<T> =
-    IsArray<T> extends true
-        ? T[number] // Extract array element type
-        : IsObject<T> extends true
-          ? keyof T // Extract object keys
-          : T // Return as-is for primitives
+  IsArray<T> extends true
+    ? T[number] // Extract array element type
+    : IsObject<T> extends true
+      ? keyof T // Extract object keys
+      : T // Return as-is for primitives
 ```
 
 ### Advanced Object Manipulation
@@ -108,28 +111,25 @@ type ProcessData<T> =
 import type { DeepPartial, DeepRequired, DeepReadonly } from "@halvaradop/ts-utility-types/deep"
 
 interface ApiResponse {
-    user: {
-        profile: { name: string; email: string }
-        settings: { theme: string; notifications: boolean }
-    }
+  user: {
+    profile: { name: string; email: string }
+    settings: { theme: string; notifications: boolean }
+  }
 }
 
-// Make all properties optional at any depth
 type PartialApiResponse = DeepPartial<ApiResponse>
 //   ^?
 
-// Make all properties required at any depth
 type RequiredApiResponse = DeepRequired<PartialApiResponse>
 //   ^?
 
-// Make all properties readonly at any depth
 type ImmutableApiResponse = DeepReadonly<ApiResponse>
 //   ^?
 ```
 
 <Callout type="warn" title="Performance Note">
-    All utility types are designed to be efficient at compile-time with recursive depth limits and tail recursion optimization
-    where possible.
+  All utility types are designed to be efficient at compile-time with recursive depth limits and tail recursion optimization where
+  possible.
 </Callout>
 
 ## TypeScript Compatibility

@@ -16,20 +16,33 @@ npm i -D @halvaradop/ts-utility-types
 
 ## Usage
 
-<Tabs items={['Named Import', 'Namespace Import']}>
+<Tabs items={["Named Import", "Namespace Import"]}>
   <Tab value="Named Import">
+
     ```ts twoslash
     import type { ArrayToUnion, Filter, Reverse } from "@halvaradop/ts-utility-types/arrays"
     ```
+
   </Tab>
   <Tab value="Namespace Import">
-    ```ts twoslash
-    import type * as Arrays from "@halvaradop/ts-utility-types/arrays"
     
-    type Result = Arrays.ArrayToUnion<["foo", "bar", "foobar"]>
+    ```ts twoslash 
+    import type * as Arrays from "@halvaradop/ts-utility-types/arrays" 
+    
+    // @noErrors
+    type Utilities = Arrays. 
+    //                      ^|
     ```
+
   </Tab>
 </Tabs>
+
+<Callout>
+  For maximum type safety, use these utility types with the `as const` assertion. This ensures TypeScript infers the most precise literal types.
+
+You can also combine these utilities to create advanced type-level operations and enhance type safety throughout your projects. See the [Overview](../) for more details.
+
+</Callout>
 
 ### `ArrayToUnion<Array>` [#array-to-union]
 
@@ -39,28 +52,17 @@ Creates a union type from the literal values of a constant string or number arra
 | -------- | ----------- | ------------------------------------------------------- |
 | `Array`  | `unknown[]` | The tuple or readonly array to convert to a union type. |
 
-**Behavior:**
-
-- Produces a union of all values in the array, excluding empty arrays (`[]`).
-- Changing the array changes the resulting union.
-
-- Use with `as const` arrays for maximum type safety.
-- Combine with other utility types to restrict function parameters or object keys.
-
 **Related:** [`ToUnion`](#to-union)
 
 ```ts twoslash
 import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
 
-// Create union from string array
 type Letters = ArrayToUnion<["foo", "bar", "foobar"]>
 //   ^?
 
-// Create union from number array
 type Numbers = ArrayToUnion<[1, 2, 3, 4, 5]>
 //   ^?
 
-// Works with mixed types
 type Mixed = ArrayToUnion<["hello", 42, true]>
 //   ^?
 ```
@@ -73,29 +75,21 @@ Gets the length (size) of an array or tuple as a type. Returns the number of ele
 | -------- | ----------- | ---------------------------------------- |
 | `Array`  | `unknown[]` | The array or tuple to get the length of. |
 
-**Behavior:**
-
-- Returns a numeric literal type representing the length.
-- Changing the array changes the result.
-
 ```ts twoslash
 import type { Size } from "@halvaradop/ts-utility-types/arrays"
 
-// Get length of tuple
 type Length = Size<[1, 2, 3]>
 //   ^?
 
-// Works with different types
 type StringArrayLength = Size<["a", "b", "c", "d"]>
 //   ^?
 
-// Empty array
 type EmptyLength = Size<[]>
 //   ^?
 ```
 
 <Callout type="info" title="Type Safety">
-    Array utilities work with both tuples and arrays, but provide the most precise types when used with tuples.
+  Array utilities work with both tuples and arrays, but provide the most precise types when used with tuples.
 </Callout>
 
 ### `Filter<Array, Predicate, Includes>` [#filter]
@@ -107,11 +101,6 @@ Filters the items of a tuple or array based on the provided predicate type. This
 | `Array`     | `unknown[]` | The array to filter.                                                        |
 | `Predicate` | `unknown`   | The value(s) to filter by. Can be a single value or a union.                |
 | `Includes`  | `boolean`   | If `true` (default), includes matching elements; if `false`, excludes them. |
-
-**Behavior:**
-
-- If `Includes` is `true`, only elements assignable to `Predicate` are included.
-- If `Includes` is `false`, elements assignable to `Predicate` are excluded.
 
 ```ts twoslash
 import type { Filter } from "@halvaradop/ts-utility-types/arrays"
@@ -340,16 +329,16 @@ Returns a tuple containing only the unique values from the input array, preservi
 import type { Uniques } from "@halvaradop/ts-utility-types/arrays"
 
 type UniqueNumbers = Uniques<[1, 2, 3, 3, 4, 4, 5]>
-//   ^? // [1, 2, 3, 4, 5]
+//   ^?
 
 type UniqueStrings = Uniques<["a", "b", "c", "a", "b"]>
-//   ^? // ["a", "b", "c"]
+//   ^?
 
 type AllDupes = Uniques<[1, 1, 1, 1]>
-//   ^? // [1]
+//   ^?
 
 type EmptyUnique = Uniques<[]>
-//   ^? // []
+//   ^?
 ```
 
 ### `ToUnion<T>` [#to-union]
@@ -362,21 +351,18 @@ Creates a union type from the literal values of a tuple or a single value. Accep
 
 ```ts twoslash
 import type { ToUnion } from "@halvaradop/ts-utility-types/arrays"
-// Single number
-type TupleNumber = ToUnion<1>
-//   ^? // 1
 
-// Single string
+type TupleNumber = ToUnion<1>
+//   ^?
+
 type TupleString = ToUnion<"foo">
 //   ^? // "foo"
 
-// Tuple of union
 type TupleMultiple = ToUnion<1 | ["foo" | "bar"]>
-//   ^? // 1 | ["foo" | "bar"]
+//   ^?
 
-// Array to union
 type ArrayToUnionTest = ToUnion<["a", "b", "c"]>
-//   ^? // "a" | "b" | "c"
+//   ^?
 ```
 
 ### `Take<N, Array>` [#take]
@@ -390,21 +376,18 @@ Extracts the first `N` elements from an array. If `N` is negative, extracts the 
 
 ```ts twoslash
 import type { Take } from "@halvaradop/ts-utility-types/arrays"
-// Take first 2
+
 type TakeFirst = Take<2, [1, 2, 3, 4]>
-//   ^? // [1, 2]
+//   ^?
 
-// Take last 2
 type TakeLast = Take<-2, [1, 2, 3, 4]>
-//   ^? // [3, 4]
+//   ^?
 
-// Take more than length
 type TakeAll = Take<10, [1, 2]>
-//   ^? // [1, 2]
+//   ^?
 
-// Take from empty
 type TakeEmpty = Take<2, []>
-//   ^? // []
+//   ^?
 ```
 
 ### `FilterNonNullish<Array>` [#filter-non-nullish]
@@ -417,26 +400,23 @@ Removes all nullish values (`null` or `undefined`) from the provided array. Also
 
 ```ts twoslash
 import type { FilterNonNullish } from "@halvaradop/ts-utility-types/arrays"
-// Remove nullish
+
 type Cleaned = FilterNonNullish<[1, null, 2, undefined, 3]>
 //   ^?
 
-// Nested nullish
 type NestedCleaned = FilterNonNullish<[[1, null], [undefined, 2], 3]>
 //   ^?
 
-// All nullish
 type AllNullish = FilterNonNullish<[null, undefined]>
 //   ^?
 
-// No nullish
 type NoNullish = FilterNonNullish<
-    //   ^?
-    [{ foo: string; bar: [null, undefined, { foobar: [null, undefined, { barbar: [null, undefined] }] }] }]
+  //   ^?
+  [{ foo: string; bar: [null, undefined, { foobar: [null, undefined, { barbar: [null, undefined] }] }] }]
 >
 
 type NonNullishWithObjs = FilterNonNullish<
-    //   ^?
-    [null, undefined, { foo: string; bar: undefined }, { bar: null; foo: { foobar: undefined } }]
+  //   ^?
+  [null, undefined, { foo: string; bar: undefined }, { bar: null; foo: { foobar: undefined } }]
 >
 ```

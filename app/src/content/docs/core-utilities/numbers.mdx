@@ -18,16 +18,22 @@ npm i -D @halvaradop/ts-utility-types
 
 <Tabs items={['Named Import', 'Namespace Import']}>
   <Tab value="Named Import">
+
     ```ts twoslash
     import type { IsOdd, IsEven, Absolute } from "@halvaradop/ts-utility-types/numbers"
     ```
+
   </Tab>
   <Tab value="Namespace Import">
+
     ```ts twoslash
     import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
-    
-    type Result = Numbers.IsOdd<2023>
+
+    // @noErrors
+    type Result = Numbers.
+    //                    ^|
     ```
+
   </Tab>
 </Tabs>
 
@@ -124,7 +130,7 @@ type CheckZero = IsPositive<0>
 ```
 
 <Callout type="warn" title="Compile-Time Operations">
-    These utilities work with literal numeric types at compile-time. They don't perform runtime operations.
+  These utilities work with literal numeric types at compile-time. They don't perform runtime operations.
 </Callout>
 
 ### `Absolute<Expression>` [#absolute]
@@ -171,7 +177,7 @@ type TruncatedString = Trunc<"5.67">
 
 ### `NumberRange<Low, High>` [#number-range]
 
-Creates a number range (union type) from `Low` to `High` (inclusive). Only accepts positive values.
+Generates a union type of numeric literals from `Low` to `High` (inclusive). Only non-negative values are supported; if either `Low` or `High` is negative, the result is `never`.
 
 | Argument | Type     | Description                                   |
 | -------- | -------- | --------------------------------------------- |
@@ -179,10 +185,6 @@ Creates a number range (union type) from `Low` to `High` (inclusive). Only accep
 | `High`   | `number` | The ending number of the range (inclusive).   |
 
 **Behavior:**
-
-- Only accepts positive numbers for both `Low` and `High`.
-- Returns `never` if negative numbers are provided.
-- Generates a union of all numbers in the specified range.
 
 ```ts twoslash
 import type { NumberRange } from "@halvaradop/ts-utility-types/numbers"
@@ -193,7 +195,6 @@ type Range1to5 = NumberRange<1, 5>
 type Range3to7 = NumberRange<3, 7>
 //   ^?
 
-// Returns never for negative ranges
 type InvalidRange = NumberRange<-1, 5>
 //   ^?
 ```

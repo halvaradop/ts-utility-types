@@ -1,0 +1,6 @@
+{
+  "title": "Core Utilities",
+  "description": "Essential utility types for array, object, string, number, and deep operations",
+  "defaultOpen": true,
+  "pages": ["arrays", "objects", "strings", "numbers", "deep"]
+}

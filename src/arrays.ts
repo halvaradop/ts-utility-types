@@ -1,7 +1,3 @@
-/**
- * @filename: arrays.ts
- *
- */
 import type { Equals } from "./test.js"
 import type { IsNegative } from "./numbers.js"
 import type { DeepNonNullish } from "./deep.js"
@@ -398,7 +394,7 @@ export type Take<N extends number, Array extends unknown[]> = InternalTake<N, Ar
  *
  * @param {unknown[]} Array - The array to filter
  */
-export type FilterNonNullish<Array extends unknown[]> = Array extends [infer Item, ...infer Spread]
+export type FilterNonNullish<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
     ? Item extends Nullish
         ? FilterNonNullish<Spread>
         : IsObject<Item> extends true

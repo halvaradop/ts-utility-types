@@ -7,17 +7,46 @@ description: General utilities and helpers for composing, manipulating, and vali
 
 General utilities and helpers for composing, manipulating, and validating types in TypeScript. Includes helpers for improving readability, creating literal unions, excluding types, working with primitive values, and more.
 
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={["Named Import", "Namespace Import"]}>
+  <Tab value="Named Import">
+
+    ```ts twoslash
+    import type { Prettify, LiteralUnion, ReturnTypeOf } from "@halvaradop/ts-utility-types/utils"
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+    
+    ```ts twoslash 
+    import type * as Utils from "@halvaradop/ts-utility-types/utils" 
+    
+    // @noErrors
+    type Utilities = Utils. 
+    //                     ^|
+    ```
+
+  </Tab>
+</Tabs>
+
 ```ts
 import type * as Utils from "@halvaradop/ts-utility-types/utils"
 ```
 
 ### `Prettify<Obj, object>`
 
+Improves the readability of an object type by expanding its properties on separate lines. Does not modify the original type.
+
 | Argument | Type   | Description                  |
 | -------- | ------ | ---------------------------- |
 | `Obj`    | object | The object type to prettify. |
-
-Improves the readability of an object type by expanding its properties on separate lines. Does not modify the original type.
 
 ```ts twoslash
 import type { Prettify } from "@halvaradop/ts-utility-types/utils"
@@ -28,12 +57,12 @@ type Pretty = Prettify<{ foo: string; bar: number }>
 
 ### `LiteralUnion<T, U = string>`
 
+Extends the values of a literal type with a broader type (defaults to `string`).
+
 | Argument | Type   | Description                                    |
 | -------- | ------ | ---------------------------------------------- |
 | `T`      | U      | The literal type(s) to extend.                 |
 | `U`      | string | The base type to extend with (default string). |
-
-Extends the values of a literal type with a broader type (defaults to `string`).
 
 ```ts twoslash
 import type { LiteralUnion } from "@halvaradop/ts-utility-types/utils"
@@ -44,14 +73,14 @@ type ExtendedFoo = LiteralUnion<"foo" | "bar">
 
 ### `Discard<Type, Extends, Value = never, Reverse = false>`
 
+Includes or excludes types based on assignability to another type. If `Reverse` is `true`, includes matching types; if `false`, excludes them.
+
 | Argument  | Type    | Description                                                                |
 | --------- | ------- | -------------------------------------------------------------------------- |
 | `Type`    | any     | The union type to filter.                                                  |
 | `Extends` | any     | The type to check assignability against.                                   |
 | `Value`   | any     | The value to use for excluded/included types (default never).              |
 | `Reverse` | boolean | If true, includes matching types; if false, excludes them (default false). |
-
-Includes or excludes types based on assignability to another type. If `Reverse` is `true`, includes matching types; if `false`, excludes them.
 
 ```ts twoslash
 import type { Discard } from "@halvaradop/ts-utility-types/utils"
@@ -65,10 +94,6 @@ type B = Discard<string | number, boolean>
 
 ### `ArgsFunction`
 
-| Argument | Type | Description                                                             |
-| -------- | ---- | ----------------------------------------------------------------------- |
-| _(none)_ |      | Represents a function that accepts any number of arguments of any type. |
-
 Represents a function that accepts any number of arguments of any type.
 
 ```ts twoslash
@@ -79,10 +104,6 @@ const fn: ArgsFunction = (...args) => {}
 ```
 
 ### `Nullish`
-
-| Argument | Type | Description                                         |
-| -------- | ---- | --------------------------------------------------- |
-| _(none)_ |      | Represents the absence of value: null or undefined. |
 
 Represents the absence of value: `null` or `undefined`.
 
@@ -95,10 +116,6 @@ type CanBeNull = string | Nullish
 
 ### `PrimitiveNullish`
 
-| Argument | Type | Description                                          |
-| -------- | ---- | ---------------------------------------------------- |
-| _(none)_ |      | A primitive type that can also be null or undefined. |
-
 A primitive type that can also be `null` or `undefined`.
 
 ```ts twoslash
@@ -109,10 +126,6 @@ type PrimitiveOrNull = PrimitiveNullish
 ```
 
 ### `Primitive`
-
-| Argument | Type | Description                                                                      |
-| -------- | ---- | -------------------------------------------------------------------------------- |
-| _(none)_ |      | A primitive type: number, string, boolean, bigint, or symbol (excludes nullish). |
 
 A primitive type: `number`, `string`, `boolean`, `bigint`, or `symbol` (excludes nullish).
 
@@ -125,10 +138,6 @@ type PrimitiveValues = Primitive
 
 ### `WhiteSpaces`
 
-| Argument | Type | Description                                                |
-| -------- | ---- | ---------------------------------------------------------- |
-| _(none)_ |      | Represents whitespace characters recognized by TypeScript. |
-
 Represents whitespace characters recognized by TypeScript.
 
 ```ts twoslash
@@ -139,10 +148,6 @@ type Spaces = WhiteSpaces
 ```
 
 ### `Falsy`
-
-| Argument | Type | Description                                                |
-| -------- | ---- | ---------------------------------------------------------- |
-| _(none)_ |      | Represents falsy values: null, undefined, 0, false, or "". |
 
 Represents falsy values: `null`, `undefined`, `0`, `false`, or `""`.
 
@@ -155,11 +160,11 @@ type FalsyValue = Falsy
 
 ### `ReturnTypeOf<T>`
 
+Determines the primitive type corresponding to the provided value.
+
 | Argument | Type | Description                             |
 | -------- | ---- | --------------------------------------- |
 | `T`      | any  | The value to get the primitive type of. |
-
-Determines the primitive type corresponding to the provided value.
 
 ```ts twoslash
 import type { ReturnTypeOf } from "@halvaradop/ts-utility-types/utils"
