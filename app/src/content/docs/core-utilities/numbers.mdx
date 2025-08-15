@@ -1,0 +1,200 @@
+---
+title: Number Utilities
+description: Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+icon: Hash
+---
+
+# Number Utilities
+
+Utilities for manipulating and validating numeric types in TypeScript. These types allow you to check parity, sign, get absolute values, truncate decimals, and generate number ranges at the type level.
+
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+
+    ```ts twoslash
+    import type { IsOdd, IsEven, Absolute } from "@halvaradop/ts-utility-types/numbers"
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+
+    ```ts twoslash
+    import type * as Numbers from "@halvaradop/ts-utility-types/numbers"
+
+    // @noErrors
+    type Result = Numbers.
+    //                    ^|
+    ```
+
+  </Tab>
+</Tabs>
+
+### `IsOdd<T>` [#is-odd]
+
+Checks if a number is odd. Returns `true` if the number is odd, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsEven`](#is-even)
+
+```ts twoslash
+import type { IsOdd } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckOdd = IsOdd<2023>
+//   ^?
+
+type CheckEven = IsOdd<2024>
+//   ^?
+
+type CheckOne = IsOdd<1>
+//   ^?
+```
+
+### `IsEven<T>` [#is-even]
+
+Checks if a number is even. Returns `true` if the number is even, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsOdd`](#is-odd)
+
+```ts twoslash
+import type { IsEven } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckEven = IsEven<2024>
+//   ^?
+
+type CheckOdd = IsEven<2023>
+//   ^?
+
+type CheckZero = IsEven<0>
+//   ^?
+```
+
+### `IsNegative<T>` [#is-negative]
+
+Checks if a number is negative. Returns `true` if the number is less than zero, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsPositive`](#is-positive)
+
+```ts twoslash
+import type { IsNegative } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckNegative = IsNegative<-2024>
+//   ^?
+
+type CheckPositive = IsNegative<2024>
+//   ^?
+
+type CheckZero = IsNegative<0>
+//   ^?
+```
+
+### `IsPositive<T>` [#is-positive]
+
+Checks if a number is positive. Returns `true` if the number is greater than zero, `false` otherwise.
+
+| Argument | Type     | Description          |
+| -------- | -------- | -------------------- |
+| `T`      | `number` | The number to check. |
+
+**Related:** [`IsNegative`](#is-negative)
+
+```ts twoslash
+import type { IsPositive } from "@halvaradop/ts-utility-types/numbers"
+
+type CheckPositive = IsPositive<2024>
+//   ^?
+
+type CheckNegative = IsPositive<-2024>
+//   ^?
+
+type CheckZero = IsPositive<0>
+//   ^?
+```
+
+<Callout type="warn" title="Compile-Time Operations">
+  These utilities work with literal numeric types at compile-time. They don't perform runtime operations.
+</Callout>
+
+### `Absolute<Expression>` [#absolute]
+
+Returns the absolute value of a number, string, or bigint as a string.
+
+| Argument     | Type                             | Description                             |
+| ------------ | -------------------------------- | --------------------------------------- |
+| `Expression` | `number` \| `string` \| `bigint` | The value to get the absolute value of. |
+
+```ts twoslash
+import type { Absolute } from "@halvaradop/ts-utility-types/numbers"
+
+type PositiveNumber = Absolute<2024>
+//   ^?
+
+type PositiveString = Absolute<"-2024">
+//   ^?
+
+type PositiveBigint = Absolute<-123n>
+//   ^?
+```
+
+### `Trunc<Math>` [#trunc]
+
+Truncates a number to its integer part, removing any decimal portion.
+
+| Argument | Type                             | Description             |
+| -------- | -------------------------------- | ----------------------- |
+| `Math`   | `string` \| `number` \| `bigint` | The number to truncate. |
+
+```ts twoslash
+import type { Trunc } from "@halvaradop/ts-utility-types/numbers"
+
+type Truncated = Trunc<3.14>
+//   ^?
+
+type TruncatedNegative = Trunc<-2.99>
+//   ^?
+
+type TruncatedString = Trunc<"5.67">
+//   ^?
+```
+
+### `NumberRange<Low, High>` [#number-range]
+
+Generates a union type of numeric literals from `Low` to `High` (inclusive). Only non-negative values are supported; if either `Low` or `High` is negative, the result is `never`.
+
+| Argument | Type     | Description                                   |
+| -------- | -------- | --------------------------------------------- |
+| `Low`    | `number` | The starting number of the range (inclusive). |
+| `High`   | `number` | The ending number of the range (inclusive).   |
+
+**Behavior:**
+
+```ts twoslash
+import type { NumberRange } from "@halvaradop/ts-utility-types/numbers"
+
+type Range1to5 = NumberRange<1, 5>
+//   ^?
+
+type Range3to7 = NumberRange<3, 7>
+//   ^?
+
+type InvalidRange = NumberRange<-1, 5>
+//   ^?
+```

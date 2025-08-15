@@ -1,0 +1,44 @@
+---
+title: Deprecated - Types Entry Point
+description: The /types entry point is deprecated and will be removed in the next major version. Please use the default export from @halvaradop/ts-utility-types or import specific types from the appropriate entry point.
+icon: AlertTriangle
+---
+
+import { Callout } from "fumadocs-ui/components/callout"
+import { Card, Cards } from "fumadocs-ui/components/card"
+
+# Deprecated - Types Entry Point
+
+<Callout type="error" title="DEPRECATED">
+  The `/types` entry point is deprecated and will be removed in the next major version.
+</Callout>
+
+This entry point does not export any types or utilities. Instead, please use the specific module entry points for better tree-shaking and organization.
+
+## Quick Migration
+
+Replace the deprecated import with specific module imports:
+
+```ts
+// ❌ Deprecated - Don't use this
+// import type { SomeType } from "@halvaradop/ts-utility-types/types"
+
+// ✅ Use specific module imports instead
+import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
+import type { ArrayToUnion } from "@halvaradop/ts-utility-types/arrays"
+import type { PickByType } from "@halvaradop/ts-utility-types/objects"
+```
+
+**Available Modules:**
+
+- [Deep Operations](/docs/deep) - `@halvaradop/ts-utility-types/deep`
+- [Array Utilities](/docs/arrays) - `@halvaradop/ts-utility-types/arrays`
+- [Object Utilities](/docs/objects) - `@halvaradop/ts-utility-types/objects`
+- [String Utilities](/docs/strings) - `@halvaradop/ts-utility-types/strings`
+- [Number Utilities](/docs/numbers) - `@halvaradop/ts-utility-types/numbers`
+- [Type Guards](/docs/guards) - `@halvaradop/ts-utility-types/type-guards`
+- [Validation](/docs/validate) - `@halvaradop/ts-utility-types/validate`
+- [Testing](/docs/test) - `@halvaradop/ts-utility-types/test`
+- [General Utils](/docs/utils) - `@halvaradop/ts-utility-types/utils`
+
+<Callout type="info">Need help with migration? Check our [Community & Support](/docs/community) page.</Callout>

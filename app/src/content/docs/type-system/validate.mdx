@@ -1,0 +1,198 @@
+---
+title: Runtime Validation
+description: Helpers and type guards for runtime value validation in TypeScript and JavaScript. These functions check if a value is primitive, nullish, boolean, string, number, object, array, function, or falsy.
+icon: Shield
+---
+
+# Runtime Validation
+
+Helpers and type guards for runtime value validation in TypeScript and JavaScript. These functions check if a value is primitive, nullish, boolean, string, number, object, array, function, or falsy.
+
+<Callout type="info" title="Runtime Functions">
+  Unlike other modules, these are **runtime functions** that can be used in JavaScript and TypeScript for actual value validation
+  with proper type guards. This package should be installed as a production package for access to the validators in the build and
+  final app
+</Callout>
+
+## Installation
+
+```npm
+npm i @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={["Named Import", "Namespace Import"]}>
+  <Tab value="Named Import">
+
+    ```ts twoslash
+    import { isPrimitive, isNullish, isArray } from "@halvaradop/ts-utility-types/validate"
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+
+    ```ts twoslash
+    import * as validate from "@halvaradop/ts-utility-types/validate"
+
+    // @noErrors
+    validate.
+    //       ^|
+    ```
+
+  </Tab>
+</Tabs>
+
+## Type Guards
+
+### `isPrimitive(value: unknown): value is Primitive` [#is-Primitive]
+
+Checks if a value is a primitive type (`number`, `string`, `boolean`, `bigint`, `symbol`).
+
+```ts twoslash
+import { isPrimitive } from "@halvaradop/ts-utility-types/validate"
+
+const num = isPrimitive(42)
+//    ^?
+
+const str = isPrimitive("hello")
+//    ^?
+
+const obj = isPrimitive({})
+//    ^?
+```
+
+### `isPrimitiveNullish(value: unknown): value is PrimitiveNullish` [#is-Primitive-Nullish]
+
+Checks if a value is a primitive or nullish (`null` or `undefined`).
+
+```ts twoslash
+import { isPrimitiveNullish } from "@halvaradop/ts-utility-types/validate"
+
+const und = isPrimitiveNullish(undefined)
+//    ^?
+
+const str = isPrimitiveNullish("hello")
+//    ^?
+
+const obj = isPrimitiveNullish({})
+//    ^?
+```
+
+### `isNullish(value: unknown): value is Nullish` [#is-Nullish]
+
+Checks if a value is `null` or `undefined`.
+
+```ts twoslash
+import { isNullish } from "@halvaradop/ts-utility-types/validate"
+
+const empty = isNullish(null)
+//    ^?
+
+const und = isNullish(undefined)
+//    ^?
+
+const num = isNullish(0)
+//    ^?
+```
+
+### `isBoolean(value: unknown): value is boolean` [#is-Boolean]
+
+Checks if a value is boolean.
+
+```ts twoslash
+import { isBoolean } from "@halvaradop/ts-utility-types/validate"
+
+const bol = isBoolean(true)
+//    ^?
+
+const str = isBoolean("true")
+//    ^?
+```
+
+### `isString(value: unknown): value is string` [#is-String]
+
+Checks if a value is a string.
+
+```ts twoslash
+import { isString } from "@halvaradop/ts-utility-types/validate"
+
+const str = isString("hello")
+//    ^?
+
+const num = isString(123)
+//    ^?
+```
+
+### `isNumber(value: unknown): value is number` [#is-Number]
+
+Checks if a value is numeric (including `NaN`).
+
+```ts twoslash
+import { isNumber } from "@halvaradop/ts-utility-types/validate"
+
+const num = isNumber(42)
+//    ^?
+
+const str = isNumber("42")
+//    ^?
+```
+
+### `isObject(value: unknown): value is object` [#is-Object]
+
+Checks if a value is a plain object (not array, not function, not nullish).
+
+```ts twoslash
+import { isObject } from "@halvaradop/ts-utility-types/validate"
+
+const obj = isObject({})
+//    ^?
+
+const arr = isObject([])
+//    ^?
+
+const empty = isObject(null)
+//    ^?
+```
+
+### `isArray(value: unknown): value is unknown[]` [#is-Array]
+
+Checks if a value is an array.
+
+```ts twoslash
+import { isArray } from "@halvaradop/ts-utility-types/validate"
+
+const nums = isArray([1, 2, 3])
+//    ^?
+
+const obj = isArray({})
+//    ^?
+```
+
+### `isFunction(value: unknown): value is Function` [#is-Function]
+
+Checks if a value is a function.
+
+```ts twoslash
+import { isFunction } from "@halvaradop/ts-utility-types/validate"
+
+const fn = isFunction(() => {})
+//    ^?
+
+const num = isFunction(123)
+//    ^?
+```
+
+### `isFalsy(value: unknown): boolean` [#is-Falsy]
+
+Checks if a value is falsy (`null`, `undefined`, `false`, `0`, `""`).
+
+```ts twoslash
+import { isFalsy } from "@halvaradop/ts-utility-types/validate"
+
+const num = isFalsy(0)
+//    ^?
+
+const str = isFalsy("hello")
+//    ^?
+```

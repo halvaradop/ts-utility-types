@@ -1,0 +1,425 @@
+---
+title: Deep Utilities
+description: Advanced utilities for deep manipulation of objects and nested types in TypeScript. These types allow you to merge, transform, filter, select, omit, and modify properties at any depth in a type-safe and expressive way.
+icon: GitMerge
+---
+
+# Deep Utilities
+
+Advanced utilities for deep manipulation of objects and nested types in TypeScript. These types allow you to merge, transform, filter, select, omit, and modify properties at any depth in a type-safe and expressive way.
+
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={["Named Import", "Namespace Import"]}>
+  <Tab value="Named Import">
+    
+    ```ts twoslash 
+    import type { DeepMerge, DeepPartial, DeepReadonly } from "@halvaradop/ts-utility-types/deep" 
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+
+    ```ts twoslash
+    import type * as Deep from "@halvaradop/ts-utility-types/deep"
+
+    // @noErrors
+    type Utilities = Deep.
+    //                    ^|
+
+    ```
+
+  </Tab>
+</Tabs>
+
+### `DeepMerge<Obj1, Obj2, ByUnion, PriorityObject>` [#deep-merge]
+
+Recursively merges two objects. If a property exists in both, the one from `Obj1` takes priority (unless otherwise specified). You can merge as a union (`ByUnion`) or prioritize objects (`PriorityObject`).
+
+| Argument         | Type                        | Description                                                        |
+| ---------------- | --------------------------- | ------------------------------------------------------------------ |
+| `Obj1`           | `object`                    | The first object to merge.                                         |
+| `Obj2`           | `object`                    | The second object to merge.                                        |
+| `ByUnion`        | `boolean` (default `false`) | If `true`, conflicting properties are combined as unions.          |
+| `PriorityObject` | `boolean` (default `true`)  | If `true`, `Obj1` properties take priority over `Obj2` properties. |
+
+**Related:** [`DeepMergeAll`](#deep-merge-all), [`DeepUnion`](#deep-union)
+
+<Callout type="warn" title="Performance Note">
+  Deep utilities work with recursive types and may have performance implications with deeply nested structures. Most operations
+  are limited to reasonable depths (typically 10-20 levels).
+</Callout>
+
+```ts twoslash
+import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
+
+interface Config {
+  api: {
+    timeout: number
+  }
+  features: {
+    darkMode: boolean
+  }
+}
+
+interface UserConfig {
+  api: {
+    retries: number
+  }
+  features: {
+    analytics: boolean
+  }
+}
+
+type AppConfig = DeepMerge<Config, UserConfig>
+//   ^?
+
+const config: AppConfig = {
+  api: {
+    timeout: 5000,
+    retries: 3,
+  },
+  features: {
+    darkMode: true,
+    analytics: false,
+  },
+}
+```
+
+### `DeepUnion<Obj1, Obj2>` [#deep-union]
+
+| Argument | Type     | Description                 |
+| -------- | -------- | --------------------------- |
+| `Obj1`   | `object` | The first object to merge.  |
+| `Obj2`   | `object` | The second object to merge. |
+
+```ts twoslash
+import type { DeepUnion } from "@halvaradop/ts-utility-types/deep"
+
+interface BaseController {
+  baseUrl: string
+  routes: string[]
+}
+
+interface ConfigBase {
+  baseUrl: string[]
+  routes: Array<{ url: string; name: string }>
+}
+
+type Union = DeepUnion<BaseController, ConfigBase>
+//   ^?
+```
+
+### `DeepMergeAll<Array, ByUnion, PriorityObject>` [#deep-merge-all]
+
+| Argument         | Type                        | Description                                               |
+| ---------------- | --------------------------- | --------------------------------------------------------- |
+| `Array`          | `unknown[]`                 | The tuple of object types to merge.                       |
+| `ByUnion`        | `boolean` (default `false`) | If `true`, conflicting properties are combined as unions. |
+| `PriorityObject` | `boolean` (default `true`)  | If `true`, earlier objects take priority over later ones. |
+
+```ts twoslash
+import type { DeepMergeAll } from "@halvaradop/ts-utility-types/deep"
+
+interface Foo {
+  foo: string
+}
+
+interface Bar {
+  bar: string
+}
+
+interface FooBar {
+  bar: number
+  foo: boolean
+  foobar: string
+}
+
+type Merge = DeepMergeAll<[Foo, Bar, FooBar], true>
+//   ^?
+```
+
+### `DeepMutable<Obj>` [#deep-mutable]
+
+| Argument | Type     | Description                        |
+| -------- | -------- | ---------------------------------- |
+| `Obj`    | `object` | The object to make mutable deeply. |
+
+```ts twoslash
+import type { DeepMutable } from "@halvaradop/ts-utility-types/deep"
+
+interface Foo {
+  readonly foo: { readonly bar: { readonly foobar: number } }
+}
+
+type NonReadonlyFoo = DeepMutable<Foo>
+//   ^?
+```
+
+### `DeepReadonly<Obj>` [#deep-readonly]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to make deeply readonly. |
+
+```ts twoslash
+import type { DeepReadonly } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type ReadonlyUser = DeepReadonly<User>
+//   ^?
+```
+
+### `DeepKeys<Obj, Depth>` [#deep-keys]
+
+| Argument | Type                   | Description                             |
+| -------- | ---------------------- | --------------------------------------- |
+| `Obj`    | `object`               | The object to extract keys from.        |
+| `Depth`  | `number` (default `6`) | The maximum depth to traverse for keys. |
+
+```ts twoslash
+import type { DeepKeys } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type UserKeys = DeepKeys<User>
+//   ^?
+```
+
+### `DeepOmit<Obj, Path>` [#deep-omit]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to omit a property from. |
+| `Path`   | `string` | The dot-separated path to omit.     |
+
+```ts twoslash
+import type { DeepOmit } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type WithoutStreet = DeepOmit<User, "address.street">
+//   ^?
+```
+
+### `DeepGet<Obj, Path>` [#deep-get]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to get a value from.     |
+| `Path`   | `string` | The dot-separated path to retrieve. |
+
+```ts twoslash
+import type { DeepGet } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type UserName = DeepGet<User, "name">
+//   ^?
+
+type UserStreet = DeepGet<User, "address.street">
+//   ^?
+```
+
+### `DeepTruncate<Obj, Depth>` [#deep-truncate]
+
+| Argument | Type     | Description                     |
+| -------- | -------- | ------------------------------- |
+| `Obj`    | `object` | The object to truncate.         |
+| `Depth`  | `number` | The depth at which to truncate. |
+
+```ts twoslash
+import type { DeepTruncate } from "@halvaradop/ts-utility-types/deep"
+
+interface Foo {
+  foo: string
+  bar: number
+  foobar: {
+    foo: boolean
+    bar: string
+    foobar: {
+      foo: number
+    }
+  }
+}
+
+type TruncatedFoo = DeepTruncate<Foo, 1>
+//   ^?
+```
+
+### `DeepPartial<Obj>` [#deep-partial]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to make deeply optional. |
+
+```ts twoslash
+import type { DeepPartial } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type UserOptional = DeepPartial<User>
+//   ^?
+```
+
+### `DeepRequired<Obj>` [#deep-required]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to make deeply required. |
+
+```ts twoslash
+import type { DeepRequired } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name?: string
+  address?: {
+    street?: string
+    avenue?: string
+  }
+}
+
+type UserRequired = DeepRequired<User>
+//   ^?
+```
+
+### `DeepPick<Obj, Path>` [#deep-pick]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to pick a property from. |
+| `Path`   | `string` | The dot-separated path to pick.     |
+
+```ts twoslash
+import type { DeepPick } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type UserPick = DeepPick<User, "address.street">
+//   ^?
+```
+
+### `DeepNullable<Obj>` [#deep-nullable]
+
+| Argument | Type     | Description                         |
+| -------- | -------- | ----------------------------------- |
+| `Obj`    | `object` | The object to make deeply nullable. |
+
+```ts twoslash
+import type { DeepNullable } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type UserNullable = DeepNullable<User>
+//   ^?
+```
+
+### `DeepNonNullable<Obj>` [#deep-non-nullable]
+
+| Argument | Type     | Description                             |
+| -------- | -------- | --------------------------------------- |
+| `Obj`    | `object` | The object to make deeply non-nullable. |
+
+```ts twoslash
+import type { DeepNonNullable } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string | null
+  address: {
+    street: string | null
+    avenue: string | null
+  } | null
+}
+
+type UserNonNullable = DeepNonNullable<User>
+//   ^?
+```
+
+### `DeepFilter<Obj, Predicate>` [#deep-filter]
+
+| Argument    | Type      | Description                       |
+| ----------- | --------- | --------------------------------- |
+| `Obj`       | `object`  | The object to filter.             |
+| `Predicate` | `unknown` | The type to filter properties by. |
+
+```ts twoslash
+import type { DeepFilter } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  age: number
+  address: { street: string; avenue: string }
+}
+
+type Filtered = DeepFilter<User, string>
+//   ^?
+```
+
+### `DeepReplace<Obj, From, To>` [#deep-replace]
+
+| Argument | Type      | Description                       |
+| -------- | --------- | --------------------------------- |
+| `Obj`    | `object`  | The object to replace types in.   |
+| `From`   | `unknown` | The type to replace.              |
+| `To`     | `unknown` | The type to use as a replacement. |
+
+```ts twoslash
+import type { DeepReplace } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  age: number
+  address: { street: string; avenue: string }
+}
+
+type Replaced = DeepReplace<User, string, number>
+//   ^?
+```
+
+### `DeepSet<Obj, Path, Value>` [#deep-set]
+
+| Argument | Type      | Description                        |
+| -------- | --------- | ---------------------------------- |
+| `Obj`    | `object`  | The object to set a value in.      |
+| `Path`   | `string`  | The dot-separated path to set.     |
+| `Value`  | `unknown` | The value type to set at the path. |
+
+```ts twoslash
+import type { DeepSet } from "@halvaradop/ts-utility-types/deep"
+
+interface User {
+  name: string
+  address: { street: string; avenue: string }
+}
+
+type Updated = DeepSet<User, "address.street", number>
+//   ^?
+```

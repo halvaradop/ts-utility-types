@@ -1,0 +1,440 @@
+---
+title: Object Utilities
+description: Utilities for manipulating, transforming, and composing object types in TypeScript. These types allow you to combine, filter, select, modify, and map object properties in a flexible and type-safe way.
+icon: Layers
+---
+
+# Object Utilities
+
+Utilities for manipulating, transforming, and composing object types in TypeScript. These types allow you to combine, filter, select, modify, and map object properties in a flexible and type-safe way.
+
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+
+    ```ts twoslash
+    import type { PickByType, OmitByType, PartialByKeys } from "@halvaradop/ts-utility-types/objects"
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+
+    ```ts twoslash
+    import type * as Objects from "@halvaradop/ts-utility-types/objects"
+
+    // @noErrors
+    type Utilities = Objects.
+    //                       ^|
+    ```
+
+  </Tab>
+</Tabs>
+
+### `Properties<Obj1, Obj2, Common>` [#properties]
+
+Creates a union of the keys of two objects. If `Common` is `true`, returns only the common keys.
+
+| Argument | Type                        | Description                                               |
+| -------- | --------------------------- | --------------------------------------------------------- |
+| `Obj1`   | `object`                    | The first object type.                                    |
+| `Obj2`   | `object`                    | The second object type.                                   |
+| `Common` | `boolean` (default `false`) | If `true`, returns only common keys; all keys if `false`. |
+
+```ts twoslash
+import type { Properties } from "@halvaradop/ts-utility-types/objects"
+
+interface Foo {
+  foo: string
+}
+
+interface Bar {
+  bar: number
+}
+
+type PropsFooBar = Properties<Foo, Bar>
+//   ^?
+
+type CommonProps = Properties<Foo & { shared: boolean }, Bar & { shared: boolean }, true>
+//   ^?
+```
+
+### `Intersection<Obj1, Obj2>` [#intersection]
+
+Creates a new object with the keys that are in one but not the other.
+
+| Argument | Type     | Description             |
+| -------- | -------- | ----------------------- |
+| `Obj1`   | `object` | The first object type.  |
+| `Obj2`   | `object` | The second object type. |
+
+```ts twoslash
+import type { Intersection } from "@halvaradop/ts-utility-types/objects"
+
+interface Foo {
+  name: string
+  age: string
+}
+
+interface Bar {
+  name: string
+  age: string
+  gender: number
+}
+
+type DiffFoo = Intersection<Foo, Bar>
+//   ^?
+
+type DiffBar = Intersection<Bar, Foo>
+//   ^?
+```
+
+<Callout type="info" title="Object Manipulation">
+  These utilities work with both interfaces and type aliases, providing flexible object type transformations.
+</Callout>
+
+### `PickByType<Obj, Type>` [#pick-by-type]
+
+Selects the properties of an object that are assignable to a given type.
+
+| Argument | Type      | Description                         |
+| -------- | --------- | ----------------------------------- |
+| `Obj`    | `object`  | The object to pick properties from. |
+| `Type`   | `unknown` | The type to filter properties by.   |
+
+```ts twoslash
+import type { PickByType } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  lastname: string
+  age: number
+  isActive: boolean
+}
+
+type UserStrings = PickByType<User, string>
+//   ^?
+
+type UserNumbers = PickByType<User, number>
+//   ^?
+
+type UserBooleans = PickByType<User, boolean>
+//   ^?
+```
+
+### `PartialByKeys<Obj, Keys>` [#partial-by-keys]
+
+Makes the specified keys of an object optional (all keys by default).
+
+| Argument | Type                           | Description                                |
+| -------- | ------------------------------ | ------------------------------------------ |
+| `Obj`    | `object`                       | The object to make properties optional in. |
+| `Keys`   | `keyof Obj` (default all keys) | The keys to make optional.                 |
+
+**Related:** [`RequiredByKeys`](#required-by-keys)
+
+```ts twoslash
+import type { PartialByKeys } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  lastname: string
+  age: number
+}
+
+type UserPartialName = PartialByKeys<User, "name">
+//   ^?
+
+type UserAllPartial = PartialByKeys<User>
+//   ^?
+```
+
+### `OmitByType<Obj, Type>` [#omit-by-type]
+
+Omits the properties of an object that are assignable to a given type.
+
+| Argument | Type      | Description                           |
+| -------- | --------- | ------------------------------------- |
+| `Obj`    | `object`  | The object to omit properties from.   |
+| `Type`   | `unknown` | The type to filter out properties by. |
+
+**Related:** [`PickByType`](#pick-by-type)
+
+```ts twoslash
+import type { OmitByType } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  lastname: string
+  age: number
+}
+
+type UserExcludeStrings = OmitByType<User, string>
+//   ^?
+
+type UserExcludeNumbers = OmitByType<User, number>
+//   ^?
+```
+
+### `FlattenProperties<Obj, Keys>`
+
+Extracts the value of a key and merges it into the object (experimental).
+
+| Argument | Type        | Description                                     |
+| -------- | ----------- | ----------------------------------------------- |
+| `Obj`    | `object`    | The object to flatten a property from.          |
+| `Keys`   | `keyof Obj` | The key(s) whose value(s) to merge into object. |
+
+```ts twoslash
+import type { FlattenProperties } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  lastname: string
+  address: { street: string; avenue: string }
+}
+
+type UserAddress = FlattenProperties<User, "address">
+//   ^?
+```
+
+### `ExcludePrivateKeys<Obj>`
+
+Removes properties whose name starts with an underscore (`_`).
+
+| Argument | Type     | Description                             |
+| -------- | -------- | --------------------------------------- |
+| `Obj`    | `object` | The object to remove private keys from. |
+
+```ts twoslash
+import type { ExcludePrivateKeys } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  _private: string
+  public: number
+}
+
+type PublicUser = ExcludePrivateKeys<User>
+//   ^?
+```
+
+### `RequiredByKeys<Obj, Keys>`
+
+Makes the specified keys of an object required (all keys by default).
+
+| Argument | Type        | Description                              |
+| -------- | ----------- | ---------------------------------------- |
+| `Obj`    | `object`    | The object to make keys required in.     |
+| `Keys`   | `keyof Obj` | The keys to make required (default all). |
+
+```ts twoslash
+import type { RequiredByKeys } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name?: string
+  age?: number
+  address?: string
+}
+
+type UserRequiredName = RequiredByKeys<User, "name">
+//   ^?
+```
+
+### `Mutable<Obj>`
+
+Makes the properties of an object mutable (removes `readonly`). Affects only the first level.
+
+| Argument | Type     | Description                 |
+| -------- | -------- | --------------------------- |
+| `Obj`    | `object` | The object to make mutable. |
+
+```ts twoslash
+import type { Mutable } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  readonly name: string
+  readonly lastname: string
+  readonly age: number
+}
+
+type NonReadonlyUser = Mutable<User>
+//   ^?
+```
+
+### `AppendKeyValue<Obj, Property, Value>`
+
+Adds a new property to an object.
+
+| Argument   | Type      | Description                      |
+| ---------- | --------- | -------------------------------- |
+| `Obj`      | `object`  | The object to add a property to. |
+| `Property` | `string`  | The property name to add.        |
+| `Value`    | `unknown` | The type of the new property.    |
+
+```ts twoslash
+import type { AppendKeyValue } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+}
+
+type UserAppendLastname = AppendKeyValue<User, "lastname", string>
+//   ^?
+```
+
+### `ObjectEntries<Obj>`
+
+Returns a union of the `[key, value]` entries of the object.
+
+| Argument | Type     | Description                     |
+| -------- | -------- | ------------------------------- |
+| `Obj`    | `object` | The object to get entries from. |
+
+```ts twoslash
+import type { ObjectEntries } from "@halvaradop/ts-utility-types/objects"
+
+interface Foo {
+  foo: string
+  bar: number
+  foobar?: boolean
+}
+
+type FooEntries = ObjectEntries<Foo>
+//   ^?
+```
+
+### `ReplaceKeys<Obj, Keys, Replace>`
+
+Replaces the types of the specified keys with those defined in `Replace`.
+
+| Argument  | Type     | Description                       |
+| --------- | -------- | --------------------------------- |
+| `Obj`     | `object` | The object to replace keys in.    |
+| `Keys`    | `string` | The keys to replace.              |
+| `Replace` | `object` | The mapping of keys to new types. |
+
+```ts twoslash
+import type { ReplaceKeys } from "@halvaradop/ts-utility-types/objects"
+
+interface Foo {
+  foo: string
+  bar: number
+  foobar: boolean
+}
+
+type ReplaceStrings = ReplaceKeys<Foo, "foo" | "foobar", { foo: number; foobar: number }>
+//   ^?
+```
+
+### `MapTypes<Obj, Mapper>`
+
+Maps the types of the properties that match `from` in the `Mapper`, replacing them with `to`.
+
+| Argument | Type     | Description                              |
+| -------- | -------- | ---------------------------------------- |
+| `Obj`    | `object` | The object to map types in.              |
+| `Mapper` | `object` | The mapping object with `from` and `to`. |
+
+```ts twoslash
+import type { MapTypes } from "@halvaradop/ts-utility-types/objects"
+
+type ReplaceTypesI = MapTypes<{ foo: string; bar: number }, { from: number; to: boolean }>
+//   ^?
+```
+
+### `ToPrimitive<Obj>`
+
+| Argument | Type     | Description                          |
+| -------- | -------- | ------------------------------------ |
+| `Obj`    | `object` | The object to convert to primitives. |
+
+Converts the properties of an object to their primitive types.
+
+```ts twoslash
+import type { ToPrimitive } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: "Foo"
+  lastname: "Bar"
+  age: 30
+}
+
+type UserPrimitive = ToPrimitive<User>
+//   ^?
+```
+
+### `Get<Obj1, Obj2, Key>`
+
+Returns the value of a key in one of the two objects.
+
+| Argument | Type     | Description                   |
+| -------- | -------- | ----------------------------- |
+| `Obj1`   | `object` | The first object to check.    |
+| `Obj2`   | `object` | The second object to check.   |
+| `Key`    | `string` | The key to get the value for. |
+
+```ts twoslash
+import type { Get } from "@halvaradop/ts-utility-types/objects"
+
+interface Foo {
+  foo: string
+}
+
+interface Bar {
+  bar: number
+}
+
+type FooValue = Get<Foo, Bar, "foo">
+//   ^?
+
+type BarValue = Get<Foo, Bar, "bar">
+//   ^?
+```
+
+### `GetRequired<Obj>`
+
+Returns only the required keys of an object.
+
+| Argument | Type     | Description                           |
+| -------- | -------- | ------------------------------------- |
+| `Obj`    | `object` | The object to get required keys from. |
+
+```ts twoslash
+import type { GetRequired } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  age?: number
+  address?: string
+}
+
+type UserRequired = GetRequired<User>
+//   ^?
+```
+
+### `GetOptional<Obj>`
+
+Returns only the optional keys of an object.
+
+| Argument | Type     | Description                           |
+| -------- | -------- | ------------------------------------- |
+| `Obj`    | `object` | The object to get optional keys from. |
+
+```ts twoslash
+import type { GetOptional } from "@halvaradop/ts-utility-types/objects"
+
+interface User {
+  name: string
+  age?: number
+  address?: string
+}
+
+type UserOptional = GetOptional<User>
+//   ^?
+```

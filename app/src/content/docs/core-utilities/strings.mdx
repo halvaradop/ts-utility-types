@@ -1,0 +1,253 @@
+---
+title: String Utilities
+description: Utilities for manipulating and analyzing string types in TypeScript. These types allow you to trim, join, search, replace, capitalize, and analyze strings at the type level.
+icon: Type
+---
+
+# String Utilities
+
+Utilities for manipulating and analyzing string types in TypeScript. These types allow you to trim, join, search, replace, capitalize, and analyze strings at the type level using template literal types.
+
+## Installation
+
+```npm
+npm i -D @halvaradop/ts-utility-types
+```
+
+## Usage
+
+<Tabs items={['Named Import', 'Namespace Import']}>
+  <Tab value="Named Import">
+
+    ```ts twoslash
+    import type { Trim, Capitalize, Join } from "@halvaradop/ts-utility-types"
+    ```
+
+  </Tab>
+  <Tab value="Namespace Import">
+
+    ```ts twoslash
+    import type * as Strings from "@halvaradop/ts-utility-types"
+
+    // @noErrors
+    type Utilities = Strings.
+    //                       ^|
+    ```
+
+  </Tab>
+</Tabs>
+
+## Text Manipulation
+
+### `TrimLeft<Str, string>` [#trim-left]
+
+Removes whitespace from the start of a string type.
+
+| Argument | Type     | Description                       |
+| -------- | -------- | --------------------------------- |
+| `Str`    | `string` | The string to trim from the left. |
+
+```ts twoslash
+import type { TrimLeft } from "@halvaradop/ts-utility-types"
+
+type TrimmedLeft = TrimLeft<"  hello world  ">
+//   ^?
+
+type NoSpaces = TrimLeft<"hello world">
+//   ^?
+```
+
+### `TrimRight<Str, string>` [#trim-right]
+
+Removes whitespace from the end of a string type.
+
+| Argument | Type     | Description                        |
+| -------- | -------- | ---------------------------------- |
+| `Str`    | `string` | The string to trim from the right. |
+
+```ts twoslash
+import type { TrimRight } from "@halvaradop/ts-utility-types"
+
+type TrimmedRight = TrimRight<"hello world  ">
+//   ^?
+
+type NoTrailing = TrimRight<"hello world">
+//   ^?
+```
+
+### `Trim<Str, string>` [#trim]
+
+Removes whitespace from both ends of a string type. Combines the functionality of `TrimLeft` and `TrimRight`.
+
+| Argument | Type     | Description         |
+| -------- | -------- | ------------------- |
+| `Str`    | `string` | The string to trim. |
+
+**Related:** [`TrimLeft`](#trim-left), [`TrimRight`](#trim-right)
+
+```ts twoslash
+import type { Trim } from "@halvaradop/ts-utility-types"
+
+// Remove whitespace from both ends
+type Trimmed = Trim<"  hello world  ">
+//   ^?
+
+// Already trimmed string
+type AlreadyTrimmed = Trim<"no spaces">
+//   ^?
+
+// Only leading spaces
+type LeadingSpaces = Trim<"  leading only">
+//   ^?
+```
+
+<Callout type="info" title="Template Literal Types">
+  String utilities leverage TypeScript's template literal types for compile-time string manipulation.
+</Callout>
+
+### `Capitalize<Str, string, FirstWord, boolean = true>` [#capitalize]
+
+Capitalizes the first letter of a word and optionally lowercases the rest.
+
+| Argument    | Type                       | Description                                |
+| ----------- | -------------------------- | ------------------------------------------ |
+| `Str`       | `string`                   | The string to capitalize.                  |
+| `FirstWord` | `boolean` (default `true`) | Whether to only capitalize the first word. |
+
+```ts twoslash
+import type { Capitalize } from "@halvaradop/ts-utility-types"
+
+type Capitalized = Capitalize<"hello world">
+//   ^?
+
+type CapitalizeAll = Capitalize<"hello world", false>
+//   ^?
+```
+
+### `Join<Array, unknown[], Separator, number | string>` [#join]
+
+Joins the values of a tuple into a string, using the given separator.
+
+| Argument    | Type        | Description                      |
+| ----------- | ----------- | -------------------------------- | -------------------------------------- |
+| `Array`     | `unknown[]` | The array to join into a string. |
+| `Separator` | `number     | string`                          | The separator to use between elements. |
+
+```ts twoslash
+import type { Join } from "@halvaradop/ts-utility-types"
+
+type JoinedDash = Join<["a", "p", "p", "l", "e"], "-">
+//   ^?
+
+type JoinedSpace = Join<["Hello", "World"], " ">
+//   ^?
+
+type JoinedNumber = Join<[1, 2, 3], "|">
+//   ^?
+```
+
+### `StartsWith<Str, string, Match, string>` [#starts-with]
+
+Checks if a string type starts with the given value.
+
+| Argument | Type     | Description                          |
+| -------- | -------- | ------------------------------------ |
+| `Str`    | `string` | The string to check.                 |
+| `Match`  | `string` | The substring to check for at start. |
+
+```ts twoslash
+import type { StartsWith } from "@halvaradop/ts-utility-types"
+
+type StartsWithAc = StartsWith<"abc", "ac">
+//   ^?
+
+type StartsWithAb = StartsWith<"abc", "ab">
+//   ^?
+
+type StartsWithHello = StartsWith<"hello world", "hello">
+//   ^?
+```
+
+### `DropChar<Str, string, Match, string>` [#drop-char]
+
+Removes all occurrences of a character from a string type.
+
+| Argument | Type     | Description                      |
+| -------- | -------- | -------------------------------- |
+| `Str`    | `string` | The string to remove chars from. |
+| `Match`  | `string` | The character to remove.         |
+
+```ts twoslash
+import type { DropChar } from "@halvaradop/ts-utility-types"
+
+type NoSpaces = DropChar<" b u t t e r f l y ! ", " ">
+//   ^?
+
+type NoDashes = DropChar<"a-b-c-d", "-">
+//   ^?
+```
+
+### `EndsWith<Str, string, Match, string>` [#ends-with]
+
+Checks if a string type ends with the given value.
+
+| Argument | Type     | Description                        |
+| -------- | -------- | ---------------------------------- |
+| `Str`    | `string` | The string to check.               |
+| `Match`  | `string` | The substring to check for at end. |
+
+```ts twoslash
+import type { EndsWith } from "@halvaradop/ts-utility-types"
+
+type EndsWithBc = EndsWith<"abc", "bc">
+//   ^?
+
+type EndsWithAc = EndsWith<"abc", "ac">
+//   ^?
+
+type EndsWithWorld = EndsWith<"hello world", "world">
+//   ^?
+```
+
+### `LengthOfString<Str, string>` [#length-of-string]
+
+Returns the length of a string type as a numeric literal type.
+
+| Argument | Type     | Description                      |
+| -------- | -------- | -------------------------------- |
+| `Str`    | `string` | The string to get the length of. |
+
+```ts twoslash
+import type { LengthOfString } from "@halvaradop/ts-utility-types"
+
+type Length3 = LengthOfString<"foo">
+//   ^?
+
+type Length6 = LengthOfString<"foobar">
+//   ^?
+
+type EmptyLength = LengthOfString<"">
+//   ^?
+```
+
+### `IndexOfString<Str, string, Match, string>` [#index-of-string]
+
+Returns the index of the first occurrence of a character in the string. Returns `-1` if not found.
+
+| Argument | Type     | Description                  |
+| -------- | -------- | ---------------------------- |
+| `Str`    | `string` | The string to search in.     |
+| `Match`  | `string` | The character to search for. |
+
+```ts twoslash
+import type { IndexOfString } from "@halvaradop/ts-utility-types"
+
+type IndexO = IndexOfString<"foo", "o">
+//   ^?
+
+type NotFound = IndexOfString<"foo", "z">
+//   ^?
+
+type FirstA = IndexOfString<"banana", "a">
+//   ^?
+```

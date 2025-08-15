@@ -1,13 +1,22 @@
 import type { PropsWithChildren } from "react"
-import { AsideBar } from "@/ui/docs/aside-bar"
+import { source } from "@/src/lib/source"
+import { DocsLayout, DocsLayoutProps } from "fumadocs-ui/layouts/notebook"
+import { baseOptions } from "@/src/app/layout.config"
+import { GithubInfo } from "fumadocs-ui/components/github-info"
 
-const LayoutDocs = ({ children }: PropsWithChildren) => {
-    return (
-        <section className="w-11/12 mx-auto mb-20 xl:w-10/12 xl:max-w-screen-2xl" id="layout-docs">
-            <AsideBar />
-            <section className="mt-10">{children}</section>
-        </section>
-    )
+const docsOptions: DocsLayoutProps = {
+    ...baseOptions,
+    tree: source.pageTree,
+    links: [
+        {
+            type: "custom",
+            children: <GithubInfo owner="halvaradop" repo="ts-utility-types" className="lg:-mx-2" />,
+        },
+    ],
+}
+
+const LayoutDocs = ({ children }: Required<PropsWithChildren>) => {
+    return <DocsLayout {...docsOptions}>{children}</DocsLayout>
 }
 
 export default LayoutDocs

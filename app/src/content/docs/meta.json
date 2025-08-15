@@ -1,0 +1,6 @@
+{
+  "title": "@halvaradop/ts-utility-types",
+  "description": "Comprehensive documentation for the utility type tools offered by @halvaradop/ts-utility-types, including usage examples and detailed API references.",
+  "root": true,
+  "pages": ["index", "core-utilities", "type-system", "developer-tools", "deprecated", "---Support---", "community"]
+}

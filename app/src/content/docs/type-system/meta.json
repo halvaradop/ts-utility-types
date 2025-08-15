@@ -1,0 +1,5 @@
+{
+  "title": "Type System",
+  "description": "Type checking, validation, and compile-time guards",
+  "pages": ["guards", "validate"]
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Developer Tools",
+  "description": "Testing utilities and general helper types for development",
+  "pages": ["test", "utils"]
+}

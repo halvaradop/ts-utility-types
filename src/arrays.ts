@@ -155,7 +155,7 @@ export type LastIndexOf<Array extends unknown[], Match> = InternalLastIndexOf<Ar
 /**
  * Helper type to create a tuple with a specific length, repeating a given value
  * Avoids the `Type instantiation is excessively deep and possibly infinite` error
- * @interface
+ * @internal
  */
 type InternalConstructTuple<Length extends number, Value = unknown, Array extends unknown[] = []> =
     Size<Array> extends Length ? Array : InternalConstructTuple<Length, Value, [...Array, Value]>
@@ -394,7 +394,7 @@ export type Take<N extends number, Array extends unknown[]> = InternalTake<N, Ar
  *
  * @param {unknown[]} Array - The array to filter
  */
-export type FilterNonNullish<Array extends unknown[]> = Array extends [infer Item, ...infer Spread]
+export type FilterNonNullish<Array extends readonly unknown[]> = Array extends [infer Item, ...infer Spread]
     ? Item extends Nullish
         ? FilterNonNullish<Spread>
         : IsObject<Item> extends true

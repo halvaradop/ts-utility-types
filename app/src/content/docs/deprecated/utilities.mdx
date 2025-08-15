@@ -1,0 +1,41 @@
+---
+title: Deprecated - Utilities Entry Point
+description: The /utilities entry point is deprecated and will be removed in the next major version. Please use the default export from @halvaradop/ts-utility-types or import specific types from the appropriate entry point.
+icon: AlertTriangle
+---
+
+# Deprecated - Utilities Entry Point
+
+<Callout type="error" title="DEPRECATED">
+  The `/utilities` entry point is deprecated and will be removed in the next major version.
+</Callout>
+
+This entry point does not export any types or utilities. Please migrate to specific module entry points for better organization and tree-shaking.
+
+## Quick Migration
+
+Replace the deprecated import with specific module imports:
+
+```ts
+// ❌ Deprecated - Don't use this
+// import type { SomeUtility } from "@halvaradop/ts-utility-types/utilities"
+
+// ✅ Use specific module imports instead
+import type { DeepMerge } from "@halvaradop/ts-utility-types/deep"
+import type { Prettify } from "@halvaradop/ts-utility-types/utils"
+import type { PickByType } from "@halvaradop/ts-utility-types/objects"
+```
+
+**Available Modules:**
+
+- [Deep Operations](/docs/deep) - `@halvaradop/ts-utility-types/deep`
+- [Array Utilities](/docs/arrays) - `@halvaradop/ts-utility-types/arrays`
+- [Object Utilities](/docs/objects) - `@halvaradop/ts-utility-types/objects`
+- [String Utilities](/docs/strings) - `@halvaradop/ts-utility-types/strings`
+- [Number Utilities](/docs/numbers) - `@halvaradop/ts-utility-types/numbers`
+- [Type Guards](/docs/guards) - `@halvaradop/ts-utility-types/type-guards`
+- [Validation](/docs/validate) - `@halvaradop/ts-utility-types/validate`
+- [Testing](/docs/test) - `@halvaradop/ts-utility-types/test`
+- [General Utils](/docs/utils) - `@halvaradop/ts-utility-types/utils`
+
+<Callout type="info">Need help with migration? Check our [Community & Support](/docs/community) page.</Callout>

@@ -1,6 +1,50 @@
-# build
-node_modules
-dist
+# Dependencies
+node_modules/
+**/node_modules/
 
-# files
+# Build outputs
+dist/
+build/
+out/
+**/dist/
+**/build/
+**/out/
+
+# Package manager files
+pnpm-lock.yaml
+yarn.lock
 package-lock.json
+
+# Generated files
+*.generated.*
+**/*.generated.*
+
+# Cache and temporary files
+.cache/
+**/.cache/
+*.tmp
+*.temp
+**/*.tmp
+**/*.temp
+
+# Misc
+*.DS_Store
+*.env
+
+# Coverage
+coverage
+
+# turborepo
+.turbo
+*storybook.log
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Storybook build outputs
+out/
+storybook-static
+storybook-static-*
