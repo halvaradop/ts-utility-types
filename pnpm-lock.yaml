@@ -14,6 +14,9 @@ importers:
       '@halvaradop/prettier-config':
         specifier: ^1.2.0
         version: 1.2.0(prettier@3.6.2)
+      '@halvaradop/tsconfig':
+        specifier: ^1.1.0
+        version: 1.1.0(typescript@5.9.2)
       '@halvaradop/tsup-config':
         specifier: ^1.1.0
         version: 1.1.0(tsup@8.5.0(jiti@2.5.1)(postcss@8.5.6)(typescript@5.9.2))
@@ -392,6 +395,11 @@ packages:
 
   '@halvaradop/tailwindcss-utilities@1.0.0':
     resolution: {integrity: sha512-tWohTj+ppgLXdXDd6HE8vd9gtg6WluBExaAjA3wGW1HkTBOXjG2/ThKxeq1AiwvaXK+QXv+mgK5OSXGnLnMJqg==}
+
+  '@halvaradop/tsconfig@1.1.0':
+    resolution: {integrity: sha512-SIkT7zlOKcVvid/mSwdkKHQcBVvZhrqxyoyvI+grPmQP3F1R0oOFwX7YE8N7cpDM/kB9avKVtRwO3oP+9JplEQ==}
+    peerDependencies:
+      typescript: ^5.0.0
 
   '@halvaradop/tsup-config@1.1.0':
     resolution: {integrity: sha512-+0+Ush5VWU0XJPcM1eksdFtar71KikcHVJCqHT9ZU04pHM3aKvrc7iowc2NCeaL/rvflBD3vhVKT57AaBDStBg==}
@@ -3995,6 +4003,10 @@ snapshots:
   '@halvaradop/tailwindcss-animations@1.0.0': {}
 
   '@halvaradop/tailwindcss-utilities@1.0.0': {}
+
+  '@halvaradop/tsconfig@1.1.0(typescript@5.9.2)':
+    dependencies:
+      typescript: 5.9.2
 
   '@halvaradop/tsup-config@1.1.0(tsup@8.5.0(jiti@2.5.1)(postcss@8.5.6)(typescript@5.9.2))':
     dependencies:

@@ -1,21 +1,7 @@
 {
-  "display": "Node 20",
-  "_version": "20.1.0",
+  "extends": "@halvaradop/tsconfig/tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2022"],
-    "module": "Node16",
-    "target": "ES2022",
     "outDir": "dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "moduleDetection": "force",
-    "moduleResolution": "Node16",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@repo/*": ["./src/*", "./app/*"]
