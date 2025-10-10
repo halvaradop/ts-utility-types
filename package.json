@@ -16,9 +16,7 @@
     "test:coverage": "vitest run --coverage",
     "clean": "pnpm clean:dist && pnpm clean:modules",
     "clean:dist": "rm -rf dist",
-    "clean:modules": "rm -rf node_modules",
-    "lint": "eslint . --cache --cache-location .cache/.eslintcache",
-    "lint:fix": "eslint . --fix --cache --cache-location .cache/.eslintcache"
+    "clean:modules": "rm -rf node_modules"
   },
   "repository": {
     "type": "git",

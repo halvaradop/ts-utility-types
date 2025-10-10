@@ -2,7 +2,6 @@
   "extends": "@halvaradop/tsconfig/tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": ".",
     "paths": {
       "@repo/*": ["./src/*", "./app/*"]
     }
